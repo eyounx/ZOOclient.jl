@@ -23,26 +23,48 @@ function clear(rc::RacosCommon)
   rc.best_solution = Nullable()
 end
 
+# Construct self._data, self._positive_data, self._negative_data
 function init_attribute(rc::RacosCommon)
   iteration_num = rc.parameter.train_size
   i = 0
   while i < iteration_num
-
+    # distinct_flag: True means sample is distinct(can be use),
+    # False means sample is distinct, you should sample again.
+    x, distinct_flag = distinct_sample(rc.objective.dim)
+    # panic stop
+    if isnull(x)
+      break
+    end
+    if distinct_flag
+      obj_eval(rc.objective, x)
+      push!(rc.data, x)
+      i += 1
+    end
+    selection(rc)
   end
+end
+
+# Sort self._data
+# Choose first-train_size solutions as the new self._data
+# Choose first-positive_size solutions as self._positive_data
+# Choose [positive_size, train_size) (Include the begin, not include the end) solutions as self._negative_data
+function selection(rc::RacosCommon)
+  sort!(rc.data, by = x->x.value)
+  rc.positive_data = rc.data[1:rc.parameter.positive_size]
+  rc.negative_data = rc.data[(rc.parameter.positive_size+1):rc.parameter.train_size]
+  rc.best_solution = rc.positive_data[1]
 end
 
 # distinct sample form dim, return a solution
 function distinct_sample(rc::RacosCommon, dim::Dimension; check_distinct=true, data_num=0)
   objective = rc.objective
   x = obj_construct_solution(objective, dim_rand_sample(dim))
-  obj_eval(x)
   times = 1
   distinct_flag = true
   if check_distinct == true
     while is_distinct(rc.positive_data, x) == false ||
       is_distinct(rc._negative_data, x) == false
       x = obj_construct_solution(objective, dim_rand_sample(dim))
-      obj_eval(x)
       times += 1
       if times % 10 == 0
         limited, number = dim_limited_space(dim)
@@ -65,15 +87,13 @@ end
 function distinct_sample_classifier(rc::RacosCommon, classifier; check_distinct=true, data_num=0)
   objective = rc.objective
   x = rand_sample(classifier)
-  ins = obj_construct_solution(objective, x)
-  obj_eval(objective, ins)
+  ins = obj_construct_solution(rc.objective, x)
   times = 1
   distinct_flag = true
   if check_distinct == true
     while is_distinct(rc.positive_data, ins) == false || is_distinct(rc.negative_data, x) == false
       x = rand_sample(classifier)
-      ins = obj_construct_solution(objective, x)
-      obj_eval(objective, ins)
+      ins = obj_construct_solution(rc.objective, x)
       times += 1
       if times % 10 == 0
         space = classifier.sample_region
