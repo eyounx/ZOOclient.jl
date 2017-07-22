@@ -6,6 +6,11 @@ type Parameter
   algorithm
   budget
 
+  # common parameters that all algorithm should accept
+  init_sample
+  time_budget
+  terminal_value
+
   # for racos optimization
   sequential
   precision

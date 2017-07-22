@@ -15,14 +15,14 @@ type Racos
   rc::RacosCommon
 end
 
-function racos_opt(racos::Racos, objective::Objective, parameter::Parameter; ub=1)
+function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub=1)
   rc = racos.rc
   clear!(rc)
   rc.objective = objective
   rc.parameter = parameter
   init_attribute!(rc)
   t = parameter.budget / parameter.negative_size
-  time_log1 =
+  time_log1 = now()
   for i in 1:t
     j = 0
     iteration_num = length(rc.negative_data)
@@ -50,8 +50,34 @@ function racos_opt(racos::Racos, objective::Objective, parameter::Parameter; ub=
     rc.best_solution = rc.positive_data[0]
     # display expected running time
     if i == 4:
-      time_log
+      time_log2 = now()
+      # second
+      expected_time = t * (Dates.value(time_log2 - time_log1) / 1000) / 5
+      if !isnull(rc.parameter.time_budget)
+        expected_time = min(expected_time, rc.parameter.time_budget)
+      end
+      if expected_time > 5
+        zoolog(string("expected remaining running time: ", convert_time(expected_time)))
+      end
+    end
+    # time budget check
+    if !isnull(rc.parameter.time_budget)
+      if expected_time >= rc.parameter.time_budget
+        zoolog("time_budget runs out")
+        return rc.best_solution
+      end
+    end
+    # terminal_value check
+    if !isnull(rc.parameter.terminal_value)
+      if rc.best_solution.value <= rc.parameter.terminal_value
+        zoolog("terminal_value function value reached")
+        return rc.best_solution
+      end
     end
   end
+  return rc.best_solution
 end
+
+
+
 end

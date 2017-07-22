@@ -17,8 +17,8 @@ function convert_time(second)
   sec = sec - hour * 3600
   min = Int64(floor(sec / 60))
   sec = Int64(round(sec - min * 60))
-  return "$(hour)h $(min)min $(sec)sec"
+  # return "%02d:%02d:%02d" hour min sec
+  return "$(hour):$(min):$(sec)"
 end
 
-t = convert_time(70)
-print(t)
+print(convert_time(3003))
