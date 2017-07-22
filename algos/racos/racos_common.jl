@@ -24,7 +24,7 @@ function clear(rc::RacosCommon)
 end
 
 # Construct self._data, self._positive_data, self._negative_data
-function init_attribute(rc::RacosCommon)
+function init_attribute!(rc::RacosCommon)
   iteration_num = rc.parameter.train_size
   i = 0
   while i < iteration_num
@@ -48,7 +48,7 @@ end
 # Choose first-train_size solutions as the new self._data
 # Choose first-positive_size solutions as self._positive_data
 # Choose [positive_size, train_size) (Include the begin, not include the end) solutions as self._negative_data
-function selection(rc::RacosCommon)
+function selection!(rc::RacosCommon)
   sort!(rc.data, by = x->x.value)
   rc.positive_data = rc.data[1:rc.parameter.positive_size]
   rc.negative_data = rc.data[(rc.parameter.positive_size+1):rc.parameter.train_size]
