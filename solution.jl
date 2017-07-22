@@ -1,8 +1,6 @@
 module solution
 
-using zoo_global
-
-export Solution
+export Solution, find_max, find_min
 
 type Solution
   x
@@ -27,5 +25,40 @@ function sol_equal(sol1, sol2)
   end
   return true
 end
+
+# find minimum solution in iset
+function find_min(iset)
+  min = Inf
+  min_index = 0
+  res = Solution()
+  i = 0
+  for sol in iset
+    i += 1
+    if sol.value < min
+      min = sol.value
+      min_index = i
+      res = sol
+    end
+  end
+  return res, min_index
+end
+
+# find maximum solution in iset
+function find_max(iset)
+  max = -Inf
+  max_index = 0
+  res = Solution()
+  i = 0
+  for sol in iset
+    i += 1
+    if sol.value > max
+      max = sol.value
+      max_index = i
+      res = sol
+    end
+  end
+  return res, max_index
+end
+
 
 end

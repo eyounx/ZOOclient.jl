@@ -1,4 +1,4 @@
-module Parameter
+module parameter
 
 export Parameter
 
@@ -24,9 +24,10 @@ type Parameter
   isolationfunc
 
   function Parameter(; algorithm=Nullable(), budget=0, autoset=true, sequential=true,
-    precision=Nullable(), uncertain_bits=Nullable())
-    parameter = new(algorithm, budget, sequential, precision, uncertain_bits,
-      0, 0, 0, 0.99, x->0)
+    precision=Nullable(), uncertain_bits=Nullable(), init_sample=Nullable(),
+    time_budget=Nullable(), terminal_value=Nullable())
+    parameter = new(algorithm, budget, init_sample, time_budget, terminal_value,
+    sequential, precision, uncertain_bits, 0, 0, 0, 0.99, x->0)
     if budget != 0 && autoset == true
       autoset!(parameter)
     end

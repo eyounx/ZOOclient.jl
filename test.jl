@@ -1,19 +1,22 @@
 using Base.Dates
 
+using parameter
+
+using solution
+
 type aa
   x
   value
-  function aa(a, value=0)
+  function aa(a; value=0)
     return new(a, value)
   end
 end
 
-# sol = aa(1)
-# print(sol)
-t1 = now()
-sleep(2)
-t2 = now()
-# t = (t2 - t1) / 1000
-print(floor(Dates.value(t2-t1)) / 1000)
+# temp = aa(1, value=2)
+# print(temp)
+# par = Parameter()
+# print(par)
+sol1 = Solution(x=[3], value=4)
+sol2 = Solution(x=[2], value=3)
 
-# print(Int64(t2-t1))
+print(find_max([sol1, sol2]))

@@ -13,6 +13,9 @@ using Base.Dates.now
 using RacosClassification
 type Racos
   rc::RacosCommon
+  function Racos()
+    return new(RacosCommon())
+  end
 end
 
 function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub=1)
