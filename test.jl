@@ -1,8 +1,8 @@
 using Base.Dates
 
-using parameter
+importall parameter
 
-using solution
+importall  solution
 
 type aa
   x
@@ -12,10 +12,10 @@ type aa
   end
 end
 
-# temp = aa(1, value=2)
-# print(temp)
-# par = Parameter()
-# print(par)
+temp = aa(1, value=2)
+print(temp)
+par = Parameter()
+print(par)
 sol1 = Solution(x=[3], value=4)
 sol2 = Solution(x=[2], value=3)
 

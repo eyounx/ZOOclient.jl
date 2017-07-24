@@ -1,4 +1,4 @@
-module RacosCommon
+module racos_common
 
 using Objective
 

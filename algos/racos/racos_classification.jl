@@ -1,4 +1,4 @@
-module RacosClassification
+module racos_classification
 
 using Solution
 

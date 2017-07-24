@@ -1,4 +1,4 @@
-module Racos
+module racos
 
 using RacosCommon
 

@@ -1,4 +1,4 @@
-module Dimension
+module dimension
 
 using zoo_global
 

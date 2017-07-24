@@ -21,4 +21,12 @@ function convert_time(second)
   return "$(hour):$(min):$(sec)"
 end
 
-print(convert_time(3003))
+function distance(x, y)
+  dis = 0
+  for i in 1:length(x)
+    dis += (x[i] - y[i])^2
+  end
+  return sqrt(dis)
+end
+
+# print(distance([1, 2], [2, 3]))

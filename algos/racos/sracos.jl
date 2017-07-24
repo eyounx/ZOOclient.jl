@@ -1,18 +1,18 @@
-module Racos
+module sracos
 
-using RacosCommon
+importall algos/racos/racos_common
 
-using Objective
+importall objective
 
-using Parameter
+importall parameter
 
-using ZooGlobal
+importall zoo_global
 
-using Base.Dates.now
+importall Base.Dates.now
 
-using Solution
+importall solution
 
-using RacosClassification
+importall racos_classification
 type SRacos
   rc::RacosCommon
   function SRacos()
@@ -55,7 +55,7 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
     selection!(rc)
     rc.best_solution = rc.positive_data[0]
     # display expected running time
-    if i == 4:
+    if i == 4
       time_log2 = now()
       # second
       expected_time = t * (Dates.value(time_log2 - time_log1) / 1000) / 5
@@ -115,14 +115,45 @@ function binary_search(iset, x, ibegin::Int64, iend::Int64)
   end
 end
 
+# Worst replace
 function strategy_wr(iset, x, iset_type)
   if iset_type == "pos"
     index = binary_search(iset, x, 1, length(iset))
     inset!(iset, index, x)
     worst_ele = pop!(iset)
   else
-    worst
+    worst_ele, worst_index = find_max(iset)
+    if worst_ele.value > x.value
+      iset[worst_index] = x
+    else
+      worst_ele = x
+    end
   end
+  return worst_ele
+end
+
+# Random replace
+function strategy_rr(iset, x)
+  len_iset = length(iset)
+  replace_index = rand(rng, 1:len_iset)
+  replace_ele = iset[replace_index]
+  iset[replace_index] = x
+  return replace_ele
+end
+
+function strategy_lm(iset, best_sol, x)
+  farthest_dis = 0
+  farthest_index = 0
+  for i in 1:length(iset)
+    dis = distance(iset[i].x, best_sol.x)
+    if dis > farthest_dis
+      farthest_dis = dis
+      farthest_index = i
+    end
+  end
+  farthest_ele = iset[farthest_index]
+  iset[farthest_index] = x
+  return farthest_ele
 end
 
 end
