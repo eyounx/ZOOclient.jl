@@ -1,18 +1,12 @@
 module sracos
 
-importall algos/racos/racos_common
+importall racos_common, objective, parameter, zoo_global, solution,
+  racos_classification
 
-importall objective
+using Base.Dates.now
 
-importall parameter
+export SRacos, sracos_opt!
 
-importall zoo_global
-
-importall Base.Dates.now
-
-importall solution
-
-importall racos_classification
 type SRacos
   rc::RacosCommon
   function SRacos()
@@ -47,18 +41,14 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
       continue
     end
     obj_eval(objective, solution)
-  end
-
-      push!(rc.data, solution)
-      j += 1
-    end
-    selection!(rc)
+    bad_ele = replace(rc.positive_data, solution, "pos")
+    replace(rc.negative_data, bad_ele, "neg", strategy)
     rc.best_solution = rc.positive_data[0]
-    # display expected running time
     if i == 4
       time_log2 = now()
       # second
-      expected_time = t * (Dates.value(time_log2 - time_log1) / 1000) / 5
+      expected_time = (parameter.budget - parameter.train_size) *
+        (Dates.value(time_log2 - time_log1) / 1000) / 5
       if !isnull(rc.parameter.time_budget)
         expected_time = min(expected_time, rc.parameter.time_budget)
       end
@@ -92,8 +82,10 @@ function replace(iset, x, iset_type; strategy="WR")
   elseif strategy == "LM"
     best_sol = find_min(iset)
     return strategy_lm(iset, best_sol, x)
-  zoolog("No such strategy")
+  else
+    zoolog("No such strategy")
   end
+end
 
 # Find first element larger than x
 function binary_search(iset, x, ibegin::Int64, iend::Int64)

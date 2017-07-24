@@ -1,6 +1,9 @@
 module racos_common
 
-importall objective
+importall objective, dimension
+
+export RacosCommon, clear!, init_attribute!, selection!, distinct_sample,
+distinct_sample_classifier, print_positive_data, print_negative_data, print_data
 
 type RacosCommon
   parameter
@@ -14,7 +17,7 @@ type RacosCommon
   end
 end
 
-function clear(rc::RacosCommon)
+function clear!(rc::RacosCommon)
   rc.parameter = Nullable()
   rc.objective = Nullable()
   rc.data = []

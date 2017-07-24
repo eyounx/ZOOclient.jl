@@ -1,6 +1,7 @@
 module racos_optimization
 
-importall SRacos, 
+importall sracos
+
 type RacosOptimization
   best_solution
   algorithm
@@ -32,7 +33,6 @@ end
 function clear!(ro::RacosOptimization)
   ro.best_solution = Nullable()
   ro.algorithm = Nullable()
-
 end
 
 # Set uncertain_bits
@@ -59,6 +59,9 @@ function set_ub(objective)
       ub = 4
     else
       ub = 5
+    end
   end
   return ub
+end
+
 end

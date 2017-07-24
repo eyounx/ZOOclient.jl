@@ -1,16 +1,13 @@
 module racos
 
-using RacosCommon
+importall racos_common, objective, parameter, zoo_global, racos_classification
 
-using Objective
-
-using Parameter
-
-using ZooGlobal
+importall dimension
 
 using Base.Dates.now
 
-using RacosClassification
+export Racos, racos_opt!
+
 type Racos
   rc::RacosCommon
   function Racos()
@@ -52,7 +49,7 @@ function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub
     selection!(rc)
     rc.best_solution = rc.positive_data[0]
     # display expected running time
-    if i == 4:
+    if i == 4
       time_log2 = now()
       # second
       expected_time = t * (Dates.value(time_log2 - time_log1) / 1000) / 5
