@@ -1,6 +1,6 @@
-module ZooGlobal
+module zoo_global
 
-export rng, my_precision, set_seet, set_precision
+export rng, my_precision, set_seed, set_precision
 
 global rng = srand()
 global my_precision = 1e-17

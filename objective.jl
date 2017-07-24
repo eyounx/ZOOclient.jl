@@ -1,8 +1,10 @@
-module Objective
+module objective
 
-using Solution
+importall solution
 
 using Base.Test
+
+export Objective, obj_construct_solution, obj_eval, get_history_bestsofar
 
 type Objective
   func
@@ -11,7 +13,7 @@ type Objective
   constraint
   history
 
-  function Objective(; func=Nullable(), dim=Nullable(), constraint=Nullable())
+  function Objective(func=Nullable(), dim=Nullable(); constraint=Nullable())
     return new(func, dim, obj_default_inherit, constraint, [])
   end
 end
@@ -48,17 +50,5 @@ function get_history_bestsofar(objective)
   end
   return history_bestsofar
 end
-
-# test
-function f(sol)
-  x = sol.x
-  return x .^ 2
-end
-
-dim = [2, 2, 2]
-obj = Objective(func=f, dim=dim)
-sol = obj_construct_solution(obj, [1, 2, 2])
-obj_eval(obj, sol)
-@test sol.value == [1, 4, 4]
 
 end

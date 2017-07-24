@@ -1,6 +1,6 @@
 module racos_classification
 
-using Solution
+importall solution, tool_function
 
 export RacosClassification, mixed_classification
 
@@ -153,4 +153,6 @@ end
 function print_sample_region(classifier)
   zoolog("------print sample region------")
   zoolog(classifier.sample_region)
+end
+
 end

@@ -1,6 +1,6 @@
 module racos_common
 
-using Objective
+importall objective
 
 type RacosCommon
   parameter
@@ -78,6 +78,8 @@ function distinct_sample(rc::RacosCommon, dim::Dimension; check_distinct=true, d
           distinct_flag = false
           break
         end
+      end
+    end
   end
   return x, distinct_flag
 end
@@ -109,6 +111,7 @@ function distinct_sample_classifier(rc::RacosCommon, classifier; check_distinct=
           break
         end
       end
+    end
   end
   return ins, distinct_flag
 end
@@ -120,6 +123,7 @@ function is_distinct(seta, x)
   for ins in seta
     if sol_equal(x, ins)
       return false
+    end
   end
   return true
 end
@@ -147,4 +151,6 @@ function print_data(rc::RacosCommon)
   for x in rc.data
     sol_print(x)
   end
+end
+
 end

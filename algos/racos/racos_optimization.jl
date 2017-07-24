@@ -1,6 +1,6 @@
 module racos_optimization
 
-importall
+importall SRacos, 
 type RacosOptimization
   best_solution
   algorithm

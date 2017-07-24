@@ -1,4 +1,4 @@
-module ToolFunction
+module tool_function
 
 export zoolog, rand_uniform
 
