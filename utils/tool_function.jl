@@ -7,9 +7,9 @@ function zoolog(text)
 end
 
 function rand_uniform(rng, lower, upper)
-  return rand(rng, float) * (upper - lower) + lower
+  return rand(rng, Float64) * (upper - lower) + lower
 end
-end
+
 
 function convert_time(second)
   sec = second
@@ -29,4 +29,5 @@ function distance(x, y)
   return sqrt(dis)
 end
 
+end
 # print(distance([1, 2], [2, 3]))

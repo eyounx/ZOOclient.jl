@@ -28,12 +28,23 @@ end
 
 # Construct self._data, self._positive_data, self._negative_data
 function init_attribute!(rc::RacosCommon)
+  # check if the initial solutions have been set
+  data_temp = rc.parameter.init_sample
+  if !isnull(data_temp) && isnull(rc.best_solution)
+    for j in 1:length(date_temp)
+      x = obj_construct_solution(rc.objective, data_temp[j])
+      rc.data.append(obj_eval(rc.objective, x))
+    end
+    selection!(rc)
+    return
+  end
+  # otherwise generate random solutions
   iteration_num = rc.parameter.train_size
   i = 0
   while i < iteration_num
     # distinct_flag: True means sample is distinct(can be use),
     # False means sample is distinct, you should sample again.
-    x, distinct_flag = distinct_sample(rc.objective.dim)
+    x, distinct_flag = distinct_sample(rc, rc.objective.dim)
     # panic stop
     if isnull(x)
       break
@@ -43,8 +54,9 @@ function init_attribute!(rc::RacosCommon)
       push!(rc.data, x)
       i += 1
     end
-    selection(rc)
   end
+  selection!(rc)
+  return
 end
 
 # Sort self._data
@@ -52,6 +64,7 @@ end
 # Choose first-positive_size solutions as self._positive_data
 # Choose [positive_size, train_size) (Include the begin, not include the end) solutions as self._negative_data
 function selection!(rc::RacosCommon)
+  # print(length(rc.data))
   sort!(rc.data, by = x->x.value)
   rc.positive_data = rc.data[1:rc.parameter.positive_size]
   rc.negative_data = rc.data[(rc.parameter.positive_size+1):rc.parameter.train_size]
@@ -66,7 +79,7 @@ function distinct_sample(rc::RacosCommon, dim::Dimension; check_distinct=true, d
   distinct_flag = true
   if check_distinct == true
     while is_distinct(rc.positive_data, x) == false ||
-      is_distinct(rc._negative_data, x) == false
+      is_distinct(rc.negative_data, x) == false
       x = obj_construct_solution(objective, dim_rand_sample(dim))
       times += 1
       if times % 10 == 0

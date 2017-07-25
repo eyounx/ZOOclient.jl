@@ -1,6 +1,6 @@
 module racos_classification
 
-importall solution, tool_function
+importall solution, tool_function, zoo_global
 
 export RacosClassification, mixed_classification
 
@@ -23,12 +23,18 @@ type RacosClassification
     x_positive = Nullable()
     uncertain_bit = ub
 
-    regions = dim.regions()
+    regions = dim.regions
     for i in 1:dim.size
-      temp = [regions[i][1], regions[i][2]]
-      append!(sample_region, temp)
-      append!(label, false)
+      if dim.types[i] == true
+        temp = [convert(Float64, regions[i][1]), convert(Float64, regions[i][2])]
+      else
+        temp = [regions[i][1], regions[i][2]]
+      end
+      push!(sample_region, temp)
+      push!(label, false)
     end
+    return new(solution_space, sample_region, label, positive_solution,
+      negative_solution, x_positive, uncertain_bit)
   end
 end
 
@@ -43,44 +49,50 @@ function reset_classifier(classifier)
 end
 
 function mixed_classification(classifier)
-  classifier.x_positive = classifier.positive_solution(rand(rng, 1:length(classifier.positive_solution)))
+  classifier.x_positive = classifier.positive_solution[rand(rng,
+    1:length(classifier.positive_solution))]
   len_negative = length(classifier.negative_solution)
-  index_set = 1:classifier.solution_space.size
+  index_set = Array(1:classifier.solution_space.size)
   types = classifier.solution_space.types
   while len_negative > 0
-    k = index_set(rand(rng, 1:len(index_set)))
+    pos = rand(rng, 1:length(index_set))
+    k = index_set[pos]
     x_pos_k = classifier.x_positive.x[k]
     # continuous
     if types[k] == true
       x_negative = classifier.negative_solution[rand(rng, 1:len_negative)]
-      x_neg_k = x_negative[k]
+      x_neg_k = x_negative.x[k]
       if x_pos_k < x_neg_k
-        r = rand(rng, Float) * (x_neg_k - x_pos_k) + x_pos_k
+        r = rand_uniform(rng, x_pos_k, x_neg_k)
+        # print(classifier.sample_region)
         if r < classifier.sample_region[k][2]
+          # print(r)
           classifier.sample_region[k][2] = r
-          i = 0
+          i = 1
           while i < len_negative
             if classifier.negative_solution[i].x[k] >= r
-              len_negative -= 1
               itemp = classifier.negative_solution[i]
+              # println("$(i), $(len_negative)")
               classifier.negative_solution[i] = classifier.negative_solution[len_negative]
               classifier.negative_solution[len_negative] = itemp
+              len_negative -= 1
             else
               i += 1
             end
           end
         end
       else
-        r = rand(rng, Float) * (x_pos_k - x_neg_k) + x_neg_k
+        r = rand_uniform(rng, x_neg_k, x_pos_k)
         if r > classifier.sample_region[k][1]
+          # print(r)
           classifier.sample_region[k][1] = r
-          i = 0
+          i = 1
           while i < len_negative
             if classifier.negative_solution[i].x[k] <= r
-              len_negative -= 1
               itemp = classifier.negative_solution[i]
               classifier.negative_solution[i] = classifier.negative_solution[len_negative]
               classifier.negative_solution[len_negative] = itemp
+              len_negative -= 1
             else
               i += 1
             end
@@ -90,32 +102,34 @@ function mixed_classification(classifier)
     # discrete
     else
       delete = 0
-      i = 0
+      i = 1
       while i < len_negative
         if classifier.negative_solution[i].x[k] != x_pos_k
-          len_negative -= 1
           delete += 1
           itemp = classifier.negative_solution[i]
-          classifier.negative_solution[i] = classifier.negative_solution[len_negative]
+          classifier.negative_solution[i] = classifier.negative_solution[len_negative+1]
           classifier.negative_solution[len_negative] = itemp
+          len_negative -= 1
         else
           i += 1
         end
       end
       if delete != 0
-        splice!(index_set, k)
+        splice!(index_set, pos)
       end
     end
-    set_uncertain_bit!(classifier, index_set)
   end
+  set_uncertain_bit!(classifier, index_set)
 end
 
 function set_uncertain_bit!(classifier, iset)
   index_set = iset
-  for i in 1:classifier.uncertain_bits
-    index = index_set[rand(rng, 1:length(index_set))]
+  # print(iset)
+  for i in 1:classifier.uncertain_bit
+    pos = rand(rng, 1:length(index_set))
+    index = index_set[pos]
     classifier.label[index] = true
-    splice!(index_set, index)
+    splice!(index_set, pos)
   end
 end
 
@@ -124,7 +138,7 @@ function rand_sample(classifier)
   for i in 1:classifier.solution_space.size
     if classifier.label[i] == true
       if classifier.solution_space.types[i] == true
-        push!(x, rand_uniform(rng, classifier.sampleregion[i][1]), classifier.sample_region[i][2])
+        push!(x, rand_uniform(rng, classifier.sample_region[i][1]), classifier.sample_region[i][2])
       else
         push!(x, rand(rng, classifier.sample_region[i][1]:classifier.sample_region[i][2]))
       end

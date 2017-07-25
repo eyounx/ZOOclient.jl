@@ -1,6 +1,8 @@
 module solution
 
-export Solution, find_max, find_min
+importall dimension
+
+export Solution, find_max, find_min, sol_print
 
 type Solution
   x
@@ -60,5 +62,10 @@ function find_max(iset)
   return res, max_index
 end
 
+function sol_print(sol)
+  zoolog("x: $(sol.x)")
+  zoolog("value: $(sol.value)")
+  zoolog("attach: $(sol.attach)")
+end
 
 end

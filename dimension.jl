@@ -4,7 +4,7 @@ using zoo_global
 
 using tool_function
 
-export Dimension, dim_rand_sample, dim_limited_space, dim_print
+export Dimension, dim_rand_sample, dim_limited_space, dim_print, is_discrete
 
 type Dimension
   size::Int64
@@ -26,7 +26,7 @@ function dim_rand_sample(dim)
   x
 end
 
-function dim_limited_space(dim)
+function dim_limited_space(dim::Dimension)
   number = 1
   for i = 1:dim.size
    if dim.types[i] == true
@@ -38,14 +38,21 @@ function dim_limited_space(dim)
   return true, number
 end
 
-
-
-function dim_print(dim)
+function dim_print(dim::Dimension)
   zoolog("dim size $(dim.size)")
   zoolog("dim regions is: ")
   zoolog("$(dim.regions)")
   zoolog("dim types is: ")
   zoolog("$(dim.types)")
+end
+
+function is_discrete(dim::Dimension)
+  for i in 1:length(dim.types)
+    if dim.types[i] == true
+      return false
+    end
+  end
+  return true
 end
 
 end

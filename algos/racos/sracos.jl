@@ -16,7 +16,7 @@ end
 
 function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
   strategy="WR", ub=1)
-  rc = racos.rc
+  rc = sracos.rc
   clear!(rc)
   rc.objective = objective
   rc.parameter = parameter
@@ -28,6 +28,7 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
     if rand(rng, Float64) < rc.parameter.probability
       classifier = RacosClassification(rc.objective.dim, rc.positive_data,
         rc.negative_data, ub=ub)
+      # println(classifier)
       mixed_classification(classifier)
       solution, distinct_flag = distinct_sample_classifier(classifier, data_num=rc.parameter.train_size)
     else
@@ -41,6 +42,7 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
       continue
     end
     obj_eval(objective, solution)
+    sol_print(solution)
     bad_ele = replace(rc.positive_data, solution, "pos")
     replace(rc.negative_data, bad_ele, "neg", strategy)
     rc.best_solution = rc.positive_data[0]
