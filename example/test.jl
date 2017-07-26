@@ -15,6 +15,6 @@ obj = Objective(sphere, dim)
 budget = 10 * dim_size
 par = Parameter(budget=budget)
 
-solution = zoo_min(obj, par)
+sol = zoo_min(obj, par)
 println("solved solution is:")
-print_solution(solution)
+sol_print(sol)

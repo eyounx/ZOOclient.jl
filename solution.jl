@@ -1,8 +1,8 @@
 module solution
 
-importall dimension
+importall dimension, zoo_global, tool_function
 
-export Solution, find_max, find_min, sol_print
+export Solution, find_max, find_min, sol_print, sol_equal
 
 type Solution
   x

@@ -2,7 +2,7 @@ module racos_classification
 
 importall solution, tool_function, zoo_global
 
-export RacosClassification, mixed_classification
+export RacosClassification, mixed_classification, rand_sample
 
 type RacosClassification
   solution_space
@@ -54,7 +54,12 @@ function mixed_classification(classifier)
   len_negative = length(classifier.negative_solution)
   index_set = Array(1:classifier.solution_space.size)
   types = classifier.solution_space.types
+  # print(len_negative)
   while len_negative > 0
+    # println(len_negative)
+    # if len_negative == 1
+    #   println("len_negative == 1")
+    # end
     pos = rand(rng, 1:length(index_set))
     k = index_set[pos]
     x_pos_k = classifier.x_positive.x[k]
@@ -69,7 +74,7 @@ function mixed_classification(classifier)
           # print(r)
           classifier.sample_region[k][2] = r
           i = 1
-          while i < len_negative
+          while i <= len_negative
             if classifier.negative_solution[i].x[k] >= r
               itemp = classifier.negative_solution[i]
               # println("$(i), $(len_negative)")
@@ -87,7 +92,7 @@ function mixed_classification(classifier)
           # print(r)
           classifier.sample_region[k][1] = r
           i = 1
-          while i < len_negative
+          while i <= len_negative
             if classifier.negative_solution[i].x[k] <= r
               itemp = classifier.negative_solution[i]
               classifier.negative_solution[i] = classifier.negative_solution[len_negative]
@@ -103,11 +108,11 @@ function mixed_classification(classifier)
     else
       delete = 0
       i = 1
-      while i < len_negative
+      while i <= len_negative
         if classifier.negative_solution[i].x[k] != x_pos_k
           delete += 1
           itemp = classifier.negative_solution[i]
-          classifier.negative_solution[i] = classifier.negative_solution[len_negative+1]
+          classifier.negative_solution[i] = classifier.negative_solution[len_negative]
           classifier.negative_solution[len_negative] = itemp
           len_negative -= 1
         else
@@ -138,7 +143,7 @@ function rand_sample(classifier)
   for i in 1:classifier.solution_space.size
     if classifier.label[i] == true
       if classifier.solution_space.types[i] == true
-        push!(x, rand_uniform(rng, classifier.sample_region[i][1]), classifier.sample_region[i][2])
+        push!(x, rand_uniform(rng, classifier.sample_region[i][1], classifier.sample_region[i][2]))
       else
         push!(x, rand(rng, classifier.sample_region[i][1]:classifier.sample_region[i][2]))
       end

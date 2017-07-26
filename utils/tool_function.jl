@@ -1,6 +1,6 @@
 module tool_function
 
-export zoolog, rand_uniform
+export zoolog, rand_uniform, convert_time
 
 function zoolog(text)
   println("[zoopt] $text")

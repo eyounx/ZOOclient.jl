@@ -1,7 +1,7 @@
 module sracos
 
 importall racos_common, objective, parameter, zoo_global, solution,
-  racos_classification
+  racos_classification, tool_function
 
 using Base.Dates.now
 
@@ -25,14 +25,17 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
   iteration_num = rc.parameter.budget - rc.parameter.train_size
   time_log1 = now()
   while i < iteration_num
+    i += 1
     if rand(rng, Float64) < rc.parameter.probability
       classifier = RacosClassification(rc.objective.dim, rc.positive_data,
         rc.negative_data, ub=ub)
       # println(classifier)
+      # zoolog("before classification")
       mixed_classification(classifier)
-      solution, distinct_flag = distinct_sample_classifier(classifier, data_num=rc.parameter.train_size)
+      # zoolog("after classification")
+      solution, distinct_flag = distinct_sample_classifier(rc, classifier, data_num=rc.parameter.train_size)
     else
-      solution, distinct_flag = distinct_sample(rc.objective.dim)
+      solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
     end
     #painc stop
     if isnull(solution)
@@ -42,10 +45,10 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
       continue
     end
     obj_eval(objective, solution)
-    sol_print(solution)
+    # sol_print(solution)
     bad_ele = replace(rc.positive_data, solution, "pos")
-    replace(rc.negative_data, bad_ele, "neg", strategy)
-    rc.best_solution = rc.positive_data[0]
+    replace(rc.negative_data, bad_ele, "neg", strategy=strategy)
+    rc.best_solution = rc.positive_data[1]
     if i == 4
       time_log2 = now()
       # second
@@ -113,7 +116,7 @@ end
 function strategy_wr(iset, x, iset_type)
   if iset_type == "pos"
     index = binary_search(iset, x, 1, length(iset))
-    inset!(iset, index, x)
+    insert!(iset, index, x)
     worst_ele = pop!(iset)
   else
     worst_ele, worst_index = find_max(iset)

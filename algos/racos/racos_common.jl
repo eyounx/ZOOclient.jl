@@ -1,6 +1,6 @@
 module racos_common
 
-importall objective, dimension
+importall objective, dimension, racos_classification, solution
 
 export RacosCommon, clear!, init_attribute!, selection!, distinct_sample,
 distinct_sample_classifier, print_positive_data, print_negative_data, print_data
@@ -109,7 +109,7 @@ function distinct_sample_classifier(rc::RacosCommon, classifier; check_distinct=
   times = 1
   distinct_flag = true
   if check_distinct == true
-    while is_distinct(rc.positive_data, ins) == false || is_distinct(rc.negative_data, x) == false
+    while is_distinct(rc.positive_data, ins) == false || is_distinct(rc.negative_data, ins) == false
       x = rand_sample(classifier)
       ins = obj_construct_solution(rc.objective, x)
       times += 1
