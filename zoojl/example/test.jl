@@ -1,7 +1,7 @@
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/algos/racos")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/utils")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/example")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/racos")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/utils")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example")
 print("load successfully")
 
 importall dimension, optimize, fx, solution, objective, parameter, tool_function
@@ -26,7 +26,7 @@ for i in 1:repeatn
   obj = Objective(sphere, dim)
 
   budget = 10 * dim_size
-  par = Parameter(budget=budget)
+  par = Parameter(budget=budget, sequential=true)
 
   sol = zoo_min(obj, par)
   push!(result, sol.value)

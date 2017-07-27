@@ -85,7 +85,7 @@ function replace(iset, x, iset_type; strategy="WR")
   elseif strategy == "RR"
     return strategy_rr(iset, x)
   elseif strategy == "LM"
-    best_sol = find_min(iset)
+    best_sol, best_index = find_min(iset)
     return strategy_lm(iset, best_sol, x)
   else
     zoolog("No such strategy")
@@ -138,18 +138,18 @@ function strategy_rr(iset, x)
   return replace_ele
 end
 
-function strategy_lm(iset, best_sol, x)
+function strategy_lm(iset, best_sol, sol)
   farthest_dis = 0
   farthest_index = 0
   for i in 1:length(iset)
-    dis = distance(iset[i].x, best_sol.x)
+    dis = mydistance(iset[i].x, best_sol.x)
     if dis > farthest_dis
       farthest_dis = dis
       farthest_index = i
     end
   end
   farthest_ele = iset[farthest_index]
-  iset[farthest_index] = x
+  iset[farthest_index] = sol
   return farthest_ele
 end
 

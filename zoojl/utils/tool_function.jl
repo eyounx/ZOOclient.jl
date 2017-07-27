@@ -1,6 +1,6 @@
 module tool_function
 
-export zoolog, rand_uniform, convert_time
+export zoolog, rand_uniform, convert_time, mydistance
 
 function zoolog(text)
   println("[zoopt] $text")
@@ -21,7 +21,7 @@ function convert_time(second)
   return "$(hour):$(min):$(sec)"
 end
 
-function distance(x, y)
+function mydistance(x, y)
   dis = 0
   for i in 1:length(x)
     dis += (x[i] - y[i])^2

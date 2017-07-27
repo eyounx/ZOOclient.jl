@@ -2,7 +2,7 @@ module racos
 
 importall racos_common, objective, parameter, zoo_global, racos_classification
 
-importall dimension
+importall dimension, tool_function
 
 using Base.Dates.now
 
@@ -31,9 +31,9 @@ function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub
         classifier = RacosClassification(rc.objective.dim, rc.positive_data,
           rc.negative_data, ub=ub)
           mixed_classification(classifier)
-          solution, distinct_flag = distinct_sample_classifier(classifier, data_num=rc.parameter.train_size)
+          solution, distinct_flag = distinct_sample_classifier(rc, classifier, data_num=rc.parameter.train_size)
       else
-        solution, distinct_flag = distinct_sample(rc.objective.dim)
+        solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
       end
       #painc stop
       if isnull(solution)
@@ -47,7 +47,7 @@ function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub
       j += 1
     end
     selection!(rc)
-    rc.best_solution = rc.positive_data[0]
+    rc.best_solution = rc.positive_data[1]
     # display expected running time
     if i == 4
       time_log2 = now()
