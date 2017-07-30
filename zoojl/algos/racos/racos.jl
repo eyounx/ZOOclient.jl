@@ -8,14 +8,14 @@ using Base.Dates.now
 
 export Racos, racos_opt!
 
-type Racos
+@everywhere type Racos
   rc::RacosCommon
   function Racos()
     return new(RacosCommon())
   end
 end
 
-function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub=1)
+@everywhere function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub=1)
   rc = racos.rc
   clear!(rc)
   rc.objective = objective

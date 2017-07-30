@@ -2,8 +2,8 @@ module zoo_global
 
 export rng, my_precision, set_seed, set_precision
 
-global rng = srand()
-global my_precision = 1e-17
+@everywhere global rng = srand()
+@everywhere global my_precision = 1e-17
 
 function set_seed(seed)
   srand(rng, seed)

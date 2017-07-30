@@ -7,14 +7,14 @@ using Base.Dates.now
 
 export SRacos, sracos_opt!
 
-type SRacos
+@everywhere type SRacos
   rc::RacosCommon
   function SRacos()
     return new(RacosCommon())
   end
 end
 
-function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
+@everywhere function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
   strategy="WR", ub=1)
   rc = sracos.rc
   clear!(rc)
@@ -79,7 +79,7 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
   return rc.best_solution
 end
 
-function replace(iset, x, iset_type; strategy="WR")
+@everywhere function replace(iset, x, iset_type; strategy="WR")
   if strategy == "WR"
     return strategy_wr(iset, x, iset_type)
   elseif strategy == "RR"
@@ -93,7 +93,7 @@ function replace(iset, x, iset_type; strategy="WR")
 end
 
 # Find first element larger than x
-function binary_search(iset, x, ibegin::Int64, iend::Int64)
+@everywhere function binary_search(iset, x, ibegin::Int64, iend::Int64)
   x_value = x.value
   if x_value <= iset[ibegin].value
     return ibegin
@@ -113,7 +113,7 @@ function binary_search(iset, x, ibegin::Int64, iend::Int64)
 end
 
 # Worst replace
-function strategy_wr(iset, x, iset_type)
+@everywhere function strategy_wr(iset, x, iset_type)
   if iset_type == "pos"
     index = binary_search(iset, x, 1, length(iset))
     insert!(iset, index, x)
@@ -130,7 +130,7 @@ function strategy_wr(iset, x, iset_type)
 end
 
 # Random replace
-function strategy_rr(iset, x)
+@everywhere function strategy_rr(iset, x)
   len_iset = length(iset)
   replace_index = rand(rng, 1:len_iset)
   replace_ele = iset[replace_index]
@@ -138,7 +138,7 @@ function strategy_rr(iset, x)
   return replace_ele
 end
 
-function strategy_lm(iset, best_sol, sol)
+@everywhere function strategy_lm(iset, best_sol, sol)
   farthest_dis = 0
   farthest_index = 0
   for i in 1:length(iset)

@@ -6,13 +6,13 @@ using tool_function
 
 export Dimension, dim_rand_sample, dim_limited_space, dim_print, is_discrete
 
-type Dimension
+@everywhere type Dimension
   size::Int64
   regions
   types
 end
 
-function dim_rand_sample(dim)
+@everywhere function dim_rand_sample(dim)
   x = []
   for i = 1:dim.size
     value = 0
@@ -26,7 +26,7 @@ function dim_rand_sample(dim)
   x
 end
 
-function dim_limited_space(dim::Dimension)
+@everywhere function dim_limited_space(dim::Dimension)
   number = 1
   for i = 1:dim.size
    if dim.types[i] == true
@@ -38,7 +38,7 @@ function dim_limited_space(dim::Dimension)
   return true, number
 end
 
-function dim_print(dim::Dimension)
+@everywhere function dim_print(dim::Dimension)
   zoolog("dim size $(dim.size)")
   zoolog("dim regions is: ")
   zoolog("$(dim.regions)")
@@ -46,7 +46,7 @@ function dim_print(dim::Dimension)
   zoolog("$(dim.types)")
 end
 
-function is_discrete(dim::Dimension)
+@everywhere function is_discrete(dim::Dimension)
   for i in 1:length(dim.types)
     if dim.types[i] == true
       return false

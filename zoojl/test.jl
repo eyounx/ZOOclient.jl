@@ -1,15 +1,15 @@
-using Base.Test
-# using Base.Dates
-
-importall parameter, dimension, solution, zoo_global, objective
-
-type aa
-  x
-  value
-  function aa(a; value=0)
-    return new(a, value)
-  end
-end
+# using Base.Test
+# # using Base.Dates
+#
+# importall parameter, dimension, solution, zoo_global, objective
+#
+# type aa
+#   x
+#   value
+#   function aa(a; value=0)
+#     return new(a, value)
+#   end
+# end
 
 ## test parameter.jl
 # temp = aa(1, value=2)
@@ -34,3 +34,39 @@ end
 # sol = obj_construct_solution(obj, [1, 2, 2])
 # obj_eval(obj, sol)
 # @test sol.value == [1, 4, 4]
+
+addprocs(4) # add worker processes
+
+const jobs = RemoteChannel(()->Channel{Int}(32));
+
+const results = RemoteChannel(()->Channel{Tuple}(32));
+
+@everywhere function do_work(jobs, results) # define work function everywhere
+  println("in do_work")
+  while true
+      job_id = take!(jobs)
+      exec_time = rand()
+      sleep(exec_time) # simulates elapsed time doing actual work
+      put!(results, (job_id, exec_time, myid()))
+  end
+end
+
+function make_jobs(n)
+   for i in 1:n
+       put!(jobs, i)
+   end
+end;
+
+n = 12;
+
+@schedule make_jobs(n); # feed the jobs channel with "n" jobs
+
+for p in workers() # start tasks on the workers to process requests in parallel
+   @async remote_do(do_work, p, jobs, results)
+end
+
+# @elapsed while n > 0 # print out results
+#    job_id, exec_time, where = take!(results)
+#    println("$job_id finished in $(round(exec_time,2)) seconds on worker $where")
+#    n = n - 1
+# end

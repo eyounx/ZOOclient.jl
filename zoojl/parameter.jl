@@ -2,7 +2,7 @@ module parameter
 
 export Parameter
 
-type Parameter
+@everywhere type Parameter
   algorithm
   budget
 

@@ -4,11 +4,11 @@ importall racos, sracos, dimension
 
 export RacosOptimization, opt!, clear!, set_ub
 
-type RacosOptimization
+@everywhere type RacosOptimization
   best_solution
   algorithm
 
-  function RacosOptimization()
+function RacosOptimization()
     return new(Nullable(), Nullable())
   end
 end
@@ -17,7 +17,7 @@ end
 # Default replace strategy is 'WR'
 # If user hasn't define uncertain_bits in parameter, set_ub() will set uncertain_bits automatically according to dim
 # in objective
-function opt!(ro::RacosOptimization, objective, parameter, stra="WR")
+@everywhere function opt!(ro::RacosOptimization, objective, parameter, stra="WR")
   clear!(ro)
   uncertain_bits = set_ub(objective)
   if parameter.sequential == true
@@ -31,13 +31,13 @@ function opt!(ro::RacosOptimization, objective, parameter, stra="WR")
   return ro.best_solution
 end
 
-function clear!(ro::RacosOptimization)
+@everywhere function clear!(ro::RacosOptimization)
   ro.best_solution = Nullable()
   ro.algorithm = Nullable()
 end
 
 # Set uncertain_bits
-function set_ub(objective)
+@everywhere function set_ub(objective)
   dim = objective.dim
   dim_size = dim.size
   discrete = is_discrete(dim)

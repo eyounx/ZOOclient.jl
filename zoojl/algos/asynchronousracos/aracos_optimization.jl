@@ -8,7 +8,7 @@ export asyn_opt!
 # Default replace strategy is 'WR'
 # If user hasn't define uncertain_bits in parameter, set_ub() will set uncertain_bits automatically according to dim
 # in objective
-function asyn_opt!(ro::RacosOptimization, objective, parameter, stra="WR")
+@everywhere function asyn_opt!(ro::RacosOptimization, objective, parameter, stra="WR")
   clear!(ro)
   uncertain_bits = set_ub(objective)
   if parameter.sequential == true

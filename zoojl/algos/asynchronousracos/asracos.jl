@@ -7,14 +7,14 @@ using Base.Dates.now
 
 export ASRacos, asracos_opt!
 
-type ASRacos
+@everywhere type ASRacos
   arc::ARacosCommon
   function ASRacos(core_num)
     return new(ARacosCommon(core_num))
   end
 end
 
-function updater(asracos, budget, strategy="WR")
+@everywhere function updater(asracos, budget, strategy="WR")
   t = 0
   arc = asracos.arc
   rc = arc.rc
@@ -51,17 +51,17 @@ function updater(asracos, budget, strategy="WR")
   put!(arc.asyn_result, rc.best_solution)
 end
 
-function computer(asracos::ASRacos, objective)
+@everywhere function computer(asracos::ASRacos, objective)
   println("in computer")
   arc = asracos.arc
   while arc.is_finish == false
-    sol = take!(sample_x)
+    sol = take!(arc.sample_set)
     obj_eval(objective, sol)
-    put!(result, sol)
+    put!(arc.result_set, sol)
   end
 end
 
-function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Parameter;
+@everywhere function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Parameter;
   strategy="WR", ub=1)
   arc = asracos.arc
   rc = arc.rc
@@ -74,11 +74,11 @@ function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Paramet
   is_finish = false
   for p in workers()
     if first
-      @async remote_do(updater, p, asracos, parameter.budget, "WR")
+      remote_do(updater, p, asracos, parameter.budget, "WR")
       first = false
       println("updater begin")
     else
-      @async remote_do(computer, p, asracos, objective)
+      remote_do(computer, p, asracos, objective)
       println("computer begin")
     end
   end

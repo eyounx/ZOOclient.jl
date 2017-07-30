@@ -2,7 +2,7 @@ module tool_function
 
 export zoolog, rand_uniform, convert_time, mydistance
 
-function zoolog(text)
+@everywhere function zoolog(text)
   println("[zoopt] $text")
 end
 

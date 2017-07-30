@@ -4,7 +4,7 @@ importall solution, tool_function, zoo_global
 
 export RacosClassification, mixed_classification, rand_sample
 
-type RacosClassification
+@everywhere type RacosClassification
   solution_space
   sample_region
   label
@@ -48,7 +48,7 @@ function reset_classifier(classifier)
   classifier.x_positive = Nullable()
 end
 
-function mixed_classification(classifier)
+@everywhere function mixed_classification(classifier)
   classifier.x_positive = classifier.positive_solution[rand(rng,
     1:length(classifier.positive_solution))]
   len_negative = length(classifier.negative_solution)
@@ -127,7 +127,7 @@ function mixed_classification(classifier)
   set_uncertain_bit!(classifier, index_set)
 end
 
-function set_uncertain_bit!(classifier, iset)
+@everywhere function set_uncertain_bit!(classifier, iset)
   index_set = iset
   # print(iset)
   for i in 1:classifier.uncertain_bit
@@ -138,7 +138,7 @@ function set_uncertain_bit!(classifier, iset)
   end
 end
 
-function rand_sample(classifier)
+@everywhere function rand_sample(classifier)
   x = []
   for i in 1:classifier.solution_space.size
     if classifier.label[i] == true
@@ -155,21 +155,21 @@ function rand_sample(classifier)
 end
 
 # for dubugging
-function print_neg(classifier)
+@everywhere function print_neg(classifier)
   zoolog("------print neg------")
   for x in classifier.negative_solution
     sol_print(x)
   end
 end
 
-function print_pos(classifier)
+@everywhere function print_pos(classifier)
   zoolog("------print pos------")
   for x in classifier.positive_solution
     sol_print(x)
   end
 end
 
-function print_sample_region(classifier)
+@everywhere function print_sample_region(classifier)
   zoolog("------print sample region------")
   zoolog(classifier.sample_region)
 end
