@@ -20,14 +20,18 @@ type Parameter
   negative_size
   probability
 
+  # for asynchronousracos
+  asynchronous
+  core_num
+
   # for pareto optimization
   isolationfunc
 
   function Parameter(; algorithm=Nullable(), budget=0, autoset=true, sequential=true,
     precision=Nullable(), uncertain_bits=Nullable(), init_sample=Nullable(),
-    time_budget=Nullable(), terminal_value=Nullable())
+    time_budget=Nullable(), terminal_value=Nullable(), asynchronous=false, core_num = 1)
     parameter = new(algorithm, budget, init_sample, time_budget, terminal_value,
-    sequential, precision, uncertain_bits, 0, 0, 0, 0.99, x->0)
+    sequential, precision, uncertain_bits, 0, 0, 0, 0.99, asynchronous, core_num, x->0)
     if budget != 0 && autoset == true
       autoset!(parameter)
     end

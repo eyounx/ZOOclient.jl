@@ -2,7 +2,7 @@ module racos_optimization
 
 importall racos, sracos, dimension
 
-export RacosOptimization, opt!
+export RacosOptimization, opt!, clear!, set_ub
 
 type RacosOptimization
   best_solution

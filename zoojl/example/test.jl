@@ -1,5 +1,6 @@
 push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl")
 push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/racos")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/asynchronousracos")
 push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/utils")
 push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example")
 print("load successfully")
@@ -26,7 +27,7 @@ for i in 1:repeatn
   obj = Objective(sphere, dim)
 
   budget = 10 * dim_size
-  par = Parameter(budget=budget, sequential=true)
+  par = Parameter(budget=budget, sequential=true, asynchronous=true, core_num = 5)
 
   sol = zoo_min(obj, par)
   push!(result, sol.value)
