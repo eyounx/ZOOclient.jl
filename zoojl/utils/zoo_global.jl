@@ -5,11 +5,11 @@ export rng, my_precision, set_seed, set_precision
 @everywhere global rng = srand()
 @everywhere global my_precision = 1e-17
 
-function set_seed(seed)
+@everywhere function set_seed(seed)
   srand(rng, seed)
 end
 
-function set_precision(prec)
+@everywhere function set_precision(prec)
   my_precision = prec
 end
 

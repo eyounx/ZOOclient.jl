@@ -14,16 +14,17 @@ export ASRacos, asracos_opt!
   end
 end
 
-@everywhere function updater(asracos, budget, strategy="WR")
+# @async remote_do(updater, p, asracos, parameter.budget, ub, strategy)
+@everywhere function updater(asracos::ASRacos, budget,  ub, strategy)
+  println("in updater")
   t = 0
   arc = asracos.arc
   rc = arc.rc
-  println("in updater")
   while(t <= budget)
     t += 1
-    println("before take solution")
+    println("updater before take solution")
     sol = take!(arc.result_set)
-    println("after take solution")
+    println("updater after take solution")
     bad_ele = replace(rc.positive_data, sol, "pos")
     replace(rc.negative_data, bad_ele, "neg", strategy=strategy)
     rc.best_solution = rc.positive_data[1]
@@ -51,11 +52,14 @@ end
   put!(arc.asyn_result, rc.best_solution)
 end
 
-@everywhere function computer(asracos::ASRacos, objective)
+@everywhere function computer(asracos::ASRacos, objective::Objective)
   println("in computer")
   arc = asracos.arc
-  while arc.is_finish == false
+  # while arc.is_finish == false
+  for i = 1:4
+    println("computer before take")
     sol = take!(arc.sample_set)
+    println("computer after take")
     obj_eval(objective, sol)
     put!(arc.result_set, sol)
   end
@@ -70,15 +74,17 @@ end
   init_attribute!(rc)
   init_sample_set!(arc, ub)
   addprocs(parameter.core_num + 1)
-  first = true
+  first = false
   is_finish = false
   for p in workers()
     if first
-      remote_do(updater, p, asracos, parameter.budget, "WR")
+      # updater(asracos, parameter.budget, ub, strategy)
+      @async remote_do(updater, p, asracos, parameter.budget, ub, strategy)
       first = false
       println("updater begin")
     else
-      remote_do(computer, p, asracos, objective)
+      @async remote_do(computer, p, asracos, objective)
+      # computer(asracos, objective)
       println("computer begin")
     end
   end

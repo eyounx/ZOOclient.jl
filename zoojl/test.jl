@@ -37,12 +37,16 @@
 
 addprocs(4) # add worker processes
 
-const jobs = RemoteChannel(()->Channel{Int}(32));
+@everywhere type T
+    icount
+end
 
-const results = RemoteChannel(()->Channel{Tuple}(32));
+jobs = RemoteChannel(()->Channel(32));
 
-@everywhere function do_work(jobs, results) # define work function everywhere
-  println("in do_work")
+results = RemoteChannel(()->Channel(32));
+
+@everywhere function do_work(i, jobs, results) # define work function everywhere
+  println("in do_work$(i.icount)")
   while true
       job_id = take!(jobs)
       exec_time = rand()
@@ -61,8 +65,14 @@ n = 12;
 
 @schedule make_jobs(n); # feed the jobs channel with "n" jobs
 
+# for p in jobs
+#     print(p)
+# end
+count = 1
 for p in workers() # start tasks on the workers to process requests in parallel
-   @async remote_do(do_work, p, jobs, results)
+    a = T(count)
+   @async remote_do(do_work, p, a, jobs, results)
+   count += 1
 end
 
 # @elapsed while n > 0 # print out results

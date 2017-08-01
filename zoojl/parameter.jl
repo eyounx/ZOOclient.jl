@@ -1,6 +1,6 @@
 module parameter
 
-export Parameter
+export Parameter, autoset!
 
 @everywhere type Parameter
   algorithm
@@ -36,9 +36,10 @@ export Parameter
       autoset!(parameter)
     end
     return parameter
+  end
 end
 
-function autoset!(parameter)
+@everywhere function autoset!(parameter)
   if parameter.budget < 3
     zoolog("parameter.jl: budget too small")
   elseif parameter.budget <= 50
@@ -57,7 +58,5 @@ function autoset!(parameter)
   parameter.negative_size = parameter.train_size - parameter.positive_size
 end
 
-
-end
 
 end

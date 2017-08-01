@@ -6,12 +6,12 @@ export zoolog, rand_uniform, convert_time, mydistance
   println("[zoopt] $text")
 end
 
-function rand_uniform(rng, lower, upper)
+@everywhere function rand_uniform(rng, lower, upper)
   return rand(rng, Float64) * (upper - lower) + lower
 end
 
 
-function convert_time(second)
+@everywhere function convert_time(second)
   sec = second
   hour = Int64(floor(sec / 3600))
   sec = sec - hour * 3600
@@ -21,7 +21,7 @@ function convert_time(second)
   return "$(hour):$(min):$(sec)"
 end
 
-function mydistance(x, y)
+@everywhere function mydistance(x, y)
   dis = 0
   for i in 1:length(x)
     dis += (x[i] - y[i])^2

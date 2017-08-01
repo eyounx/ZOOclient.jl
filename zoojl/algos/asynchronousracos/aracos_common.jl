@@ -32,7 +32,7 @@ end
     else
       solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
     end
-    sol_print(solution)
+    # sol_print(solution)
     put!(arc.sample_set, solution)
   end
 end

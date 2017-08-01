@@ -8,7 +8,7 @@ export RacosOptimization, opt!, clear!, set_ub
   best_solution
   algorithm
 
-function RacosOptimization()
+  function RacosOptimization()
     return new(Nullable(), Nullable())
   end
 end

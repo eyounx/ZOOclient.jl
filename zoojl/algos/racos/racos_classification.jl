@@ -38,7 +38,7 @@ export RacosClassification, mixed_classification, rand_sample
   end
 end
 
-function reset_classifier(classifier)
+@everywhere function reset_classifier(classifier)
   regions = classfier.solution_space.regions
   for i in 1:classifier.solution_space.size
     classifier.sample_region[i][0] = regions[i][0]

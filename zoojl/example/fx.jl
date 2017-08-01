@@ -4,7 +4,7 @@ importall solution
 
 export sphere
 
-function sphere(solution)
+@everywhere function sphere(solution)
   x = solution.x
   value = sum((x - 0.2).^2)
   return value

@@ -9,7 +9,7 @@ importall dimension, optimize, fx, solution, objective, parameter, tool_function
 
 using Base.Dates.now
 
-function result_analysis(result, top)
+@everywhere function result_analysis(result, top)
   sort!(result)
   top_k = result[1:top]
   meanr = mean(top_k)
@@ -19,15 +19,16 @@ end
 time_log1 = now()
 result = []
 repeatn = 15
+
 for i in 1:repeatn
   dim_size = 100
-  dim_regs = [[-1, 1] for i = 1:dim_size]
-  dim_tys = [true for i = 1:dim_size]
+  dim_regs = [[-1, 1] for j = 1:dim_size]
+  dim_tys = [true for j = 1:dim_size]
   dim = Dimension(dim_size, dim_regs, dim_tys)
   obj = Objective(sphere, dim)
 
   budget = 10 * dim_size
-  par = Parameter(budget=budget, sequential=true, asynchronous=true, core_num = 5)
+  par = Parameter(budget=budget, sequential=true, asynchronous=true, core_num = 4)
 
   sol = zoo_min(obj, par)
   push!(result, sol.value)
