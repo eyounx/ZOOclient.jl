@@ -1,21 +1,20 @@
 module racos
 
-importall racos_common, objective, parameter, zoo_global, racos_classification
-
-importall dimension, tool_function
+@everywhere importall racos_common, objective, parameter, zoo_global,
+  racos_classification, dimension, tool_function
 
 using Base.Dates.now
 
 export Racos, racos_opt!
 
-@everywhere type Racos
+type Racos
   rc::RacosCommon
   function Racos()
     return new(RacosCommon())
   end
 end
 
-@everywhere function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub=1)
+function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub=1)
   rc = racos.rc
   clear!(rc)
   rc.objective = objective

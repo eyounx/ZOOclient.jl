@@ -1,18 +1,16 @@
 module dimension
 
-using zoo_global
-
-using tool_function
+@everywhere importall zoo_global, tool_function
 
 export Dimension, dim_rand_sample, dim_limited_space, dim_print, is_discrete
 
-@everywhere type Dimension
+type Dimension
   size::Int64
   regions
   types
 end
 
-@everywhere function dim_rand_sample(dim)
+function dim_rand_sample(dim)
   x = []
   for i = 1:dim.size
     value = 0
@@ -26,7 +24,7 @@ end
   x
 end
 
-@everywhere function dim_limited_space(dim::Dimension)
+function dim_limited_space(dim::Dimension)
   number = 1
   for i = 1:dim.size
    if dim.types[i] == true
@@ -38,7 +36,7 @@ end
   return true, number
 end
 
-@everywhere function dim_print(dim::Dimension)
+function dim_print(dim::Dimension)
   zoolog("dim size $(dim.size)")
   zoolog("dim regions is: ")
   zoolog("$(dim.regions)")
@@ -46,7 +44,7 @@ end
   zoolog("$(dim.types)")
 end
 
-@everywhere function is_discrete(dim::Dimension)
+function is_discrete(dim::Dimension)
   for i in 1:length(dim.types)
     if dim.types[i] == true
       return false

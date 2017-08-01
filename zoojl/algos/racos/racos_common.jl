@@ -1,11 +1,11 @@
 module racos_common
 
-importall objective, dimension, racos_classification, solution
+@everywhere importall objective, dimension, racos_classification, solution
 
 export RacosCommon, clear!, init_attribute!, selection!, distinct_sample,
 distinct_sample_classifier, print_positive_data, print_negative_data, print_data
 
-@everywhere type RacosCommon
+type RacosCommon
   parameter
   objective
   data
@@ -17,7 +17,7 @@ distinct_sample_classifier, print_positive_data, print_negative_data, print_data
   end
 end
 
-@everywhere function clear!(rc::RacosCommon)
+function clear!(rc::RacosCommon)
   rc.parameter = Nullable()
   rc.objective = Nullable()
   rc.data = []
@@ -27,7 +27,7 @@ end
 end
 
 # Construct self._data, self._positive_data, self._negative_data
-@everywhere function init_attribute!(rc::RacosCommon)
+function init_attribute!(rc::RacosCommon)
   # check if the initial solutions have been set
   data_temp = rc.parameter.init_sample
   if !isnull(data_temp) && isnull(rc.best_solution)
@@ -63,7 +63,7 @@ end
 # Choose first-train_size solutions as the new self._data
 # Choose first-positive_size solutions as self._positive_data
 # Choose [positive_size, train_size) (Include the begin, not include the end) solutions as self._negative_data
-@everywhere function selection!(rc::RacosCommon)
+function selection!(rc::RacosCommon)
   # print(length(rc.data))
   sort!(rc.data, by = x->x.value)
   rc.positive_data = rc.data[1:rc.parameter.positive_size]
@@ -72,7 +72,7 @@ end
 end
 
 # distinct sample form dim, return a solution
-@everywhere function distinct_sample(rc::RacosCommon, dim::Dimension; check_distinct=true, data_num=0)
+function distinct_sample(rc::RacosCommon, dim::Dimension; check_distinct=true, data_num=0)
   objective = rc.objective
   x = obj_construct_solution(objective, dim_rand_sample(dim))
   times = 1
@@ -102,7 +102,7 @@ end
 
 # Distinct sample from a classifier, return a solution
 # if check_distinct is False, you don't need to sample distinctly
-@everywhere function distinct_sample_classifier(rc::RacosCommon, classifier; check_distinct=true, data_num=0)
+function distinct_sample_classifier(rc::RacosCommon, classifier; check_distinct=true, data_num=0)
   objective = rc.objective
   x = rand_sample(classifier)
   ins = obj_construct_solution(rc.objective, x)
@@ -135,7 +135,7 @@ end
 # Check if x is distinct from each solution in seta
 # return False if there exists a solution the same as x,
 # otherwise return True
-@everywhere function is_distinct(seta, x)
+function is_distinct(seta, x)
   for ins in seta
     if sol_equal(x, ins)
       return false
@@ -145,7 +145,7 @@ end
 end
 
 # for dubugging
-@everywhere function print_positive_data(rc::RacosCommon)
+function print_positive_data(rc::RacosCommon)
   zoolog("------print positive_data------")
   zoolog("the size of positive data is $(length(rc.positive_data))")
   for x in rc.positive_data
@@ -153,7 +153,7 @@ end
   end
 end
 
-@everywhere function print_negative_data(rc::RacosCommon)
+function print_negative_data(rc::RacosCommon)
   zoolog("------print negative_data------")
   zoolog("the size of negative_data is $(length(rc.negative_data))")
   for x in rc.negative_data
@@ -161,7 +161,7 @@ end
   end
 end
 
-@everywhere function print_data(rc::RacosCommon)
+function print_data(rc::RacosCommon)
   zoolog("------print data------")
   zoolog("the size of data is $(length(rc.data))")
   for x in rc.data

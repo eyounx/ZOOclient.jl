@@ -1,12 +1,12 @@
 module objective
 
-importall solution
+@everywhere importall solution
 
 using Base.Test
 
 export Objective, obj_construct_solution, obj_eval, get_history_bestsofar
 
-@everywhere type Objective
+type Objective
   func
   dim
   inherit
@@ -18,7 +18,7 @@ export Objective, obj_construct_solution, obj_eval, get_history_bestsofar
   end
 end
 
-@everywhere function obj_construct_solution(objective, x; parent=Nullable())
+function obj_construct_solution(objective, x; parent=Nullable())
   sol = Solution()
   sol.x = x
   sol.attach = objective.inherit(parent=parent)
@@ -26,20 +26,20 @@ end
 end
 
 # evaluate the objective function of a solution
-@everywhere function obj_eval(objective, solution)
+function obj_eval(objective, solution)
   solution.value = objective.func(solution)
   append!(objective.history, solution.value)
 end
 
-@everywhere function obj_eval_constraint(objective, solution)
+function obj_eval_constraint(objective, solution)
   #Todo
 end
 
-@everywhere function obj_default_inherit(; parent=Nullable())
+function obj_default_inherit(; parent=Nullable())
   return Nullable()
 end
 
-@everywhere function get_history_bestsofar(objective)
+function get_history_bestsofar(objective)
   history_bestsofar = []
   bestsofar = Inf
   for i in 1:length(objective.history)

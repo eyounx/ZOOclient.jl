@@ -1,10 +1,10 @@
 module racos_classification
 
-importall solution, tool_function, zoo_global
+@everywhere importall solution, tool_function, zoo_global
 
 export RacosClassification, mixed_classification, rand_sample
 
-@everywhere type RacosClassification
+type RacosClassification
   solution_space
   sample_region
   label
@@ -38,7 +38,7 @@ export RacosClassification, mixed_classification, rand_sample
   end
 end
 
-@everywhere function reset_classifier(classifier)
+function reset_classifier(classifier)
   regions = classfier.solution_space.regions
   for i in 1:classifier.solution_space.size
     classifier.sample_region[i][0] = regions[i][0]
@@ -48,7 +48,7 @@ end
   classifier.x_positive = Nullable()
 end
 
-@everywhere function mixed_classification(classifier)
+function mixed_classification(classifier)
   classifier.x_positive = classifier.positive_solution[rand(rng,
     1:length(classifier.positive_solution))]
   len_negative = length(classifier.negative_solution)
@@ -127,7 +127,7 @@ end
   set_uncertain_bit!(classifier, index_set)
 end
 
-@everywhere function set_uncertain_bit!(classifier, iset)
+function set_uncertain_bit!(classifier, iset)
   index_set = iset
   # print(iset)
   for i in 1:classifier.uncertain_bit
@@ -138,7 +138,7 @@ end
   end
 end
 
-@everywhere function rand_sample(classifier)
+function rand_sample(classifier)
   x = []
   for i in 1:classifier.solution_space.size
     if classifier.label[i] == true
@@ -155,21 +155,21 @@ end
 end
 
 # for dubugging
-@everywhere function print_neg(classifier)
+function print_neg(classifier)
   zoolog("------print neg------")
   for x in classifier.negative_solution
     sol_print(x)
   end
 end
 
-@everywhere function print_pos(classifier)
+function print_pos(classifier)
   zoolog("------print pos------")
   for x in classifier.positive_solution
     sol_print(x)
   end
 end
 
-@everywhere function print_sample_region(classifier)
+function print_sample_region(classifier)
   zoolog("------print sample region------")
   zoolog(classifier.sample_region)
 end

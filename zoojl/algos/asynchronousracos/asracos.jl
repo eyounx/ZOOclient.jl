@@ -1,6 +1,6 @@
 module asracos
 
-importall aracos_common, racos_common, objective, parameter, zoo_global, solution,
+@everywhere importall aracos_common, racos_common, objective, parameter, zoo_global, solution,
   racos_classification, tool_function
 
 using Base.Dates.now

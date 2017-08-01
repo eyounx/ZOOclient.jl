@@ -2,7 +2,7 @@ module parameter
 
 export Parameter, autoset!
 
-@everywhere type Parameter
+type Parameter
   algorithm
   budget
 
@@ -39,7 +39,7 @@ export Parameter, autoset!
   end
 end
 
-@everywhere function autoset!(parameter)
+function autoset!(parameter)
   if parameter.budget < 3
     zoolog("parameter.jl: budget too small")
   elseif parameter.budget <= 50

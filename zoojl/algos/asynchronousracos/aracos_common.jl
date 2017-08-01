@@ -1,11 +1,11 @@
 module aracos_common
 
-importall objective, dimension, racos_common, racos_classification, zoo_global,
+@everywhere importall objective, dimension, racos_common, racos_classification, zoo_global,
   solution, tool_function
 
 export ARacosCommon, init_sample_set!
 
-@everywhere type ARacosCommon
+type ARacosCommon
   rc::RacosCommon
   core_num
   sample_set
@@ -19,7 +19,7 @@ export ARacosCommon, init_sample_set!
   end
 end
 
-@everywhere function init_sample_set!(arc::ARacosCommon, ub)
+function init_sample_set!(arc::ARacosCommon, ub)
   rc = arc.rc
   for i = 1:arc.core_num
     if rand(rng, Float64) < rc.parameter.probability

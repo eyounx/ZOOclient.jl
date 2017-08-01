@@ -1,11 +1,11 @@
 # main function
 module optimize
 
-importall objective, parameter, racos_optimization, aracos_optimization
+@everywhere importall objective, parameter, racos_optimization, aracos_optimization
 
 export zoo_min
 
-@everywhere function zoo_min(obj::Objective, par::Parameter)
+function zoo_min(obj::Objective, par::Parameter)
   if par.asynchronous == true
     algorithm = asyn_opt!
   else

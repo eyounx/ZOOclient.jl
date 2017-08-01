@@ -2,16 +2,16 @@ module tool_function
 
 export zoolog, rand_uniform, convert_time, mydistance
 
-@everywhere function zoolog(text)
+function zoolog(text)
   println("[zoopt] $text")
 end
 
-@everywhere function rand_uniform(rng, lower, upper)
+function rand_uniform(rng, lower, upper)
   return rand(rng, Float64) * (upper - lower) + lower
 end
 
 
-@everywhere function convert_time(second)
+function convert_time(second)
   sec = second
   hour = Int64(floor(sec / 3600))
   sec = sec - hour * 3600
@@ -21,7 +21,7 @@ end
   return "$(hour):$(min):$(sec)"
 end
 
-@everywhere function mydistance(x, y)
+function mydistance(x, y)
   dis = 0
   for i in 1:length(x)
     dis += (x[i] - y[i])^2

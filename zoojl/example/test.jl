@@ -9,7 +9,7 @@ importall dimension, optimize, fx, solution, objective, parameter, tool_function
 
 using Base.Dates.now
 
-@everywhere function result_analysis(result, top)
+function result_analysis(result, top)
   sort!(result)
   top_k = result[1:top]
   meanr = mean(top_k)

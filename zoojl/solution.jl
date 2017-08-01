@@ -1,10 +1,10 @@
 module solution
 
-importall dimension, zoo_global, tool_function
+@everywhere importall dimension, zoo_global, tool_function
 
 export Solution, find_max, find_min, sol_print, sol_equal
 
-@everywhere type Solution
+type Solution
   x
   value
   attach::Nullable
@@ -13,7 +13,7 @@ export Solution, find_max, find_min, sol_print, sol_equal
   end
 end
 
-@everywhere function sol_equal(sol1, sol2)
+function sol_equal(sol1, sol2)
   if abs(sol1.value - sol2.value) > my_precision
     return false
   end
@@ -29,7 +29,7 @@ end
 end
 
 # find minimum solution in iset
-@everywhere function find_min(iset)
+function find_min(iset)
   min = Inf
   min_index = 0
   res = Solution()
@@ -46,7 +46,7 @@ end
 end
 
 # find maximum solution in iset
-@everywhere function find_max(iset)
+function find_max(iset)
   max = -Inf
   max_index = 0
   res = Solution()
@@ -62,7 +62,7 @@ end
   return res, max_index
 end
 
-@everywhere function sol_print(sol)
+function sol_print(sol)
   zoolog("x: $(sol.x)")
   zoolog("value: $(sol.value)")
   zoolog("attach: $(sol.attach)")
