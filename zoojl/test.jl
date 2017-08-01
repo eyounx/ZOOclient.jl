@@ -63,7 +63,7 @@ end;
 
 n = 12;
 
-@schedule make_jobs(n); # feed the jobs channel with "n" jobs
+make_jobs(n); # feed the jobs channel with "n" jobs
 
 # for p in jobs
 #     print(p)

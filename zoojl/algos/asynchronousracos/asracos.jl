@@ -9,6 +9,7 @@ export ASRacos, asracos_opt!
 
 @everywhere type ASRacos
   arc::ARacosCommon
+
   function ASRacos(core_num)
     return new(ARacosCommon(core_num))
   end

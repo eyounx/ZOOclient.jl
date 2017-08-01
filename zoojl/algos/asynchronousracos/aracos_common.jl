@@ -12,6 +12,7 @@ export ARacosCommon, init_sample_set!
   result_set
   asyn_result
   is_finish
+
   function ARacosCommon(ncore)
     new(RacosCommon(), ncore, RemoteChannel(()->Channel(ncore)),
     RemoteChannel(()->Channel(ncore)), RemoteChannel(()->Channel(1)), false)
@@ -36,4 +37,5 @@ end
     put!(arc.sample_set, solution)
   end
 end
+
 end
