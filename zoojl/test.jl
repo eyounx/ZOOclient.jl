@@ -35,24 +35,24 @@
 # obj_eval(obj, sol)
 # @test sol.value == [1, 4, 4]
 
-addprocs(4) # add worker processes
-
 @everywhere type T
     icount
 end
+
+addprocs(4) # add worker processes
 
 jobs = RemoteChannel(()->Channel(32));
 
 results = RemoteChannel(()->Channel(32));
 
-@everywhere function do_work(i, jobs, results) # define work function everywhere
+@everywhere function do_work(i) # define work function everywhere
   println("in do_work$(i.icount)")
-  while true
-      job_id = take!(jobs)
-      exec_time = rand()
-      sleep(exec_time) # simulates elapsed time doing actual work
-      put!(results, (job_id, exec_time, myid()))
-  end
+  # while true
+  #     job_id = take!(jobs)
+  #     exec_time = rand()
+  #     sleep(exec_time) # simulates elapsed time doing actual work
+  #     put!(results, (job_id, exec_time, myid()))
+  # end
 end
 
 function make_jobs(n)
@@ -71,7 +71,7 @@ make_jobs(n); # feed the jobs channel with "n" jobs
 count = 1
 for p in workers() # start tasks on the workers to process requests in parallel
     a = T(count)
-   @async remote_do(do_work, p, a, jobs, results)
+   @async remote_do(do_work, p, a)
    count += 1
 end
 

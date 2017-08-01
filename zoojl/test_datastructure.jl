@@ -1,8 +1,8 @@
 module test_datastructure
 
-export test
+export Test
 
-@everywhere type test
+type Test
   tt
 end
 

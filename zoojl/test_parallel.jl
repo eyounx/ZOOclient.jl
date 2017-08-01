@@ -5,33 +5,33 @@ push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/utils")
 push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example")
 print("load successfully")
 
-using asracos
+@everywhere importall test_datastructure
 
-@everywhere function test_computer(asracos::ASRacos)
-  println("in test_computer")
+# @everywhere type Test
+#   tt
+# end
+
+@everywhere function test_computer(t::Test)
+  println("in test_computer $(t.tt)")
 end
 
-@everywhere function test_updater(asracos::ASRacos)
-  println("in test_updater")
+@everywhere function test_updater(t::Test)
+  println("in test_updater $(t.tt)")
 end
 
-@everywhere function test_parallel(asracos::ASRacos)
-  arc = asracos.arc
-  rc = arc.rc
-  for i = 1:5
-    put!(arc.sample_set, i)
-  end
+@everywhere function test_parallel(t::Test)
   addprocs(6)
   i = 1
   for p in workers()
     if i == 1
-      @async remote_do(test_updater, p, asracos)
+      @async remote_do(test_updater, p, t)
       i += 1
     else
-      @async remote_do(test_computer, p, asracos)
+      @async remote_do(test_computer, p, t)
     end
   end
 end
 
-asr = ASRacos(5)
-test_parallel(asr)
+# asr = ASRacos(5)
+t = Test(5)
+test_parallel(t)
