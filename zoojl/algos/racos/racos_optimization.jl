@@ -1,6 +1,6 @@
 module racos_optimization
 
-@everywhere importall racos, sracos, dimension
+importall racos, sracos, dimension
 
 export RacosOptimization, opt!, clear!, set_ub
 

@@ -1,6 +1,6 @@
 module racos
 
-@everywhere importall racos_common, objective, parameter, zoo_global,
+importall racos_common, objective, parameter, zoo_global,
   racos_classification, dimension, tool_function
 
 using Base.Dates.now

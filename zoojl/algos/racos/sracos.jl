@@ -1,6 +1,6 @@
 module sracos
 
-@everywhere importall racos_common, objective, parameter, zoo_global, solution,
+importall racos_common, objective, parameter, zoo_global, solution,
   racos_classification, tool_function
 
 using Base.Dates.now
@@ -79,7 +79,7 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
   return rc.best_solution
 end
 
-@everywhere function replace(iset, x, iset_type; strategy="WR")
+function replace(iset, x, iset_type; strategy="WR")
   if strategy == "WR"
     return strategy_wr(iset, x, iset_type)
   elseif strategy == "RR"

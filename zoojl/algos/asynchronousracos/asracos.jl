@@ -1,13 +1,13 @@
 module asracos
 
-@everywhere importall aracos_common, racos_common, objective, parameter, zoo_global, solution,
+importall aracos_common, racos_common, objective, parameter, zoo_global, solution,
   racos_classification, tool_function
 
 using Base.Dates.now
 
 export ASRacos, asracos_opt!
 
-@everywhere type ASRacos
+type ASRacos
   arc::ARacosCommon
 
   function ASRacos(core_num)
@@ -16,7 +16,7 @@ export ASRacos, asracos_opt!
 end
 
 # @async remote_do(updater, p, asracos, parameter.budget, ub, strategy)
-@everywhere function updater(asracos::ASRacos, budget,  ub, strategy)
+function updater(asracos::ASRacos, budget,  ub, strategy)
   println("in updater")
   t = 0
   arc = asracos.arc
@@ -53,7 +53,7 @@ end
   put!(arc.asyn_result, rc.best_solution)
 end
 
-@everywhere function computer(asracos::ASRacos, objective::Objective)
+function computer(asracos::ASRacos, objective::Objective)
   println("in computer")
   arc = asracos.arc
   # while arc.is_finish == false
@@ -66,7 +66,7 @@ end
   end
 end
 
-@everywhere function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Parameter;
+function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Parameter;
   strategy="WR", ub=1)
   arc = asracos.arc
   rc = arc.rc

@@ -1,6 +1,6 @@
 module dimension
 
-@everywhere importall zoo_global, tool_function
+importall zoo_global, tool_function
 
 export Dimension, dim_rand_sample, dim_limited_space, dim_print, is_discrete
 

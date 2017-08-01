@@ -1,6 +1,6 @@
 module aracos_common
 
-@everywhere importall objective, dimension, racos_common, racos_classification, zoo_global,
+importall objective, dimension, racos_common, racos_classification, zoo_global,
   solution, tool_function
 
 export ARacosCommon, init_sample_set!

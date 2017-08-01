@@ -1,7 +1,7 @@
 # main function
 module optimize
 
-@everywhere importall objective, parameter, racos_optimization, aracos_optimization
+importall aracos_optimization, objective, parameter, racos_optimization
 
 export zoo_min
 

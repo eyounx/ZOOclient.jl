@@ -5,7 +5,7 @@ push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/utils")
 push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example")
 print("load successfully")
 
-importall dimension, optimize, fx, solution, objective, parameter, tool_function
+@everywhere importall optimize, dimension, fx, solution, objective, parameter, tool_function
 
 using Base.Dates.now
 

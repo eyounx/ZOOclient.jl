@@ -1,6 +1,6 @@
 module solution
 
-@everywhere importall dimension, zoo_global, tool_function
+importall dimension, zoo_global, tool_function
 
 export Solution, find_max, find_min, sol_print, sol_equal
 

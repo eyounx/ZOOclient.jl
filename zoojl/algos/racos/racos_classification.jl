@@ -1,6 +1,6 @@
 module racos_classification
 
-@everywhere importall solution, tool_function, zoo_global
+importall solution, tool_function, zoo_global
 
 export RacosClassification, mixed_classification, rand_sample
 

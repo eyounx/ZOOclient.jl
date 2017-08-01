@@ -1,6 +1,6 @@
 module racos_common
 
-@everywhere importall objective, dimension, racos_classification, solution
+importall objective, dimension, racos_classification, solution
 
 export RacosCommon, clear!, init_attribute!, selection!, distinct_sample,
 distinct_sample_classifier, print_positive_data, print_negative_data, print_data
@@ -72,7 +72,7 @@ function selection!(rc::RacosCommon)
 end
 
 # distinct sample form dim, return a solution
-function distinct_sample(rc::RacosCommon, dim::Dimension; check_distinct=true, data_num=0)
+function distinct_sample(rc::RacosCommon, dim; check_distinct=true, data_num=0)
   objective = rc.objective
   x = obj_construct_solution(objective, dim_rand_sample(dim))
   times = 1

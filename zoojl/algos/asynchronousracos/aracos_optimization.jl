@@ -1,6 +1,8 @@
 module aracos_optimization
 
-@everywhere importall racos, asracos, dimension, racos_optimization
+importall asracos
+
+importall racos, dimension, racos_optimization
 
 export asyn_opt!
 

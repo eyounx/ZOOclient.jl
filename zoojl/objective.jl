@@ -1,6 +1,6 @@
 module objective
 
-@everywhere importall solution
+importall solution
 
 using Base.Test
 
