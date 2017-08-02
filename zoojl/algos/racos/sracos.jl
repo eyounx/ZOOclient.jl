@@ -5,7 +5,7 @@ importall racos_common, objective, parameter, zoo_global, solution,
 
 using Base.Dates.now
 
-export SRacos, sracos_opt!
+export SRacos, sracos_opt!, replace
 
 type SRacos
   rc::RacosCommon

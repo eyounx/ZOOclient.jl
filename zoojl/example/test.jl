@@ -18,7 +18,7 @@ end
 
 time_log1 = now()
 result = []
-repeatn = 15
+repeatn = 1
 
 for i in 1:repeatn
   dim_size = 100
@@ -28,14 +28,14 @@ for i in 1:repeatn
   obj = Objective(sphere, dim)
 
   budget = 10 * dim_size
-  par = Parameter(budget=budget, sequential=true, asynchronous=true, core_num = 4)
+  par = Parameter(budget=budget, sequential=true, asynchronous=false, core_num = 3)
 
   sol = zoo_min(obj, par)
   push!(result, sol.value)
   println("solved solution is:")
   sol_print(sol)
 end
-result_analysis(result, 5)
+result_analysis(result, 1)
 time_log2 = now()
 expect_time = Dates.value(time_log2 - time_log1) / 1000
 println(expect_time)

@@ -1,7 +1,7 @@
 module asracos
 
 importall aracos_common, racos_common, objective, parameter, zoo_global, solution,
-  racos_classification, tool_function
+  racos_classification, tool_function, sracos
 
 using Base.Dates.now
 
@@ -17,15 +17,15 @@ end
 
 # @async remote_do(updater, p, asracos, parameter.budget, ub, strategy)
 function updater(asracos::ASRacos, budget,  ub, strategy)
-  println("in updater")
+  # println("in updater")
   t = 0
   arc = asracos.arc
   rc = arc.rc
   while(t <= budget)
     t += 1
-    println("updater before take solution")
+    # println("updater before take solution")
     sol = take!(arc.result_set)
-    println("updater after take solution")
+    # println("updater after take solution")
     bad_ele = replace(rc.positive_data, sol, "pos")
     replace(rc.negative_data, bad_ele, "neg", strategy=strategy)
     rc.best_solution = rc.positive_data[1]
@@ -45,24 +45,24 @@ function updater(asracos::ASRacos, budget,  ub, strategy)
       zoolog("ERROR: solution null")
       break
     end
-    println("updater before sample")
+    # println("updater before sample")
     put!(arc.sample_set, solution)
-    println("updater after sample")
+    # println("updater after sample")
   end
-  arc.if_finish = true
+  arc.is_finish = true
   put!(arc.asyn_result, rc.best_solution)
 end
 
 function computer(asracos::ASRacos, objective::Objective)
-  println("in computer")
+  # println("in computer")
   arc = asracos.arc
-  # while arc.is_finish == false
-  for i = 1:4
-    println("computer before take")
+  while arc.is_finish == false
+    # println("computer before take")
     sol = take!(arc.sample_set)
-    println("computer after take")
+    # println("computer after take")
     obj_eval(objective, sol)
     put!(arc.result_set, sol)
+    # println("computer after put")
   end
 end
 
@@ -75,21 +75,21 @@ function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Paramet
   init_attribute!(rc)
   init_sample_set!(arc, ub)
   addprocs(parameter.core_num + 1)
-  first = false
+  first = true
   is_finish = false
   for p in workers()
     if first
       # updater(asracos, parameter.budget, ub, strategy)
-      @async remote_do(updater, p, asracos, parameter.budget, ub, strategy)
+      remote_do(updater, p, asracos, parameter.budget, ub, strategy)
       first = false
-      println("updater begin")
+      # println("updater begin")
     else
-      @async remote_do(computer, p, asracos, objective)
+      remote_do(computer, p, asracos, objective)
       # computer(asracos, objective)
-      println("computer begin")
+      # println("computer begin")
     end
   end
-  print("Finish workers")
+  # print("Finish workers")
   result = take!(arc.asyn_result)
   return result
 end

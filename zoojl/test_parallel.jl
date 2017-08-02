@@ -3,9 +3,6 @@ module test_parallel
 importall test_datastructure
 
 export test_par
-# @everywhere type Test
-#   tt
-# end
 
 function test_computer(t::Test)
   println("in test_computer $(t.tt.aa)")
