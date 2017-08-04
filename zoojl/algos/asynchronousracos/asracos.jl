@@ -10,8 +10,8 @@ export ASRacos, asracos_opt!
 type ASRacos
   arc::ARacosCommon
 
-  function ASRacos(core_num)
-    return new(ARacosCommon(core_num))
+  function ASRacos(computer_num)
+    return new(ARacosCommon(computer_num))
   end
 end
 
@@ -21,8 +21,13 @@ function updater(asracos::ASRacos, budget,  ub, strategy)
   t = 0
   arc = asracos.arc
   rc = arc.rc
+  parameter = rc.parameter
+  time_log1 = now()
   while(t <= budget)
     t += 1
+    if t == arc.computer_num + 1
+      time_log1 = now()
+    end
     # println("updater before take solution")
     sol = take!(arc.result_set)
     # println("updater after take solution")
@@ -41,6 +46,10 @@ function updater(asracos::ASRacos, budget,  ub, strategy)
       solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
     end
     #painc stop
+    if distinct_flag == false
+      zoolog("ERROR: dimension limited")
+      break
+    end
     if isnull(solution)
       zoolog("ERROR: solution null")
       break
@@ -48,6 +57,12 @@ function updater(asracos::ASRacos, budget,  ub, strategy)
     # println("updater before sample")
     put!(arc.sample_set, solution)
     # println("updater after sample")
+    if t == arc.computer_num * 2
+      time_log2 = now()
+      expected_time = (parameter.budget - parameter.train_size) *
+        (Dates.value(time_log2 - time_log1) / 1000) / computer_num
+      zoolog(string("expected remaining running time: ", convert_time(expected_time)))
+    end
   end
   arc.is_finish = true
   put!(arc.asyn_result, rc.best_solution)
@@ -74,7 +89,7 @@ function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Paramet
   rc.parameter = parameter
   init_attribute!(rc)
   init_sample_set!(arc, ub)
-  addprocs(parameter.core_num + 1)
+  addprocs(parameter.computer_num + 1)
   first = true
   is_finish = false
   for p in workers()

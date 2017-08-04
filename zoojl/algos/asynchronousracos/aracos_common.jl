@@ -7,21 +7,21 @@ export ARacosCommon, init_sample_set!
 
 type ARacosCommon
   rc::RacosCommon
-  core_num
+  computer_num
   sample_set
   result_set
   asyn_result
   is_finish
 
-  function ARacosCommon(ncore)
-    new(RacosCommon(), ncore, RemoteChannel(()->Channel(ncore)),
-    RemoteChannel(()->Channel(ncore)), RemoteChannel(()->Channel(1)), false)
+  function ARacosCommon(ncomputer)
+    new(RacosCommon(), ncomputer, RemoteChannel(()->Channel(ncomputer)),
+    RemoteChannel(()->Channel(ncomputer)), RemoteChannel(()->Channel(1)), false)
   end
 end
 
 function init_sample_set!(arc::ARacosCommon, ub)
   rc = arc.rc
-  for i = 1:arc.core_num
+  for i = 1:arc.computer_num
     if rand(rng, Float64) < rc.parameter.probability
       classifier = RacosClassification(rc.objective.dim, rc.positive_data,
         rc.negative_data, ub=ub)
