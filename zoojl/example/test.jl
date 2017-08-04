@@ -28,7 +28,7 @@ for i in 1:repeatn
   obj = Objective(sphere, dim)
 
   budget = 10 * dim_size
-  par = Parameter(budget=budget, sequential=true, asynchronous=false, computer_num = 3)
+  par = Parameter(budget=budget, sequential=true, asynchronous=true, computer_num = 3)
 
   sol = zoo_min(obj, par)
   push!(result, sol.value)

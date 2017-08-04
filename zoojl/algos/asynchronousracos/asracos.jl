@@ -60,7 +60,7 @@ function updater(asracos::ASRacos, budget,  ub, strategy)
     if t == arc.computer_num * 2
       time_log2 = now()
       expected_time = (parameter.budget - parameter.train_size) *
-        (Dates.value(time_log2 - time_log1) / 1000) / computer_num
+        (Dates.value(time_log2 - time_log1) / 1000) / arc.computer_num
       zoolog(string("expected remaining running time: ", convert_time(expected_time)))
     end
   end
@@ -89,7 +89,7 @@ function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Paramet
   rc.parameter = parameter
   init_attribute!(rc)
   init_sample_set!(arc, ub)
-  addprocs(parameter.computer_num + 1)
+  # addprocs(parameter.computer_num + 1)
   first = true
   is_finish = false
   for p in workers()
