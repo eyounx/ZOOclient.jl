@@ -8,13 +8,15 @@ export Objective, obj_construct_solution, obj_eval, get_history_bestsofar
 
 type Objective
   func
+  args
   dim
   inherit
   constraint
   history
 
-  function Objective(func=Nullable(), dim=Nullable(); constraint=Nullable())
-    return new(func, dim, obj_default_inherit, constraint, [])
+  function Objective(func=Nullable(), dim=Nullable(); args=Nullable(),
+      inherit=obj_default_inherit, constraint=Nullable())
+    return new(func, args, dim, obj_default_inherit, constraint, [])
   end
 end
 
@@ -27,7 +29,7 @@ end
 
 # evaluate the objective function of a solution
 function obj_eval(objective, solution)
-  solution.value = objective.func(solution)
+  solution.value = objective.func(solution, args)
   append!(objective.history, solution.value)
 end
 

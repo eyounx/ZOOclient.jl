@@ -28,10 +28,10 @@ type Parameter
   isolationfunc
 
   function Parameter(; algorithm=Nullable(), budget=0, autoset=true, sequential=true,
-    precision=Nullable(), uncertain_bits=Nullable(), init_sample=Nullable(),
+    precision=Nullable(), uncertain_bits=Nullable(), probability=0.99, init_sample=Nullable(),
     time_budget=Nullable(), terminal_value=Nullable(), asynchronous=false, computer_num = 1)
     parameter = new(algorithm, budget, init_sample, time_budget, terminal_value,
-    sequential, precision, uncertain_bits, 0, 0, 0, 0.99, asynchronous, computer_num, x->0)
+    sequential, precision, uncertain_bits, 0, 0, 0, probability, asynchronous, computer_num, x->0)
     if budget != 0 && autoset == true
       autoset!(parameter)
     end

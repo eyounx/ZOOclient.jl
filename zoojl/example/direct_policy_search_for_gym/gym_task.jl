@@ -106,7 +106,7 @@ function nn_policy_sample(gt::GymTask, observation)
   return action
 end
 
-function sum_reward!(gt::GymTask, solution)
+function sum_reward!(solution, gt::GymTask)
   x = solution.x
   sum_re = 0
   # reset stop step

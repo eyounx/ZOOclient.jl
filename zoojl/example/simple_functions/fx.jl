@@ -4,7 +4,7 @@ importall solution
 
 export sphere
 
-function sphere(solution)
+function sphere(solution, args)
   l = 0
   for i = 1:5000000
     l += rand(1:5)
