@@ -114,8 +114,8 @@ end
 
 function nn_policy_sample(gt::GymTask, observation)
   #action = []
-  output = cal_output_nnm(gt.policy_model, observation)
-  action = transform_action(output)
+  output = cal_output_nnm(gt.policy_model, observation')
+  action = transform_action(gt, output)
   return action
 end
 

@@ -2,10 +2,10 @@ push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl")
 push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/racos")
 push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/asynchronousracos")
 push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/utils")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/simple_functions")
 print("load successfully")
 
-@everywhere importall optimize, dimension, fx, solution, objective, parameter, tool_function
+importall optimize, dimension, fx, solution, objective, parameter, tool_function
 
 using Base.Dates.now
 
@@ -18,7 +18,7 @@ end
 
 time_log1 = now()
 result = []
-repeatn = 1
+repeatn = 15
 
 for i in 1:repeatn
   dim_size = 100
@@ -28,14 +28,14 @@ for i in 1:repeatn
   obj = Objective(sphere, dim)
 
   budget = 10 * dim_size
-  par = Parameter(budget=budget, sequential=true, asynchronous=true, computer_num = 3)
+  par = Parameter(budget=budget, sequential=true, asynchronous=false, computer_num = 3)
 
   sol = zoo_min(obj, par)
   push!(result, sol.value)
   println("solved solution is:")
   sol_print(sol)
 end
-result_analysis(result, 1)
+result_analysis(result, 5)
 time_log2 = now()
 expect_time = Dates.value(time_log2 - time_log1) / 1000
 println(expect_time)
