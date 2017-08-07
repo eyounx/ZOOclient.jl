@@ -29,7 +29,7 @@ end
 
 # evaluate the objective function of a solution
 function obj_eval(objective, solution)
-  solution.value = objective.func(solution, args)
+  solution.value = objective.func(solution, objective.args)
   append!(objective.history, solution.value)
 end
 

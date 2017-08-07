@@ -1,9 +1,20 @@
 module gym_task
 
+importall nn_model
+
 using PyCall
 
-pyimport("gym") as gym
-pyimport("gym.space.discrete") as Discrete
+export GymTask, transform_action, new_nnmodel!, nn_policy_sample, sum_reward!
+
+# @pyimport("gym")
+
+# @pyimport("gym.spaces.discrete") as Discrete
+
+gym = pyimport("gym")
+
+# @pyimport("gym.spaces.discrete.Discrete") as Discrete
+
+isinstance = pybuiltin("isinstance")
 
 type GymTask
   envir
@@ -21,7 +32,7 @@ type GymTask
   stop_step
 
   function GymTask(name)
-    envir = gym.make(name)
+    envir = gym[:make](name)
     envir_name = name
     obser_size = envir[:observation_space][:shape][1]
     obser_up_bound = []
@@ -41,7 +52,9 @@ type GymTask
     max_step = 0
     stop_step = 0
 
-    if isinstance(envir[:action_space], Discrete)
+    # gym[:spaces][:discrete][:Discrete]
+    if isinstance(envir[:action_space], gym[:spaces][:discrete][:Discrete])
+      println("envir discrete")
       action_size = 1
       action_sca = []
       action_type = []
@@ -96,12 +109,12 @@ end
 
 function new_nnmodel!(gt::GymTask, layers)
   gt.policy_model = NNModel()
-  construct_nnmodel(gt.policy_model, layers)
+  construct_nnmodel!(gt.policy_model, layers)
 end
 
 function nn_policy_sample(gt::GymTask, observation)
   #action = []
-  output = cal_output(gt.policy_model, observation)
+  output = cal_output_nnm(gt.policy_model, observation)
   action = transform_action(output)
   return action
 end
@@ -112,11 +125,11 @@ function sum_reward!(solution, gt::GymTask)
   # reset stop step
   gt.stop_step = gt.max_step
   # reset nn model weight
-  decode_w(gt.policy_model, x)
+  decode_w_nnm(gt.policy_model, x)
   # reset enviroment
   observation = gt.envir[:reset]()
   for i in 1:gt.max_step
-    action = gt.nn_policy_sample(observation)
+    action = nn_policy_sample(gt, observation)
     observation, reward, done, info = gt.envir[:step](action)
     sum_re += reward
     if done

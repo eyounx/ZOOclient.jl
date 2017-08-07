@@ -1,5 +1,13 @@
-@everywhere importall gym_task, nn_model, Dimension, Parameter, zoo_function,
-  zoo_global
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/racos")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/asynchronousracos")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/utils")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/direct_policy_search_for_gym")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/simple_functions")
+print("load successfully")
+
+importall gym_task, nn_model, dimension, parameter, objective, solution, tool_function,
+  zoo_global, optimize
 # in_layers means layers information. eg. [2, 5, 1] means input layer has 2 neurons, hidden layer(only one) has 5,
 # output layer has 1.
 # in_budget means budget
@@ -12,13 +20,14 @@ function run_test(task_name, layers, in_budget, max_step, repeat)
   budget = in_budget # number of calls to the objective function
   rand_probability = 0.95 # the probability of sample in model
 
-  dim_size = gym_task.w
+  dim_size = gym_task.policy_model.w_size
+  zoolog(dim_size)
   dim_regs = [[-10, 10] for i = 1:dim_size]
   dim_tys = [true for i = 1:dim_size]
   dim = Dimension(dim_size, dim_regs, dim_tys)
 
-  objective = Objective(sum_reward, dim, args=gym_task)
-  parameter = Parameter(budget=budget, autoset=true, probability=probability, asynchronous=true)
+  objective = Objective(sum_reward!, dim, args=gym_task)
+  parameter = Parameter(budget=budget, autoset=true, probability=rand_probability, asynchronous=false)
 
   result = []
   sum = 0
