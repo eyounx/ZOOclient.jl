@@ -21,7 +21,6 @@ function run_test(task_name, layers, in_budget, max_step, repeat)
   rand_probability = 0.95 # the probability of sample in model
 
   dim_size = gym_task.policy_model.w_size
-  zoolog(dim_size)
   dim_regs = [[-10, 10] for i = 1:dim_size]
   dim_tys = [true for i = 1:dim_size]
   dim = Dimension(dim_size, dim_regs, dim_tys)
@@ -50,7 +49,7 @@ swimmer_layers = [8 5 3 2]
 ant_layers = [111 15 8]
 hopper_layers = [11 9 5 3]
 lunarlander_layers = [8 5 3 1]
-run_test("MountainCar-v0", mountain_car_layers, 10000, 10000, 1)
+run_test("MountainCar-v0", mountain_car_layers, 1000, 10000, 1)
 # run_test('Acrobot-v1', acrobot_layers, 2000, 500, 10)
 # If you want to run the following examples, you may need to install more libs(mujoco, Box2D).
 # run_test('HalfCheetah-v1', halfcheetah_layers, 2000, 10000, 10)
