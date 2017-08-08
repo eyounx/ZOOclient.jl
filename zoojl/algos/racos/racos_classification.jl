@@ -109,6 +109,10 @@ function mixed_classification(classifier)
       delete = 0
       i = 1
       while i <= len_negative
+        # if len_negative == 1
+        #   print_neg(classifier)
+        #   print_pos(classifier)
+        # end
         if classifier.negative_solution[i].x[k] != x_pos_k
           delete += 1
           itemp = classifier.negative_solution[i]

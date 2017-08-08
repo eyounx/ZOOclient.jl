@@ -33,7 +33,7 @@ function init_attribute!(rc::RacosCommon)
   if !isnull(data_temp) && isnull(rc.best_solution)
     for j in 1:length(date_temp)
       x = obj_construct_solution(rc.objective, data_temp[j])
-      rc.data.append(obj_eval(rc.objective, x))
+      push!(rc.data, obj_eval(rc.objective, x))
     end
     selection!(rc)
     return
@@ -44,7 +44,8 @@ function init_attribute!(rc::RacosCommon)
   while i < iteration_num
     # distinct_flag: True means sample is distinct(can be use),
     # False means sample is distinct, you should sample again.
-    x, distinct_flag = distinct_sample(rc, rc.objective.dim)
+    x, distinct_flag = distinct_sample_from_set(rc, rc.objective.dim, rc.data,
+      data_num=iteration_num)
     # panic stop
     if isnull(x)
       break
@@ -100,6 +101,32 @@ function distinct_sample(rc::RacosCommon, dim; check_distinct=true, data_num=0)
   return x, distinct_flag
 end
 
+function distinct_sample_from_set(rc::RacosCommon, dim, set; check_distinct=true, data_num=0)
+  objective = rc.objective
+  x = obj_construct_solution(objective, dim_rand_sample(dim))
+  times = 1
+  distinct_flag = true
+  if check_distinct == true
+    while is_distinct(set, x) == false
+      x = obj_construct_solution(objective, dim_rand_sample(dim))
+      times += 1
+      if times % 10 == 0
+        limited, number = dim_limited_space(dim)
+        if limited == true
+          if number <= data_num
+            zoolog("racos_common.py: WARNING -- sample space has been fully enumerated. Stop early")
+            return Nullable(), Nullable()
+          end
+        end
+        if times > 100
+          distinct_flag = false
+          break
+        end
+      end
+    end
+  end
+  return x, distinct_flag
+end
 # Distinct sample from a classifier, return a solution
 # if check_distinct is False, you don't need to sample distinctly
 function distinct_sample_classifier(rc::RacosCommon, classifier; check_distinct=true, data_num=0)
@@ -114,7 +141,7 @@ function distinct_sample_classifier(rc::RacosCommon, classifier; check_distinct=
       ins = obj_construct_solution(rc.objective, x)
       times += 1
       if times % 10 == 0
-        space = classifier.sample_region
+        space = classifier.solution_space
         limited, number = dim_limited_space(space)
         if limited == true
           if number <= data_num

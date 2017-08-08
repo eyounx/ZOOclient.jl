@@ -42,6 +42,7 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
       return rc.best_solution
     end
     if !distinct_flag
+      zoolog("distinct_error")
       continue
     end
     obj_eval(objective, solution)

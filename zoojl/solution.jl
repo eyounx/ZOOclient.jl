@@ -14,8 +14,10 @@ type Solution
 end
 
 function sol_equal(sol1, sol2)
-  if abs(sol1.value - sol2.value) > my_precision
-    return false
+  if sol1.value != 0 && sol2.value!=0
+    if abs(sol1.value - sol2.value) > my_precision
+      return false
+    end
   end
   if length(sol1.x) != length(sol2.x)
     return false
