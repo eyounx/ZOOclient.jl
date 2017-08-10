@@ -2,7 +2,7 @@ module fx
 
 importall dimension, tool_function
 
-export sphere, ackley, setcover, setcover_fx, setcover_dim
+export sphere, ackley, setcover, setcover_fx, setcover_dim, mixed_functin
 
 function sphere(solution, args)
   # l = 0

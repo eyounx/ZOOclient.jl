@@ -48,18 +48,14 @@ function reset_classifier(classifier)
   classifier.x_positive = Nullable()
 end
 
+# This algos always works, whether discrete or continuous, we always use this function.
 function mixed_classification(classifier)
   classifier.x_positive = classifier.positive_solution[rand(rng,
     1:length(classifier.positive_solution))]
   len_negative = length(classifier.negative_solution)
   index_set = Array(1:classifier.solution_space.size)
   types = classifier.solution_space.types
-  # print(len_negative)
   while len_negative > 0
-    # println(len_negative)
-    # if len_negative == 1
-    #   println("len_negative == 1")
-    # end
     pos = rand(rng, 1:length(index_set))
     k = index_set[pos]
     x_pos_k = classifier.x_positive.x[k]
@@ -69,15 +65,12 @@ function mixed_classification(classifier)
       x_neg_k = x_negative.x[k]
       if x_pos_k < x_neg_k
         r = rand_uniform(rng, x_pos_k, x_neg_k)
-        # print(classifier.sample_region)
         if r < classifier.sample_region[k][2]
-          # print(r)
           classifier.sample_region[k][2] = r
           i = 1
           while i <= len_negative
             if classifier.negative_solution[i].x[k] >= r
               itemp = classifier.negative_solution[i]
-              # println("$(i), $(len_negative)")
               classifier.negative_solution[i] = classifier.negative_solution[len_negative]
               classifier.negative_solution[len_negative] = itemp
               len_negative -= 1
@@ -89,7 +82,6 @@ function mixed_classification(classifier)
       else
         r = rand_uniform(rng, x_neg_k, x_pos_k)
         if r > classifier.sample_region[k][1]
-          # print(r)
           classifier.sample_region[k][1] = r
           i = 1
           while i <= len_negative
@@ -109,10 +101,6 @@ function mixed_classification(classifier)
       delete = 0
       i = 1
       while i <= len_negative
-        # if len_negative == 1
-        #   print_neg(classifier)
-        #   print_pos(classifier)
-        # end
         if classifier.negative_solution[i].x[k] != x_pos_k
           delete += 1
           itemp = classifier.negative_solution[i]
@@ -133,7 +121,6 @@ end
 
 function set_uncertain_bit!(classifier, iset)
   index_set = iset
-  # print(iset)
   for i in 1:classifier.uncertain_bit
     pos = rand(rng, 1:length(index_set))
     index = index_set[pos]

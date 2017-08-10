@@ -14,6 +14,7 @@ type Racos
   end
 end
 
+# racos optimization function
 function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub=1)
   rc = racos.rc
   clear!(rc)
@@ -38,6 +39,7 @@ function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub
       if isnull(solution)
         return rc.best_solution
       end
+      # If the solution had been sampled, skip it
       if !distinct_flag
         continue
       end

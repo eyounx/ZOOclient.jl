@@ -8,15 +8,21 @@ distinct_sample_classifier, print_positive_data, print_negative_data, print_data
 type RacosCommon
   parameter
   objective
+  # solution set
+  # random sampled solutions construct self._data
   data
+  # self._positive_data are best-positive_size solutions set
   positive_data
+  # self._negative_data are the other solutions
   negative_data
+  # best solution
   best_solution
   function RacosCommon()
     new(Nullable(), Nullable(), [], [], [], Nullable())
   end
 end
 
+# clear RacosCommon
 function clear!(rc::RacosCommon)
   rc.parameter = Nullable()
   rc.objective = Nullable()
@@ -26,7 +32,7 @@ function clear!(rc::RacosCommon)
   rc.best_solution = Nullable()
 end
 
-# Construct self._data, self._positive_data, self._negative_data
+# construct self._data, self._positive_data, self._negative_data
 function init_attribute!(rc::RacosCommon)
   # check if the initial solutions have been set
   data_temp = rc.parameter.init_sample
@@ -60,10 +66,10 @@ function init_attribute!(rc::RacosCommon)
   return
 end
 
-# Sort self._data
-# Choose first-train_size solutions as the new self._data
-# Choose first-positive_size solutions as self._positive_data
-# Choose [positive_size, train_size) (Include the begin, not include the end) solutions as self._negative_data
+# sort self._data
+# choose first-train_size solutions as the new self._data
+# choose first-positive_size solutions as self._positive_data
+# choose [positive_size, train_size) (Include the begin, not include the end) solutions as self._negative_data
 function selection!(rc::RacosCommon)
   # print(length(rc.data))
   sort!(rc.data, by = x->x.value)
@@ -127,7 +133,8 @@ function distinct_sample_from_set(rc::RacosCommon, dim, set; check_distinct=true
   end
   return x, distinct_flag
 end
-# Distinct sample from a classifier, return a solution
+
+# distinct sample from a classifier, return a solution
 # if check_distinct is False, you don't need to sample distinctly
 function distinct_sample_classifier(rc::RacosCommon, classifier; check_distinct=true, data_num=0)
   objective = rc.objective

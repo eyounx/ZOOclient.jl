@@ -14,6 +14,9 @@ type SRacos
   end
 end
 
+# SRacos's optimization function
+# Default strategy is WR(worst replace)
+# Default uncertain_bits is 1, but actually ub will be set either by user or by RacosOptimization automatically.
 function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
   strategy="WR", ub=1)
   rc = sracos.rc
@@ -29,10 +32,7 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
     if rand(rng, Float64) < rc.parameter.probability
       classifier = RacosClassification(rc.objective.dim, rc.positive_data,
         rc.negative_data, ub=ub)
-      # println(classifier)
-      # zoolog("before classification")
       mixed_classification(classifier)
-      # zoolog("after classification")
       solution, distinct_flag = distinct_sample_classifier(rc, classifier, data_num=rc.parameter.train_size)
     else
       solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
@@ -45,14 +45,13 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
       zoolog("distinct_error")
       continue
     end
+    # evaluate the solution
     obj_eval(objective, solution)
-    # sol_print(solution)
     bad_ele = replace(rc.positive_data, solution, "pos")
     replace(rc.negative_data, bad_ele, "neg", strategy=strategy)
     rc.best_solution = rc.positive_data[1]
     if i == 4
       time_log2 = now()
-      # second
       expected_time = (parameter.budget - parameter.train_size) *
         (Dates.value(time_log2 - time_log1) / 1000) / 5
       if !isnull(rc.parameter.time_budget)
@@ -139,6 +138,7 @@ function strategy_rr(iset, x)
   return replace_ele
 end
 
+# replace the farthest solution from best_sol
 function strategy_lm(iset, best_sol, sol)
   farthest_dis = 0
   farthest_index = 0
