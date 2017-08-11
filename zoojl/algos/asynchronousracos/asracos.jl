@@ -10,7 +10,7 @@ export ASRacos, asracos_opt!
 type ASRacos
   arc::ARacosCommon
 
-  function ASRacos(computer_num)
+  function ASRacos(computer_num=1)
     return new(ARacosCommon(computer_num))
   end
 end

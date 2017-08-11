@@ -24,14 +24,20 @@ type Parameter
   asynchronous
   computer_num
 
+  # for tcp with python
+  ip_port
+
   # for pareto optimization
   isolationfunc
 
-  function Parameter(; algorithm=Nullable(), budget=0, autoset=true, sequential=true,
-    precision=Nullable(), uncertain_bits=Nullable(), probability=0.99, init_sample=Nullable(),
-    time_budget=Nullable(), terminal_value=Nullable(), asynchronous=false, computer_num = 1)
+  function Parameter(; algorithm=Nullable(), budget=0, init_sample=Nullable(),
+    time_budget=Nullable(), terminal_value=Nullable(), sequential=true,
+    precision=Nullable(), uncertain_bits=Nullable(), train_size=0, positive_size=0,
+    negative_size=0, probability=0.99, asynchronous=false, computer_num = 1,
+    ip_port=Nullable(), isolationfunc=x->0, autoset=true)
     parameter = new(algorithm, budget, init_sample, time_budget, terminal_value,
-    sequential, precision, uncertain_bits, 0, 0, 0, probability, asynchronous, computer_num, x->0)
+    sequential, precision, uncertain_bits, train_size, positive_size, negative_size,
+    probability, asynchronous, computer_num, ip_port, isolationfunc)
     if budget != 0 && autoset == true
       autoset!(parameter)
     end
