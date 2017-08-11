@@ -5,7 +5,7 @@ importall aracos_common, racos_common, objective, parameter, zoo_global, solutio
 
 using Base.Dates.now
 
-export ASRacos, asracos_opt!
+export ASRacos, asracos_opt!, updater
 
 type ASRacos
   arc::ARacosCommon

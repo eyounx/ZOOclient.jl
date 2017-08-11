@@ -35,9 +35,15 @@ type Parameter
     precision=Nullable(), uncertain_bits=Nullable(), train_size=0, positive_size=0,
     negative_size=0, probability=0.99, asynchronous=false, computer_num = 1,
     ip_port=Nullable(), isolationfunc=x->0, autoset=true)
+
+    ip_port_temp = RemoteChannel(()->Channel(length(ip_port)))
+    for ins in ip_port
+      put!(ip_port_temp, ins)
+    end
+
     parameter = new(algorithm, budget, init_sample, time_budget, terminal_value,
     sequential, precision, uncertain_bits, train_size, positive_size, negative_size,
-    probability, asynchronous, computer_num, ip_port, isolationfunc)
+    probability, asynchronous, computer_num, ip_port_temp, isolationfunc)
     if budget != 0 && autoset == true
       autoset!(parameter)
     end

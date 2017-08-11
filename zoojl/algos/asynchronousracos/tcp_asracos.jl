@@ -1,6 +1,8 @@
-module tcp_asracos!
+module tcp_asracos
 
-importall aracos_common, asracos, objective, parameter
+importall racos_common, aracos_common, asracos, objective, parameter
+
+export tcp_asracos!
 
 function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Parameter;
   strategy="WR", ub=1)
@@ -16,13 +18,15 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
   i = 1
   while i <= parameter.budget
     ip_port = take!(parameter.ip_port)
-    ip, port = get_ip_port(ip, port)
+    ip, port = get_ip_port(ip_port)
     i += 1
     @async begin
       client = connect(ip, port)
       sol = take!(arc.sample_set)
       println(client, list2str(sol.x))
-      value = parse(Float64, readline(client))
+      receive = readline(client)
+      println(receive)
+      value = parse(Float64, receive)
       sol.value = value
       put!(arc.result_set, sol)
       put!(parameter.ip_port, ip_port)
@@ -33,12 +37,20 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
 end
 
 function get_ip_port(ip_port)
+  temp = split(ip_port, ":")
+  ip = temp[1]
+  port = parse(Int64, temp[2])
+  return ip, port
 end
 
 function list2str(list)
   result = ""
   for i = 1:length(list)
-    result = string(result, " ", string(list[i]))
+    if i == 1
+      result = string(list[i])
+    else
+      result = string(result, " ", string(list[i]))
+    end
   end
   result
 end
