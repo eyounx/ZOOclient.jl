@@ -12,6 +12,8 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
   rc.parameter = parameter
   init_attribute!(rc)
   init_sample_set!(arc, ub)
+  # print_positive_data(rc)
+  # print_negative_data(rc)
   ip_port = parameter.ip_port
   addprocs(1)
   remote_do(updater, 2, asracos, parameter.budget, ub, strategy)
@@ -23,9 +25,10 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
     @async begin
       client = connect(ip, port)
       sol = take!(arc.sample_set)
+      # println(list2str(sol.x))
       println(client, list2str(sol.x))
       receive = readline(client)
-      println(receive)
+      # println(receive)
       value = parse(Float64, receive)
       sol.value = value
       put!(arc.result_set, sol)

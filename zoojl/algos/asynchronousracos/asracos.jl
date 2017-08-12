@@ -18,7 +18,7 @@ end
 # @async remote_do(updater, p, asracos, parameter.budget, ub, strategy)
 function updater(asracos::ASRacos, budget,  ub, strategy)
   # println("in updater")
-  t = 0
+  t = 1
   arc = asracos.arc
   rc = arc.rc
   parameter = rc.parameter

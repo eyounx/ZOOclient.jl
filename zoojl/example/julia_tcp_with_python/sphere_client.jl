@@ -1,0 +1,42 @@
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/racos")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/asynchronousracos")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/utils")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/direct_policy_search_for_gym")
+push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/simple_functions")
+print("load successfully")
+
+importall fx, dimension, parameter, objective, solution, tool_function,
+  zoo_global, optimize
+# in_layers means layers information. eg. [2, 5, 1] means input layer has 2 neurons, hidden layer(only one) has 5,
+# output layer has 1.
+# in_budget means budget
+# maxstep means stop step in gym
+# repeat means repeat number in a test.
+if true
+  dim_size = 100
+  dim_regs = [[-1, 1] for i = 1:dim_size]
+  dim_tys = [true for i = 1:dim_size]
+  dim = Dimension(dim_size, dim_regs, dim_tys)
+
+  budget = 10 * dim_size + 20
+  rand_probability = 0.95
+
+  ip_port = ["127.0.0.1:9999"]
+  obj = Objective(sphere, dim)
+  par = Parameter(budget=budget, probability=rand_probability, asynchronous=true,
+    ip_port=ip_port)
+
+  result = []
+  sum = 0
+  repeat = 5
+  zoolog("solved solution is:")
+  for i in 1:repeat
+    ins = zoo_min(obj, par)
+    sum += ins.value
+    zoolog(ins.value)
+    push!(result, ins.value)
+  end
+  zoolog(result)
+  zoolog(sum / length(result))
+end

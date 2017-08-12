@@ -19,11 +19,11 @@ function result_analysis(result, top)
 end
 
 # example for minimizing the sphere function
-if false
+if true
   time_log1 = now()
   # repeat of optimization experiments
   result = []
-  repeatn = 15
+  repeatn = 5
   # the random seed for zoojl can be set
   set_seed(12345)
   for i in 1:repeatn
@@ -38,7 +38,7 @@ if false
     budget = 10 * dim_size  # number of calls to the objective function
     # by default, the algorithm is sequential RACOS, asynchronous is false
     # if asynchronous is false, computer_num makes no sense and can be omitted
-    par = Parameter(budget=budget, sequential=true, asynchronous=false, computer_num = 3)
+    par = Parameter(budget=budget, sequential=true, asynchronous=false)
 
     # perform the optimization
     sol = zoo_min(obj, par)
@@ -110,7 +110,7 @@ if false
 end
 
 # mixed optimization
-if true
+if false
   repeat = 15
   result = []
   set_seed(12345)
