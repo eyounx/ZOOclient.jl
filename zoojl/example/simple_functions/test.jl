@@ -19,7 +19,7 @@ function result_analysis(result, top)
 end
 
 # example for minimizing the sphere function
-if true
+if false
   time_log1 = now()
   # repeat of optimization experiments
   result = []
@@ -55,7 +55,7 @@ if true
 end
 
 # example for minimizing the ackley function
-if false
+if true
   time_log1 = now()
   result = []
   repeatn = 15
