@@ -6,13 +6,9 @@ push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/direct_policy
 push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/simple_functions")
 print("load successfully")
 
-importall fx, dimension, parameter, objective, solution, tool_function,
+@everywhere importall fx, dimension, parameter, objective, solution, tool_function,
   zoo_global, optimize
-# in_layers means layers information. eg. [2, 5, 1] means input layer has 2 neurons, hidden layer(only one) has 5,
-# output layer has 1.
-# in_budget means budget
-# maxstep means stop step in gym
-# repeat means repeat number in a test.
+
 if true
   dim_size = 100
   dim_regs = [[-1, 1] for i = 1:dim_size]
@@ -22,7 +18,8 @@ if true
   budget = 10 * dim_size + 20
   rand_probability = 0.95
 
-  ip_port = ["127.0.0.1:9999"]
+  ip_port = ["127.0.0.1:$(i)" for i = 10000:10003]
+  print(ip_port)
   obj = Objective(sphere, dim)
   par = Parameter(budget=budget, probability=rand_probability, asynchronous=true,
     ip_port=ip_port)
