@@ -68,7 +68,9 @@ if true
     obj = Objective(ackley, dim)
 
     budget = 20 * dim_size
-    par = Parameter(budget=budget, sequential=true, asynchronous=false, computer_num = 3)
+
+    par = Parameter(budget=budget, sequential=true, asynchronous=true, computer_num = 3)
+    # par = Parameter(budget=budget, sequential=true, asynchronous=false)
 
     sol = zoo_min(obj, par)
     push!(result, sol.value)

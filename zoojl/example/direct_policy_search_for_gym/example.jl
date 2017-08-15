@@ -26,7 +26,7 @@ function run_test(task_name, layers, in_budget, max_step, repeat)
   dim = Dimension(dim_size, dim_regs, dim_tys)
 
   objective = Objective(sum_reward!, dim, args=gym_task)
-  parameter = Parameter(budget=budget, autoset=true, probability=rand_probability, asynchronous=false)
+  parameter = Parameter(budget=budget, probability=rand_probability, asynchronous=false)
 
   result = []
   sum = 0
