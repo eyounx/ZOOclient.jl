@@ -15,15 +15,14 @@ if true
   dim_tys = [true for i = 1:dim_size]
   dim = Dimension(dim_size, dim_regs, dim_tys)
 
-  budget = 10 * dim_size + 20
+  budget = 1000
   rand_probability = 0.95
 
-  ip_port = ["127.0.0.1:$(i)" for i = 10000:10003]
+  ip_port = ["127.0.0.1:$(i)" for i = 10000:10001]
   print(ip_port)
   obj = Objective(sphere, dim)
   par = Parameter(budget=budget, probability=rand_probability, asynchronous=true,
-    ip_port=ip_port)
-
+    computer_num=4, ip_port=ip_port)
   result = []
   sum = 0
   repeat = 5

@@ -23,6 +23,7 @@ function updater(asracos::ASRacos, budget,  ub, strategy)
   rc = arc.rc
   parameter = rc.parameter
   time_log1 = now()
+  println(budget)
   while(t <= budget)
     t += 1
     if t == arc.computer_num + 1
@@ -63,6 +64,7 @@ function updater(asracos::ASRacos, budget,  ub, strategy)
         (Dates.value(time_log2 - time_log1) / 1000) / arc.computer_num
       zoolog(string("expected remaining running time: ", convert_time(expected_time)))
     end
+    println("update $(t-1)")
   end
   arc.is_finish = true
   put!(arc.asyn_result, rc.best_solution)

@@ -19,14 +19,14 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
   remote_do(updater, 2, asracos, parameter.budget, ub, strategy)
   i = 1
   while i <= parameter.budget
-      ip_port = take!(parameter.ip_port)
-      println(ip_port)
-      ip, port = get_ip_port(ip_port)
       i += 1
-      @async begin
+      @spawn begin
+        ip_port = take!(parameter.ip_port)
+        ip, port = get_ip_port(ip_port)
         client = connect(ip, port)
         sol = take!(arc.sample_set)
-        # println(list2str(sol.x))
+        # println("$(i) after take sample")
+        # println("$(i): $(list2str(sol.x))")
         println(client, list2str(sol.x))
         receive = readline(client)
         # println(receive)
@@ -34,7 +34,9 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
         sol.value = value
         put!(arc.result_set, sol)
         put!(parameter.ip_port, ip_port)
-      end
+        # println("$(i) after put result")
+        println("tcp_asracos: $(i-1), value=$value, ip_port=$(ip_port)")
+    end
   end
   result = take!(arc.asyn_result)
   return result

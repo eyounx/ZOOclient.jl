@@ -21,14 +21,11 @@ end
 
 function init_sample_set!(arc::ARacosCommon, ub)
   rc = arc.rc
+  classifier = RacosClassification(rc.objective.dim, rc.positive_data,
+    rc.negative_data, ub=ub)
+  mixed_classification(classifier)
   for i = 1:arc.computer_num
     if rand(rng, Float64) < rc.parameter.probability
-      classifier = RacosClassification(rc.objective.dim, rc.positive_data,
-        rc.negative_data, ub=ub)
-      # println(classifier)
-      # zoolog("before classification")
-      mixed_classification(classifier)
-      # zoolog("after classification")
       solution, distinct_flag = distinct_sample_classifier(rc, classifier, data_num=rc.parameter.train_size)
     else
       solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
