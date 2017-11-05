@@ -6,33 +6,42 @@ push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/direct_policy
 push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/simple_functions")
 print("load successfully")
 
-@everywhere importall fx, dimension, parameter, objective, solution, tool_function,
+importall fx, dimension, parameter, objective, solution, tool_function,
   zoo_global, optimize
 
+using Base.Dates.now
+
 if true
+  time_log1 = now()
   dim_size = 100
   dim_regs = [[-1, 1] for i = 1:dim_size]
   dim_tys = [true for i = 1:dim_size]
   dim = Dimension(dim_size, dim_regs, dim_tys)
 
-  budget = 1000
-  rand_probability = 0.95
+  budget = 100
+  rand_probability = 0.99
 
-  ip_port = ["127.0.0.1:$(i)" for i = 10000:10001]
-  print(ip_port)
+  # ip_port = ["127.0.0.1:$(i)" for i = 50000:50004]
+  # print(ip_port)
   obj = Objective(sphere, dim)
   par = Parameter(budget=budget, probability=rand_probability, asynchronous=true,
-    computer_num=4, ip_port=ip_port)
+    computer_num=2, tcp=true, control_server_ip="127.0.0.1", control_server_port=[20001, 20002],
+    working_directory="sphere.py")
   result = []
+	# println(par.control_server_port)
   sum = 0
-  repeat = 5
+  repeat = 1
   zoolog("solved solution is:")
   for i in 1:repeat
     ins = zoo_min(obj, par)
     sum += ins.value
+    zoolog(ins.x)
     zoolog(ins.value)
     push!(result, ins.value)
   end
   zoolog(result)
   zoolog(sum / length(result))
+  time_log2 = now()
+  expect_time = Dates.value(time_log2 - time_log1) / 1000
+  println(expect_time)
 end

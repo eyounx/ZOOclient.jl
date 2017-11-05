@@ -12,7 +12,7 @@ function asyn_opt!(ro::RacosOptimization, objective, parameter, stra="WR")
   clear!(ro)
   uncertain_bits = set_ub(objective)
   ro.algorithm = ASRacos(parameter.computer_num)
-  if isnull(parameter.ip_port)
+  if parameter.tcp == false
     ro.best_solution = asracos_opt!(ro.algorithm, objective, parameter, strategy
       =stra, ub=uncertain_bits)
   else

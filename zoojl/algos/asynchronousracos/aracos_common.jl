@@ -14,6 +14,7 @@ type ARacosCommon
   is_finish
 
   function ARacosCommon(ncomputer)
+    println(ncomputer)
     new(RacosCommon(), ncomputer, RemoteChannel(()->Channel(ncomputer)),
     RemoteChannel(()->Channel(ncomputer)), RemoteChannel(()->Channel(1)), false)
   end

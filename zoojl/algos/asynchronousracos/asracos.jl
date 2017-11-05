@@ -23,7 +23,7 @@ function updater(asracos::ASRacos, budget,  ub, strategy)
   rc = arc.rc
   parameter = rc.parameter
   time_log1 = now()
-  println(budget)
+  # println(budget)
   while(t <= budget)
     t += 1
     if t == arc.computer_num + 1
@@ -57,14 +57,14 @@ function updater(asracos::ASRacos, budget,  ub, strategy)
     end
     # println("updater before sample")
     put!(arc.sample_set, solution)
-    # println("updater after sample")
+    # println("updater after sample: $(solution.x)")
     if t == arc.computer_num * 2
       time_log2 = now()
       expected_time = (parameter.budget - parameter.train_size) *
         (Dates.value(time_log2 - time_log1) / 1000) / arc.computer_num
       zoolog(string("expected remaining running time: ", convert_time(expected_time)))
     end
-    println("update $(t-1)")
+    # println("update $(t-1)")
   end
   arc.is_finish = true
   put!(arc.asyn_result, rc.best_solution)

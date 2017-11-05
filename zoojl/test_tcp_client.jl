@@ -1,4 +1,3 @@
 begin
-  client = connect(9999)
-  println(client, "helloworld")
+  println(nprocs())
 end
