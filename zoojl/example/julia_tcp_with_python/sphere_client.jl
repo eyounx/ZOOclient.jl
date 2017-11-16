@@ -25,8 +25,8 @@ if true
   # print(ip_port)
   obj = Objective(sphere, dim)
   par = Parameter(budget=budget, probability=rand_probability, asynchronous=true,
-    computer_num=2, tcp=true, control_server_ip="127.0.0.1", control_server_port=[20001, 20002],
-    working_directory="sphere.py")
+    computer_num=2, tcp=true, control_server_ip="192.168.1.101", control_server_port=[20001, 20002, 20003],
+    working_directory="sphere.py", func="sphere")
   result = []
 	# println(par.control_server_port)
   sum = 0
