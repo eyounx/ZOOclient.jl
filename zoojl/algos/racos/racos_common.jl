@@ -4,7 +4,8 @@ importall objective, dimension, racos_classification, solution, zoo_global,
   tool_function
 
 export RacosCommon, clear!, init_attribute!, selection!, distinct_sample,
-distinct_sample_classifier, print_positive_data, print_negative_data, print_data
+distinct_sample_classifier, print_positive_data, print_negative_data, print_data,
+distinct_sample_from_set
 
 type RacosCommon
   parameter

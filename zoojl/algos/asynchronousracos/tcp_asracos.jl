@@ -1,6 +1,6 @@
 module tcp_asracos
 
-importall racos_common, aracos_common, asracos, objective, parameter
+importall racos_common, aracos_common, asracos, objective, parameter, solution
 
 export tcp_asracos!
 
@@ -11,10 +11,6 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
   rc = arc.rc
   rc.objective = objective
   rc.parameter = parameter
-  init_attribute!(rc)
-  init_sample_set!(arc, ub)
-  # print_positive_data(rc)
-  # print_negative_data(rc)
 
   # require calculator server
   ip = parameter.control_server_ip
@@ -30,6 +26,10 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
   for server in servers
     put!(parameter.ip_port, server)
   end
+
+  tcp_init_attribute!(asracos, parameter)
+  init_sample_set!(arc, ub)
+  println("after init")
   # addprocs(1)
   @spawn updater(asracos, parameter.budget, ub, strategy)
   # remote_do(updater, 2, asracos, parameter.budget, ub, strategy)
@@ -44,51 +44,10 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
       end
       @spawn begin
         try
-          ip_port = take!(parameter.ip_port)
-          # println("after take ip_port$(i): $(ip_port)")
-          ip, port = get_ip_port(ip_port)
-          client = connect(ip, port)
-          # println("connect success")
-
-          # send calculate info
-          println(client, "client: calculate#")
-          msg = readline(client)
-          if check_exception(msg) == true
-            br = false
-          end
-          println(msg)
-
-          # send working_directory:func
-          if br == false
-            smsg = string(parameter.working_directory, ":", parameter.func, "#")
-            # println(smsg)
-            println(client, smsg)
-            msg = readline(client)
-            if check_exception(msg) == true
-              br = true
-            end
-          end
-          # println(msg)
-
-          # send x
-          if br == false
-            sol = take!(arc.sample_set)
-            str = list2str(sol.x)
-            println(client, str)
-            receive = readline(client)
-            if check_exception(receive) == true
-              br = true
-            end
-          end
-          # println(receive)
-
-          if br == false
-            value = parse(Float64, receive)
-            sol.value = value
-            put!(arc.result_set, sol)
-            put!(parameter.ip_port, ip_port)
-            println("tcp_asracos: $(i-1), value=$value, ip_port=$(ip_port)")
-          end
+          sol = take!(arc.sample_set)
+          br, sol = compute_fx(sol, asracos, parameter)
+          put!(arc.result_set, sol)
+          println("compute fx: $(i-1), value=$sol.value, ip_port=$(ip_port)")
         catch e
           # println("Exception")
           # cs_exception = connect(ip, port[3])
@@ -106,6 +65,90 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
   # println(servers_msg)
   println(cs_receive, servers_msg)
   return result
+end
+
+function compute_fx(sol::Solution, asracos::ASRacos, parameter::Parameter)
+  ip_port = take!(parameter.ip_port)
+  # println("after take ip_port$(i): $(ip_port)")
+  ip, port = get_ip_port(ip_port)
+  client = connect(ip, port)
+  # println("connect success")
+
+  # send calculate info
+  println(client, "client: calculate#")
+  msg = readline(client)
+  br = false
+  if check_exception(msg) == true
+    br = true
+  end
+  # println(msg)
+
+  # send working_directory:func
+  if br == false
+    smsg = string(parameter.working_directory, ":", parameter.func, "#")
+    # println(smsg)
+    println(client, smsg)
+    msg = readline(client)
+    if check_exception(msg) == true
+      br = true
+    end
+  end
+  # println(msg)
+
+  # send x
+  if br == false
+
+    str = list2str(sol.x)
+    println(client, str)
+    receive = readline(client)
+    if check_exception(receive) == true
+      br = true
+    end
+  end
+  # println(receive)
+
+  if br == false
+    value = parse(Float64, receive)
+    sol.value = value
+  end
+  put!(parameter.ip_port, ip_port)
+  println("compute fx: value=$(sol.value), ip_port=$(ip_port)")
+  return br, sol
+end
+
+function tcp_init_attribute!(asracos::ASRacos, parameter::Parameter)
+  rc = asracos.arc.rc
+  # check if the initial solutions have been set
+  data_temp = rc.parameter.init_sample
+  if !isnull(data_temp) && isnull(rc.best_solution)
+    for j in 1:length(date_temp)
+      x = obj_construct_solution(rc.objective, data_temp[j])
+      br, x = compute_fx(x, asracos, parameter)
+      push!(rc.data, x)
+    end
+    selection!(rc)
+    return
+  end
+  # otherwise generate random solutions
+  iteration_num = rc.parameter.train_size
+  i = 0
+  while i < iteration_num
+    # distinct_flag: True means sample is distinct(can be use),
+    # False means sample is distinct, you should sample again.
+    x, distinct_flag = distinct_sample_from_set(rc, rc.objective.dim, rc.data,
+      data_num=iteration_num)
+    # panic stop
+    if isnull(x)
+      break
+    end
+    if distinct_flag
+      br, x = compute_fx(x, asracos, parameter)
+      push!(rc.data, x)
+      i += 1
+    end
+  end
+  selection!(rc)
+  return
 end
 
 function check_exception(msg)

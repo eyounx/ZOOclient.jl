@@ -16,14 +16,14 @@ if true
   dim_size = 100
   dim_regs = [[-1, 1] for i = 1:dim_size]
   dim_tys = [true for i = 1:dim_size]
-  dim = Dimension(dim_size, dim_regs, dim_tys)
+  mydim = Dimension(dim_size, dim_regs, dim_tys)
 
   budget = 100
   rand_probability = 0.99
 
   # ip_port = ["127.0.0.1:$(i)" for i = 50000:50004]
   # print(ip_port)
-  obj = Objective(sphere, dim)
+  obj = Objective(dim=mydim)
   par = Parameter(budget=budget, probability=rand_probability, asynchronous=true,
     computer_num=2, tcp=true, control_server_ip="192.168.1.101", control_server_port=[20001, 20002, 20003],
     working_directory="sphere.py", func="sphere")

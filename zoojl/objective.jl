@@ -14,7 +14,7 @@ type Objective
   constraint
   history
 
-  function Objective(func=Nullable(), dim=Nullable(); args=Nullable(),
+  function Objective(;func=Nullable(), dim=Nullable(), args=Nullable(),
       inherit=obj_default_inherit, constraint=Nullable())
     return new(func, args, dim, obj_default_inherit, constraint, [])
   end
