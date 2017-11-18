@@ -18,7 +18,7 @@ if true
   dim_tys = [true for i = 1:dim_size]
   mydim = Dimension(dim_size, dim_regs, dim_tys)
 
-  budget = 100
+  budget = 10 * dim_size
   rand_probability = 0.99
 
   # ip_port = ["127.0.0.1:$(i)" for i = 50000:50004]
