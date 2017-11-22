@@ -15,13 +15,14 @@ type ASRacos
   end
 end
 
-# @async remote_do(updater, p, asracos, parameter.budget, ub, strategy)
-function updater(asracos::ASRacos, budget,  ub, strategy)
+# @async remote_do(updater, p, asracos, parameter.budget, ub)
+function updater(asracos::ASRacos, budget,  ub)
   # println("in updater")
   t = 1
   arc = asracos.arc
   rc = arc.rc
   parameter = rc.parameter
+  strategy = parameter.replace_strategy
   time_log1 = now()
   # println(budget)
   while(t <= budget)
@@ -84,7 +85,7 @@ function computer(asracos::ASRacos, objective::Objective)
 end
 
 function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Parameter;
-  strategy="WR", ub=1)
+  ub=1)
   arc = asracos.arc
   rc = arc.rc
   rc.objective = objective
@@ -96,8 +97,7 @@ function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Paramet
   is_finish = false
   for p in workers()
     if first
-      # updater(asracos, parameter.budget, ub, strategy)
-      remote_do(updater, p, asracos, parameter.budget, ub, strategy)
+      remote_do(updater, p, asracos, parameter.budget, ub)
       first = false
       # println("updater begin")
     else

@@ -14,16 +14,14 @@ type RacosOptimization
 end
 
 # General optimization function, it will choose optimization algorithm according to parameter.get_sequential()
-# Default replace strategy is 'WR'
 # If user hasn't define uncertain_bits in parameter, set_ub() will set uncertain_bits automatically according to dim
 # in objective
-function opt!(ro::RacosOptimization, objective, parameter, stra="WR")
+function opt!(ro::RacosOptimization, objective, parameter)
   clear!(ro)
   uncertain_bits = set_ub(objective)
   if parameter.sequential == true
     ro.algorithm = SRacos()
-    ro.best_solution = sracos_opt!(ro.algorithm, objective, parameter, strategy
-      =stra, ub=uncertain_bits)
+    ro.best_solution = sracos_opt!(ro.algorithm, objective, parameter, ub=uncertain_bits)
   else
     ro.algorithm = Racos()
     ro.best_solution = racos_opt!(ro.algorithm, objective, parameter, ub=uncertain_bits)

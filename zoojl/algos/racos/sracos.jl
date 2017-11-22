@@ -18,7 +18,8 @@ end
 # Default strategy is WR(worst replace)
 # Default uncertain_bits is 1, but actually ub will be set either by user or by RacosOptimization automatically.
 function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
-  strategy="WR", ub=1)
+  ub=1)
+  strategy = parameter.replace_strategy
   rc = sracos.rc
   clear!(rc)
   rc.objective = objective

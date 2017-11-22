@@ -19,6 +19,7 @@ type Parameter
   positive_size
   negative_size
   probability
+  replace_strategy
 
   # for asynchronousracos
   asynchronous
@@ -38,7 +39,7 @@ type Parameter
   function Parameter(; algorithm=Nullable(), budget=0, init_sample=Nullable(),
     time_budget=Nullable(), terminal_value=Nullable(), sequential=true,
     precision=Nullable(), uncertain_bits=Nullable(), train_size=0, positive_size=0,
-    negative_size=0, probability=0.99, asynchronous=false, computer_num = 1, tcp=false,
+    negative_size=0, probability=0.99, replace_strategy="WR", asynchronous=false, computer_num = 1, tcp=false,
     ip_port=Nullable(), control_server_ip="", control_server_port=Nullable(),
     working_directory="", func="target_func", isolationfunc=x->0, autoset=true)
 
@@ -53,8 +54,8 @@ type Parameter
 
     parameter = new(algorithm, budget, init_sample, time_budget, terminal_value,
     sequential, precision, uncertain_bits, train_size, positive_size, negative_size,
-    probability, asynchronous, computer_num, tcp, ip_port, control_server_ip, control_server_port,
-    working_directory, func, isolationfunc)
+    probability, replace_strategy, asynchronous, computer_num, tcp, ip_port,
+    control_server_ip, control_server_port, working_directory, func, isolationfunc)
     if budget != 0 && autoset == true
       autoset!(parameter)
     end

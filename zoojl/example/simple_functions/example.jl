@@ -1,8 +1,10 @@
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/racos")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/asynchronousracos")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/utils")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/simple_functions")
+root = "/Users/liu/Desktop/CS/github/"
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/racos"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/asynchronousracos"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/utils"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/example/direct_policy_search_for_gym"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/example/simple_functions"))
 print("load successfully")
 
 importall optimize, dimension, fx, solution, objective, parameter, tool_function,
@@ -19,7 +21,7 @@ function result_analysis(result, top)
 end
 
 # example for minimizing the sphere function
-if false
+if true
   time_log1 = now()
   # repeat of optimization experiments
   result = []
@@ -32,13 +34,13 @@ if false
     dim_regs = [[-1, 1] for j = 1:dim_size] # dimension range
     dim_tys = [true for j = 1:dim_size] # dimension type : real
     dim = Dimension(dim_size, dim_regs, dim_tys) # form up the dimension object
-    obj = Objective(sphere, dim)  # form up the objective function
+    obj = Objective(func=sphere, dim=dim)  # form up the objective function
 
     # setup algorithm parameters
     budget = 10 * dim_size  # number of calls to the objective function
     # by default, the algorithm is sequential RACOS, asynchronous is false
     # if asynchronous is false, computer_num makes no sense and can be omitted
-    par = Parameter(budget=budget, sequential=true, asynchronous=false)
+    par = Parameter(budget=budget, sequential=true, replace_strategy="WR", asynchronous=false)
 
     # perform the optimization
     sol = zoo_min(obj, par)
@@ -55,7 +57,7 @@ if false
 end
 
 # example for minimizing the ackley function
-if true
+if false
   time_log1 = now()
   result = []
   repeatn = 15

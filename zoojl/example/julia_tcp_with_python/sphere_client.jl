@@ -1,9 +1,10 @@
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/racos")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/asynchronousracos")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/utils")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/direct_policy_search_for_gym")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/simple_functions")
+root = "/Users/liu/Desktop/CS/github/"
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/racos"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/asynchronousracos"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/utils"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/example/direct_policy_search_for_gym"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/example/simple_functions"))
 print("load successfully")
 
 importall fx, dimension, parameter, objective, solution, tool_function,
@@ -24,8 +25,8 @@ if true
   # ip_port = ["127.0.0.1:$(i)" for i = 50000:50004]
   # print(ip_port)
   obj = Objective(dim=mydim)
-  par = Parameter(budget=budget, probability=rand_probability, asynchronous=true,
-    computer_num=2, tcp=true, control_server_ip="192.168.1.101", control_server_port=[20001, 20002, 20003],
+  par = Parameter(budget=budget, probability=rand_probability, replace_strategy="RR", asynchronous=true,
+    computer_num=2, tcp=true, control_server_ip="172.28.145.49", control_server_port=[20001, 20002, 20003],
     working_directory="sphere.py", func="sphere")
   result = []
 	# println(par.control_server_port)

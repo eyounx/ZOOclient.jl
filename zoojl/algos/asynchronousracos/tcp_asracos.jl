@@ -6,8 +6,7 @@ zoo_global, tool_function, racos_classification, sracos
 export tcp_asracos!
 
 function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Parameter;
-  strategy="WR", ub=1)
-  println(parameter.control_server_port)
+  ub=1)
   arc = asracos.arc
   rc = arc.rc
   rc.objective = objective
@@ -22,7 +21,6 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
 
   servers_msg = readline(cs_send)
   servers = split(servers_msg, " ")
-  println(servers)
   parameter.ip_port = RemoteChannel(()->Channel(length(servers)))
   for server in servers
     put!(parameter.ip_port, server)
@@ -34,8 +32,7 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
   finish = SharedArray{Bool}(1)
   finish[1] = false
   # addprocs(1)
-  @spawn tcp_updater(asracos, parameter.budget, ub, strategy, finish)
-  # remote_do(updater, 2, asracos, parameter.budget, ub, strategy)
+  @spawn tcp_updater(asracos, parameter.budget, ub, finish)
   i = parameter.train_size
   br = false
   while true
@@ -43,21 +40,11 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
       if finish[1] == true
         break
       end
-      # println("iteration: $(i-1), before take ip_port")
       ip_port = take!(parameter.ip_port)
       sol = take!(arc.sample_set)
-      # println("iteration: $(i-1), ip_port: $(ip_port)")
-      # if br == true
-      #   println("Error: break")
-      #   break
-      # end
       @spawn begin
         try
           br, x = compute_fx(sol, ip_port, asracos, parameter)
-          # println("$(br), $(x.value)")
-          # sample_sol = tcp_sample(rc, ub)
-          # # print("$(sample_sol.x)")
-          # put!(arc.sample_set, sample_sol)
           put!(parameter.ip_port, ip_port)
           put!(arc.result_set, x)
           if i <= parameter.budget
@@ -66,10 +53,6 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
         catch e
           println("Exception")
           println(e)
-          # cs_exception = connect(ip, port[3])
-          # servers_msg = string(servers_msg, "#")
-          # println(cs_exception, servers_msg)
-          # br = true
         end
     end
   end
@@ -77,18 +60,13 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
   result = take!(arc.asyn_result)
   cs_receive = connect(ip, port[2])
   servers_msg = string(servers_msg, "#")
-  # println(servers_msg)
   println(cs_receive, servers_msg)
   return result
 end
 
 function compute_fx(sol::Solution, ip_port, asracos::ASRacos, parameter::Parameter)
-  # ip_port = take!(parameter.ip_port)
-  # println("after take ip_port$(i): $(ip_port)")
-  # println(ip_port)
   ip, port = get_ip_port(ip_port)
   client = connect(ip, port)
-  # println("connect success")
 
   # send calculate info
   println(client, "client: calculate#")
@@ -97,19 +75,16 @@ function compute_fx(sol::Solution, ip_port, asracos::ASRacos, parameter::Paramet
   if check_exception(msg) == true
     br = true
   end
-  # println(msg)
 
   # send working_directory:func
   if br == false
     smsg = string(parameter.working_directory, ":", parameter.func, "#")
-    # println(smsg)
     println(client, smsg)
     msg = readline(client)
     if check_exception(msg) == true
       br = true
     end
   end
-  # println(msg)
 
   # send x
   if br == false
@@ -121,7 +96,6 @@ function compute_fx(sol::Solution, ip_port, asracos::ASRacos, parameter::Paramet
       br = true
     end
   end
-  # println(receive)
 
   if br == false
     value = parse(Float64, receive)
@@ -130,36 +104,30 @@ function compute_fx(sol::Solution, ip_port, asracos::ASRacos, parameter::Paramet
   return br, sol
 end
 
-function tcp_updater(asracos::ASRacos, budget, ub, strategy, finish)
-  # println("in updater")
+function tcp_updater(asracos::ASRacos, budget, ub, finish)
   t = asracos.arc.rc.parameter.train_size + 1
   arc = asracos.arc
   rc = arc.rc
   parameter = rc.parameter
+  strategy = parameter.replace_strategy
   time_log1 = now()
-  # println(budget)
   while(t <= budget)
     t += 1
     if t == arc.computer_num + 1
       time_log1 = now()
     end
     sol = take!(arc.result_set)
-    # println("updater after take solution")
     bad_ele = replace(rc.positive_data, sol, "pos")
     replace(rc.negative_data, bad_ele, "neg", strategy=strategy)
     rc.best_solution = rc.positive_data[1]
     if rand(rng, Float64) < rc.parameter.probability
       classifier = RacosClassification(rc.objective.dim, rc.positive_data,
         rc.negative_data, ub=ub)
-      # println(classifier)
-      # zoolog("before classification")
       mixed_classification(classifier)
-      # zoolog("after classification")
       solution, distinct_flag = distinct_sample_classifier(rc, classifier, data_num=rc.parameter.train_size)
     else
       solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
     end
-    #painc stop
     if distinct_flag == false
       zoolog("ERROR: dimension limited")
       break
@@ -168,16 +136,14 @@ function tcp_updater(asracos::ASRacos, budget, ub, strategy, finish)
       zoolog("ERROR: solution null")
       break
     end
-    # println("updater before put sample")
     put!(arc.sample_set, solution)
-    # println("$(rc.best_solution.value)")
     if t == arc.computer_num * 2
       time_log2 = now()
       expected_time = (parameter.budget - parameter.train_size) *
         (Dates.value(time_log2 - time_log1) / 1000) / arc.computer_num
       zoolog(string("expected remaining running time: ", convert_time(expected_time)))
     end
-    println("update $(t-1)")
+    # println("update $(t-1)")
   end
   finish[1] = true
   put!(arc.asyn_result, rc.best_solution)
@@ -187,7 +153,6 @@ function tcp_sample(rc, ub)
   if rand(rng, Float64) < rc.parameter.probability
     classifier = RacosClassification(rc.objective.dim, rc.positive_data,
       rc.negative_data, ub=ub)
-    # println(classifier)
     zoolog("before classification")
     mixed_classification(classifier)
     zoolog("after classification")
