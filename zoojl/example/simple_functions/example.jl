@@ -21,7 +21,7 @@ function result_analysis(result, top)
 end
 
 # example for minimizing the sphere function
-if true
+if false
   time_log1 = now()
   # repeat of optimization experiments
   result = []
@@ -57,7 +57,7 @@ if true
 end
 
 # example for minimizing the ackley function
-if false
+if true
   time_log1 = now()
   result = []
   repeatn = 15
@@ -67,11 +67,11 @@ if false
     dim_regs = [[-1, 1] for j = 1:dim_size]
     dim_tys = [true for j = 1:dim_size]
     dim = Dimension(dim_size, dim_regs, dim_tys)
-    obj = Objective(ackley, dim)
+    obj = Objective(func=ackley, dim=dim)
 
     budget = 20 * dim_size
 
-    par = Parameter(budget=budget, sequential=true, asynchronous=true, computer_num = 3)
+    par = Parameter(budget=budget, sequential=true, asynchronous=false, computer_num = 3)
     # par = Parameter(budget=budget, sequential=true, asynchronous=false)
 
     sol = zoo_min(obj, par)
@@ -94,7 +94,7 @@ if false
   for i in 1:repeatn
     problem = setcover()
     dim = setcover_dim()
-    obj = Objective(setcover_fx, dim, args=problem)
+    obj = Objective(func=setcover_fx, dim=dim, args=problem)
 
     budget = 100 * dim.size
     par = Parameter(budget=budget, autoset=false, asynchronous=false, computer_num = 3)
@@ -134,7 +134,7 @@ if false
       end
     end
     dim = Dimension(dim_size, dim_regs, dim_tys)
-    obj = Objective(mixed_functin, dim)
+    obj = Objective(func=mixed_functin, dim=dim)
     budget = 2000
     par = Parameter(budget=budget, autoset=true)
     sol = zoo_min(obj, par)

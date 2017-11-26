@@ -19,19 +19,17 @@ if true
   dim_tys = [true for i = 1:dim_size]
   mydim = Dimension(dim_size, dim_regs, dim_tys)
 
-  budget = 10 * dim_size
+  budget = 20 * dim_size
   rand_probability = 0.99
 
-  # ip_port = ["127.0.0.1:$(i)" for i = 50000:50004]
-  # print(ip_port)
   obj = Objective(dim=mydim)
-  par = Parameter(budget=budget, probability=rand_probability, replace_strategy="RR", asynchronous=true,
-    computer_num=2, tcp=true, control_server_ip="172.28.145.49", control_server_port=[20001, 20002, 20003],
-    working_directory="sphere.py", func="sphere")
+  par = Parameter(budget=budget, probability=rand_probability, replace_strategy="WR", asynchronous=true,
+    computer_num=1, tcp=true, control_server_ip="172.19.99.204", control_server_port=[20001, 20002, 20003],
+    working_directory="fx.py", func="ackley")
   result = []
 	# println(par.control_server_port)
   sum = 0
-  repeat = 1
+  repeat = 10
   zoolog("solved solution is:")
   for i in 1:repeat
     ins = zoo_min(obj, par)

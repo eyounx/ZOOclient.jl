@@ -48,7 +48,7 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
           put!(parameter.ip_port, ip_port)
           put!(arc.result_set, x)
           if i <= parameter.budget
-            println("compute fx: $(i), value=$(x.value), ip_port=$(ip_port)")
+			#  println("compute fx: $(i), value=$(x.value), ip_port=$(ip_port)")
           end
         catch e
           println("Exception")
@@ -111,15 +111,22 @@ function tcp_updater(asracos::ASRacos, budget, ub, finish)
   parameter = rc.parameter
   strategy = parameter.replace_strategy
   time_log1 = now()
+  interval = 10
+  time_sum = interval
+  f = open("result.txt", "w")
   while(t <= budget)
-    t += 1
-    if t == arc.computer_num + 1
-      time_log1 = now()
-    end
     sol = take!(arc.result_set)
     bad_ele = replace(rc.positive_data, sol, "pos")
     replace(rc.negative_data, bad_ele, "neg", strategy=strategy)
     rc.best_solution = rc.positive_data[1]
+	  time_log2 = now()
+    time_pass = Dates.value(time_log2 - time_log1) / 1000
+	  if time_pass >= time_sum
+	    time_sum = time_sum + interval
+	    println("time: $(time_pass) update $(t): best_solution value = $(rc.best_solution.value)")
+      str = "$(floor(time_pass)) $(rc.best_solution.value)\n"
+      write(f, str)
+	end
     if rand(rng, Float64) < rc.parameter.probability
       classifier = RacosClassification(rc.objective.dim, rc.positive_data,
         rc.negative_data, ub=ub)
@@ -137,15 +144,10 @@ function tcp_updater(asracos::ASRacos, budget, ub, finish)
       break
     end
     put!(arc.sample_set, solution)
-    if t == arc.computer_num * 2
-      time_log2 = now()
-      expected_time = (parameter.budget - parameter.train_size) *
-        (Dates.value(time_log2 - time_log1) / 1000) / arc.computer_num
-      zoolog(string("expected remaining running time: ", convert_time(expected_time)))
-    end
-    # println("update $(t-1)")
+    t += 1
   end
   finish[1] = true
+  close(f)
   put!(arc.asyn_result, rc.best_solution)
 end
 
