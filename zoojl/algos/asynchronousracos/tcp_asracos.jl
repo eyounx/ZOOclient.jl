@@ -21,6 +21,7 @@ function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Paramet
 
   servers_msg = readline(cs_send)
   servers = split(servers_msg, " ")
+  println("get $(length(servers)) servers")
   parameter.ip_port = RemoteChannel(()->Channel(length(servers)))
   for server in servers
     put!(parameter.ip_port, server)
@@ -113,7 +114,11 @@ function tcp_updater(asracos::ASRacos, budget, ub, finish)
   time_log1 = now()
   interval = 10
   time_sum = interval
-  f = open("result.txt", "w")
+  output_file = rc.parameter.output_file
+  f = Nullable()
+  if output_file != ""
+    f = open(output_file, "w")
+  end
   while(t <= budget)
     sol = take!(arc.result_set)
     bad_ele = replace(rc.positive_data, sol, "pos")
@@ -125,7 +130,9 @@ function tcp_updater(asracos::ASRacos, budget, ub, finish)
 	    time_sum = time_sum + interval
 	    println("time: $(time_pass) update $(t): best_solution value = $(rc.best_solution.value)")
       str = "$(floor(time_pass)) $(rc.best_solution.value)\n"
-      write(f, str)
+      if !isnull(f)
+        write(f, str)
+      end
 	end
     if rand(rng, Float64) < rc.parameter.probability
       classifier = RacosClassification(rc.objective.dim, rc.positive_data,
@@ -147,7 +154,9 @@ function tcp_updater(asracos::ASRacos, budget, ub, finish)
     t += 1
   end
   finish[1] = true
-  close(f)
+  if !isnull(f)
+    close(f)
+  end
   put!(arc.asyn_result, rc.best_solution)
 end
 

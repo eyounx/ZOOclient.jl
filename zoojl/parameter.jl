@@ -32,6 +32,7 @@ type Parameter
   control_server_port
   working_directory
   func
+  output_file
 
   # for pareto optimization
   isolationfunc
@@ -41,7 +42,7 @@ type Parameter
     precision=Nullable(), uncertain_bits=Nullable(), train_size=0, positive_size=0,
     negative_size=0, probability=0.99, replace_strategy="WR", asynchronous=false, computer_num = 1, tcp=false,
     ip_port=Nullable(), control_server_ip="", control_server_port=Nullable(),
-    working_directory="", func="target_func", isolationfunc=x->0, autoset=true)
+    working_directory="", func="target_func", output_file="", isolationfunc=x->0, autoset=true)
 
     # if !isnull(ip_port)
     #   temp_ip_port = RemoteChannel(()->Channel(length(ip_port)))
@@ -55,7 +56,8 @@ type Parameter
     parameter = new(algorithm, budget, init_sample, time_budget, terminal_value,
     sequential, precision, uncertain_bits, train_size, positive_size, negative_size,
     probability, replace_strategy, asynchronous, computer_num, tcp, ip_port,
-    control_server_ip, control_server_port, working_directory, func, isolationfunc)
+    control_server_ip, control_server_port, working_directory, func, output_file,
+    isolationfunc)
     if budget != 0 && autoset == true
       autoset!(parameter)
     end

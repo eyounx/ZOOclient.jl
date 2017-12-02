@@ -12,24 +12,23 @@ importall fx, dimension, parameter, objective, solution, tool_function,
 
 using Base.Dates.now
 
-if true
+function test(budget, computer_num, output_file)
   time_log1 = now()
   dim_size = 100
   dim_regs = [[-1, 1] for i = 1:dim_size]
   dim_tys = [true for i = 1:dim_size]
   mydim = Dimension(dim_size, dim_regs, dim_tys)
 
-  budget = 20 * dim_size
   rand_probability = 0.99
 
   obj = Objective(dim=mydim)
   par = Parameter(budget=budget, probability=rand_probability, replace_strategy="WR", asynchronous=true,
-    computer_num=1, tcp=true, control_server_ip="172.19.99.204", control_server_port=[20001, 20002, 20003],
-    working_directory="fx.py", func="ackley")
+    computer_num=computer_num, tcp=true, control_server_ip="192.168.10.1", control_server_port=[20001, 20002, 20003],
+    working_directory="fx.py", func="ackley", output_file=output_file)
   result = []
 	# println(par.control_server_port)
   sum = 0
-  repeat = 10
+  repeat = 1
   zoolog("solved solution is:")
   for i in 1:repeat
     ins = zoo_min(obj, par)
@@ -43,4 +42,13 @@ if true
   time_log2 = now()
   expect_time = Dates.value(time_log2 - time_log1) / 1000
   println(expect_time)
+end
+
+if true
+  repeat = 3
+  output = ["/Users/liu/Desktop/test_data/evaluation_server_1_$(i).txt" for i = 1:repeat]
+  println(output)
+  for i = 1:repeat
+    test(2000, 1, output[i])
+  end
 end
