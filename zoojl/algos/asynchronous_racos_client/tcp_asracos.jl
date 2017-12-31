@@ -119,6 +119,7 @@ function tcp_updater(asracos::ASRacos, budget, ub, finish)
   if output_file != ""
     f = open(output_file, "w")
   end
+  br = false
   while(t <= budget)
     sol = take!(arc.result_set)
     bad_ele = replace(rc.positive_data, sol, "pos")
@@ -133,7 +134,11 @@ function tcp_updater(asracos::ASRacos, budget, ub, finish)
       if !isnull(f)
         write(f, str)
       end
-	end
+      if !isnull(parameter.time_limit) && time_pass > parameter.time_limit
+        zoolog("Exceed time limit: $(parameter.time_limit)")
+        br = true
+      end
+	  end
     if rand(rng, Float64) < rc.parameter.probability
       classifier = RacosClassification(rc.objective.dim, rc.positive_data,
         rc.negative_data, ub=ub)
@@ -152,8 +157,12 @@ function tcp_updater(asracos::ASRacos, budget, ub, finish)
     end
     put!(arc.sample_set, solution)
     t += 1
+    if br == true
+      break
+    end
   end
   finish[1] = true
+  # zoolog("update finish")
   if !isnull(f)
     close(f)
   end
