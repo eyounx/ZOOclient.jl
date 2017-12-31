@@ -38,7 +38,8 @@ def ackley(solution):
     return value
 ```
 
-1. Run control server by providing four ports.
+2. Run control server by providing four ports.
+
    `example/julia_tcp_with_python/python_server/control_server_example.py`
 
 ```python
@@ -67,164 +68,165 @@ if __name__ == "__main__":
     run([20000, 20001, 20002, 20003])
 ```
 
-1. Run evaluation servers by providing a configuration text.
-   `example/julia_tcp_with_python/python_server/evaluation_server_example.py`
+3. Run evaluation servers by providing a configuration text.
 
-   ```python
-   import sys
-   project_path = "/Users/liu/Desktop/CS/github/"
-   sys.path.append(project_path + "ZOOjl/zoojl/algos/asynchronous_racos_server/")
+`example/julia_tcp_with_python/python_server/evaluation_server_example.py`
 
-   import socket
-   import multiprocessing
-   from evaluation_server import EvaluationServer
-   from tool_function import ToolFunction
-   from port_conflict import is_open
+```python
+import sys
+project_path = "/Users/liu/Desktop/CS/github/"
+sys.path.append(project_path + "ZOOjl/zoojl/algos/asynchronous_racos_server/")
 
-
-   def run_server(port, work_dir, control_server):
-       """
-       Api of running evaluation server.
-
-       :param port: port of evaluation server
-       :param work_dir: working directory
-       :param control_server: ip:port of control server
-       :return: no return
-       """
-       local_ip = socket.gethostbyname(socket.gethostname())
-       data_length = 1024
-       server_ip = local_ip
-       server_port = port
-
-       # set server ip, port and longest data length in initialization
-       server = EvaluationServer(server_ip, server_port, data_length)
-
-       server.start_server(control_server=control_server, working_dir=work_dir)
+import socket
+import multiprocessing
+from evaluation_server import EvaluationServer
+from tool_function import ToolFunction
+from port_conflict import is_open
 
 
-   def run(configuration):
-       """
-       Api of running evaluation servers from configuration file.
+def run_server(port, work_dir, control_server):
+    """
+    Api of running evaluation server.
 
-       :param configuration:
-           configuration is a file name
-           configuration  has three lines
-           he first line is the working directory this server works on
-           the second line is the address of control server
-           the third line has three numbers, for example, 2 50000 50002
-           2 means opening 2 server, 50000 50002 means these servers can use port between 50000 and 50002([50000, 50002])
-       :return: no return
-       """
-       file_obj = open(configuration)
-       list_of_all_lines = file_obj.readlines()
-       working_dir = list_of_all_lines[0][:-1]
-       control_server = list_of_all_lines[1][:-1]
-       info = list_of_all_lines[2].split()
-       num = int(info[0])
-       lowerb = int(info[1])
-       upperb = int(info[2])
-       local_ip = socket.gethostbyname(socket.gethostname())  # get local ip
-       ToolFunction.log("evaluation server ip: " + local_ip)
-       count = 0
-       workers = []
-       for port in range(lowerb, upperb):
-           if is_open(local_ip, port) is False:
-               count += 1
-               workers.append(multiprocessing.Process(target=run_server, args=(port, working_dir, control_server)))
-               if count >= num:
-                   break
-       for w in workers:
-           w.start()
+    :param port: port of evaluation server
+    :param work_dir: working directory
+    :param control_server: ip:port of control server
+    :return: no return
+    """
+    local_ip = socket.gethostbyname(socket.gethostname())
+    data_length = 1024
+    server_ip = local_ip
+    server_port = port
 
-   if __name__ == "__main__":
-       run("configuration.txt")
-   ```
+    # set server ip, port and longest data length in initialization
+    server = EvaluationServer(server_ip, server_port, data_length)
 
-   configuration text looks like
+    server.start_server(control_server=control_server, working_dir=work_dir)
 
-   ```
-   /Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/julia_tcp_with_python/python_server/
-   192.168.0.102:20000
-   2 60003 60005
-   ```
 
-2. Provide *dimension*, *objective* and  *parameter* in client.jl.
+def run(configuration):
+    """
+    Api of running evaluation servers from configuration file.
 
-   ```julia
-   root = "/Users/liu/Desktop/CS/github/"
+    :param configuration:
+        configuration is a file name
+        configuration  has three lines
+        he first line is the working directory this server works on
+        the second line is the address of control server
+        the third line has three numbers, for example, 2 50000 50002
+        2 means opening 2 server, 50000 50002 means these servers can use port between 50000 and 50002([50000, 50002])
+    :return: no return
+    """
+    file_obj = open(configuration)
+    list_of_all_lines = file_obj.readlines()
+    working_dir = list_of_all_lines[0][:-1]
+    control_server = list_of_all_lines[1][:-1]
+    info = list_of_all_lines[2].split()
+    num = int(info[0])
+    lowerb = int(info[1])
+    upperb = int(info[2])
+    local_ip = socket.gethostbyname(socket.gethostname())  # get local ip
+    ToolFunction.log("evaluation server ip: " + local_ip)
+    count = 0
+    workers = []
+    for port in range(lowerb, upperb):
+        if is_open(local_ip, port) is False:
+            count += 1
+            workers.append(multiprocessing.Process(target=run_server, args=(port, working_dir, control_server)))
+            if count >= num:
+                break
+    for w in workers:
+        w.start()
 
-   push!(LOAD_PATH, string(root, "ZOOjl/zoojl"))
-   push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/racos"))
-   push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/asynchronous_racos_client"))
-   push!(LOAD_PATH, string(root, "ZOOjl/zoojl/utils"))
-   push!(LOAD_PATH, string(root, "ZOOjl/zoojl/example/direct_policy_search_for_gym"))
-   push!(LOAD_PATH, string(root, "ZOOjl/zoojl/example/simple_functions"))
-   print("load successfully")
+if __name__ == "__main__":
+    run("configuration.txt")
+```
 
-   importall fx, dimension, parameter, objective, solution, tool_function,
-     zoo_global, optimize
+configuration text looks like
 
-   export test
+```
+/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/julia_tcp_with_python/python_server/
+192.168.0.102:20000
+2 60003 60005
+```
 
-   using Base.Dates.now
+4. Provide *dimension*, *objective* and  *parameter* in client.jl.
 
-   function test(budget, computer_num; output_file="")
-     time_log1 = now()
-     dim_size = 100
-     dim_regs = [[-1, 1] for i = 1:dim_size]
-     dim_tys = [true for i = 1:dim_size]
-     mydim = Dimension(dim_size, dim_regs, dim_tys)
+```julia
+root = "/Users/liu/Desktop/CS/github/"
 
-     rand_probability = 0.99
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/racos"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/asynchronous_racos_client"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/utils"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/example/direct_policy_search_for_gym"))
+push!(LOAD_PATH, string(root, "ZOOjl/zoojl/example/simple_functions"))
+print("load successfully")
 
-     obj = Objective(dim=mydim)
-     par = Parameter(budget=budget, probability=rand_probability, replace_strategy="WR", asynchronous=true,
-       computer_num=computer_num, tcp=true, control_server_ip="192.168.0.102", control_server_port=[20001, 20002, 20003],
-       working_directory="fx.py", func="ackley", output_file=output_file)
-     result = []
-   	# println(par.control_server_port)
-     sum = 0
-     repeat = 1
-     zoolog("solved solution is:")
-     for i in 1:repeat
-       ins = zoo_min(obj, par)
-       sum += ins.value
-       zoolog(ins.x)
-       zoolog(ins.value)
-       push!(result, ins.value)
-     end
-     zoolog(result)
-     zoolog(sum / length(result))
-     time_log2 = now()
-     expect_time = Dates.value(time_log2 - time_log1) / 1000
-     println(expect_time)
-   end
+importall fx, dimension, parameter, objective, solution, tool_function,
+  zoo_global, optimize
 
-   function repeat_test(budget, cal_num, repeat)
-     output = ["/Users/liu/Desktop/test_data/evaluation_server_$(cal_num)_$(i).txt" for i = 1:repeat]
-     # println(output)
-     for i = 1:repeat
-       # test(budget, cal_num, output[i])
-       test(budget, cal_num)
-     end
-   end
+export test
 
-   if true
-     budget = parse(Int64,ARGS[1])
-     cal_num = parse(Int64,ARGS[2])
-     repeat = parse(Int64,ARGS[3])
-     println(repeat)
-     repeat_test(budget, cal_num, repeat)
-   end
+using Base.Dates.now
 
-   ```
+function test(budget, computer_num; output_file="")
+  time_log1 = now()
+  dim_size = 100
+  dim_regs = [[-1, 1] for i = 1:dim_size]
+  dim_tys = [true for i = 1:dim_size]
+  mydim = Dimension(dim_size, dim_regs, dim_tys)
 
-   ​
+  rand_probability = 0.99
 
-3. Run client.jl using command line.
+  obj = Objective(dim=mydim)
+  par = Parameter(budget=budget, probability=rand_probability, replace_strategy="WR", asynchronous=true,
+    computer_num=computer_num, tcp=true, control_server_ip="192.168.0.102", control_server_port=[20001, 20002, 20003],
+    working_directory="fx.py", func="ackley", output_file=output_file)
+  result = []
+	# println(par.control_server_port)
+  sum = 0
+  repeat = 1
+  zoolog("solved solution is:")
+  for i in 1:repeat
+    ins = zoo_min(obj, par)
+    sum += ins.value
+    zoolog(ins.x)
+    zoolog(ins.value)
+    push!(result, ins.value)
+  end
+  zoolog(result)
+  zoolog(sum / length(result))
+  time_log2 = now()
+  expect_time = Dates.value(time_log2 - time_log1) / 1000
+  println(expect_time)
+end
 
-   > ./julia -p 4 //Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/julia_tcp_with_python/julia_client/client.jl 3000 2 3
+function repeat_test(budget, cal_num, repeat)
+  output = ["/Users/liu/Desktop/test_data/evaluation_server_$(cal_num)_$(i).txt" for i = 1:repeat]
+  # println(output)
+  for i = 1:repeat
+    # test(budget, cal_num, output[i])
+    test(budget, cal_num)
+  end
+end
 
-   client.jl read three arguments provided by command line, respectively are budget, requested calculator server number, repeat times.
+if true
+  budget = parse(Int64,ARGS[1])
+  cal_num = parse(Int64,ARGS[2])
+  repeat = parse(Int64,ARGS[3])
+  println(repeat)
+  repeat_test(budget, cal_num, repeat)
+end
 
-4. For a few seconds, the optimization is done and we will get the result.
+```
+
+
+
+5. Run client.jl using command line.
+
+> ./julia -p 4 //Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/julia_tcp_with_python/julia_client/client.jl 3000 2 3
+
+client.jl read three arguments provided by command line, respectively are budget, requested calculator server number, repeat times.
+
+6. For a few seconds, the optimization is done and we will get the result.
