@@ -6,7 +6,8 @@ Author:
 """
 
 import sys
-sys.path.append("/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/asynchronous_racos_server/")
+project_path = "/Users/liu/Desktop/CS/github/"  #project path
+sys.path.append(project_path + "ZOOjl/zoojl/algos/asynchronous_racos_server/")
 
 import socket
 from control_server import ControlServer

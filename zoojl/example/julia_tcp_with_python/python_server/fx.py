@@ -9,10 +9,11 @@ from random import Random
 import numpy as np
 
 
-
 def sphere(solution):
     """
-    Sphere function for continuous optimization
+    Sphere function for continuous optimization.
+    In order to simulate CPU-bound tasks, extra 100 thousand for loops are added
+    to extend evalution.
 
     :param solution: a data structure containing x and fx
     :return: value of fx
@@ -29,14 +30,16 @@ def sphere(solution):
 def ackley(solution):
     """
         Ackley function for continuous optimization
+        In order to simulate CPU-bound tasks, extra 100 thousand for loops are added
+        to extend evalution.
 
         :param solution: a data structure containing x and fx
         :return: value of fx
     """
-    # a = 0
-    # rd = Random()
-    # for i in range(100000):
-    #     a += rd.uniform(0, 1)
+    a = 0
+    rd = Random()
+    for i in range(100000):
+        a += rd.uniform(0, 1)
     x = solution.get_x()
     bias = 0.2
     ave_seq = sum([(i - bias) * (i - bias) for i in x]) / len(x)

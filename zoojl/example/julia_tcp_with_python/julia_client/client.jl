@@ -1,5 +1,5 @@
 root = "/Users/liu/Desktop/CS/github/"
-# root = "/home/lamda/liuyr/"
+
 push!(LOAD_PATH, string(root, "ZOOjl/zoojl"))
 push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/racos"))
 push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/asynchronous_racos_client"))
@@ -40,8 +40,8 @@ function test(budget, computer_num; output_file="")
     zoolog(ins.value)
     push!(result, ins.value)
   end
-  zoolog(result)
-  zoolog(sum / length(result))
+  # zoolog(result)
+  # zoolog(sum / length(result))
   time_log2 = now()
   expect_time = Dates.value(time_log2 - time_log1) / 1000
   println(expect_time)

@@ -3,7 +3,7 @@ module tool_function
 export zoolog, rand_uniform, convert_time, mydistance
 
 function zoolog(text)
-  println("[zoopt] $text")
+  println("[zoojl] $text")
 end
 
 function rand_uniform(rng, lower, upper)
