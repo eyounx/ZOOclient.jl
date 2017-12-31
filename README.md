@@ -10,7 +10,7 @@ Zeroth-order optimization (a.k.a. derivative-free optimization/black-box optimiz
 
 ## A quick example
 
-1. Define the Ackley function implemented in Python for minimization.'''
+1. Define the Ackley function implemented in Python for minimization.
 
 ```python
 from random import Random
