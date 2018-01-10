@@ -1,6 +1,6 @@
 module tcp_asracos
 
-importall racos_common, aracos_common, asracos, objective, parameter, solution,
+importall racos_common, asracos_common, asracos, objective, parameter, solution,
 zoo_global, tool_function, racos_classification, sracos
 
 export tcp_asracos!

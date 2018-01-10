@@ -1,4 +1,4 @@
-module aracos_optimization
+module asracos_optimization
 
 importall asracos, racos, dimension, racos_optimization, tcp_asracos
 

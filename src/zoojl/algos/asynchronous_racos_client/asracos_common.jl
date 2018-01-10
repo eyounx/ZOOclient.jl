@@ -1,11 +1,11 @@
-module aracos_common
+module asracos_common
 
 importall objective, dimension, racos_common, racos_classification, zoo_global,
   solution, tool_function
 
-export ARacosCommon, init_sample_set!
+export ASRacosCommon, init_sample_set!
 
-type ARacosCommon
+type ASRacosCommon
   rc::RacosCommon
   computer_num
   sample_set
@@ -13,13 +13,13 @@ type ARacosCommon
   asyn_result
   is_finish
 
-  function ARacosCommon(ncomputer)
+  function ASRacosCommon(ncomputer)
     new(RacosCommon(), ncomputer, RemoteChannel(()->Channel(ncomputer)),
     RemoteChannel(()->Channel(ncomputer)), RemoteChannel(()->Channel(1)), false)
   end
 end
 
-function init_sample_set!(arc::ARacosCommon, ub)
+function init_sample_set!(arc::ASRacosCommon, ub)
   rc = arc.rc
   classifier = RacosClassification(rc.objective.dim, rc.positive_data,
     rc.negative_data, ub=ub)

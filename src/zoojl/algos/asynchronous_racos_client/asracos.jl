@@ -8,10 +8,10 @@ using Base.Dates.now
 export ASRacos, asracos_opt!, updater
 
 type ASRacos
-  arc::ARacosCommon
+  arc::ASRacosCommon
 
   function ASRacos(computer_num=1)
-    return new(ARacosCommon(computer_num))
+    return new(ASRacosCommon(computer_num))
   end
 end
 
