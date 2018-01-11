@@ -1,10 +1,9 @@
-module dimension
-
-# include("utils/zoo_global.jl")
-include("/Users/liu/Desktop/CS/github/ZOOjl/src/zoojl/utils/zoo_global.jl")
+include("utils/zoo_global.jl")
 include("utils/tool_function.jl")
 
-# importall zoo_global, tool_function
+module dimension
+
+importall zoo_global, tool_function
 
 export Dimension, dim_rand_sample, dim_limited_space, dim_print, is_discrete
 

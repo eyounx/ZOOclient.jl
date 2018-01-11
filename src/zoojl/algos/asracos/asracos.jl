@@ -1,5 +1,3 @@
-module asracos
-
 include("../racos/sracos.jl")
 include("../racos/racos_common.jl")
 include("../racos/racos_classification.jl")
@@ -9,8 +7,11 @@ include("../../parameter.jl")
 include("../../solution.jl")
 include("../../utils/zoo_global.jl")
 include("../../utils/tool_function.jl")
+include("asracos_common.jl")
 
-importall aracos_common, racos_common, sracos, racos_classification, objective,
+module asracos
+
+importall asracos_common, racos_common, sracos, racos_classification, objective,
   parameter, zoo_global, solution, tool_function
 
 using Base.Dates.now

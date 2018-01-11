@@ -1,3 +1,5 @@
+include("solution.jl")
+
 module objective
 
 importall solution

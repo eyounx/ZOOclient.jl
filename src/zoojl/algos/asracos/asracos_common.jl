@@ -1,10 +1,12 @@
-module asracos_common
-
 include("../../objective.jl")
 include("../../parameter.jl")
 include("../../solution.jl")
 include("../../utils/zoo_global.jl")
 include("../../utils/tool_function.jl")
+include("../racos/racos_common.jl")
+include("../racos/racos_classification.jl")
+
+module asracos_common
 
 importall objective, dimension, racos_common, racos_classification, zoo_global,
   solution, tool_function

@@ -1,6 +1,8 @@
 module racos_optimization
 
 include("../../dimension.jl")
+include("racos.jl")
+include("sracos.jl")
 
 importall racos, sracos, dimension
 

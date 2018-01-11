@@ -1,9 +1,12 @@
-module racos
-
 include("../../objective.jl")
 include("../../parameter.jl")
+include("../../dimension.jl")
 include("../../utils/zoo_global.jl")
 include("../../utils/tool_function.jl")
+include("racos_common.jl")
+include("racos_classification.jl")
+
+module racos
 
 importall racos_common, objective, parameter, zoo_global,
   racos_classification, dimension, tool_function

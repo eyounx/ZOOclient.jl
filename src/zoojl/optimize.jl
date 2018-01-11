@@ -1,8 +1,7 @@
-# main function
-module optimize
-
-include("algos/asynchronous_racos/asracos_optimization.jl")
+include("algos/asracos/asracos_optimization.jl")
 include("algos/racos/racos_optimization.jl")
+
+module optimize
 
 importall asracos_optimization, objective, parameter, racos_optimization
 

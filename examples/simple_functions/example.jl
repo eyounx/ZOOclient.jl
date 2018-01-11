@@ -1,10 +1,7 @@
-root = "/Users/liu/Desktop/CS/github/"
+include("../../src/ZOOjl.jl")
+include("fx.jl")
 
-push!(LOAD_PATH, string(root, "ZOOjl/src/"))
-
-print("load successfully")
-
-using ZOOjl, fx
+using fx
 
 using Base.Dates.now
 

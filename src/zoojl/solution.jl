@@ -1,7 +1,7 @@
-module solution
-
 include("utils/zoo_global.jl")
 include("utils/tool_function.jl")
+
+module solution
 
 importall zoo_global, tool_function
 

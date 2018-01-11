@@ -1,7 +1,10 @@
-module asracos_optimization
-
 include("../racos/racos.jl")
 include("../../dimension.jl")
+include("asracos.jl")
+include("tcp_asracos.jl")
+include("../racos/racos_optimization.jl")
+
+module asracos_optimization
 
 importall asracos, racos, dimension, racos_optimization, tcp_asracos
 

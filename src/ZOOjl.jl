@@ -12,9 +12,9 @@ include("zoojl/algos/racos/racos_common.jl")
 include("zoojl/algos/racos/racos_optimization.jl")
 include("zoojl/algos/racos/racos.jl")
 include("zoojl/algos/racos/sracos.jl")
-include("zoojl/algos/asynchronous_racos/asracos_common.jl")
-include("zoojl/algos/asynchronous_racos/asracos_optimization.jl")
-include("zoojl/algos/asynchronous_racos/asracos.jl")
-include("zoojl/algos/asynchronous_racos/tcp_asracos.jl")
+include("zoojl/algos/asracos/asracos_common.jl")
+include("zoojl/algos/asracos/asracos_optimization.jl")
+include("zoojl/algos/asracos/asracos.jl")
+include("zoojl/algos/asracos/tcp_asracos.jl")
 
 end

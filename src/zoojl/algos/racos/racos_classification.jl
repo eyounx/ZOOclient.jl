@@ -1,8 +1,8 @@
-module racos_classification
-
 include("../../solution.jl")
 include("../../utils/tool_function.jl")
 include("../../utils/zoo_global.jl")
+
+module racos_classification
 
 importall solution, tool_function, zoo_global
 
