@@ -1,5 +1,7 @@
 module racos_optimization
 
+include("../../dimension.jl")
+
 importall racos, sracos, dimension
 
 export RacosOptimization, opt!, clear!, set_ub

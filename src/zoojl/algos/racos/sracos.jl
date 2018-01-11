@@ -1,5 +1,11 @@
 module sracos
 
+include("../../objective.jl")
+include("../../parameter.jl")
+include("../../solution.jl")
+include("../../utils/zoo_global.jl")
+include("../../utils/tool_function.jl")
+
 importall racos_common, objective, parameter, zoo_global, solution,
   racos_classification, tool_function
 

@@ -1,14 +1,10 @@
 root = "/Users/liu/Desktop/CS/github/"
-push!(LOAD_PATH, string(root, "ZOOjl/zoojl"))
-push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/racos"))
-push!(LOAD_PATH, string(root, "ZOOjl/zoojl/algos/asynchronousracos"))
-push!(LOAD_PATH, string(root, "ZOOjl/zoojl/utils"))
-push!(LOAD_PATH, string(root, "ZOOjl/zoojl/example/direct_policy_search_for_gym"))
-push!(LOAD_PATH, string(root, "ZOOjl/zoojl/example/simple_functions"))
+
+push!(LOAD_PATH, string(root, "ZOOjl/src/"))
+
 print("load successfully")
 
-importall optimize, dimension, fx, solution, objective, parameter, tool_function,
-  zoo_global
+using ZOOjl, fx
 
 using Base.Dates.now
 

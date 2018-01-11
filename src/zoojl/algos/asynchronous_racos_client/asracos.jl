@@ -1,7 +1,17 @@
 module asracos
 
-importall aracos_common, racos_common, objective, parameter, zoo_global, solution,
-  racos_classification, tool_function, sracos
+include("../racos/sracos.jl")
+include("../racos/racos_common.jl")
+include("../racos/racos_classification.jl")
+include("../../dimension.jl")
+include("../../objective.jl")
+include("../../parameter.jl")
+include("../../solution.jl")
+include("../../utils/zoo_global.jl")
+include("../../utils/tool_function.jl")
+
+importall aracos_common, racos_common, sracos, racos_classification, objective,
+  parameter, zoo_global, solution, tool_function
 
 using Base.Dates.now
 

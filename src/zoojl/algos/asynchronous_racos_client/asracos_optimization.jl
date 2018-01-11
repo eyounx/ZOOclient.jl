@@ -1,5 +1,8 @@
 module asracos_optimization
 
+include("../racos/racos.jl")
+include("../../dimension.jl")
+
 importall asracos, racos, dimension, racos_optimization, tcp_asracos
 
 export asyn_opt!

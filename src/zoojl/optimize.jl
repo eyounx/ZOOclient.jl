@@ -1,7 +1,10 @@
 # main function
 module optimize
 
-importall aracos_optimization, objective, parameter, racos_optimization
+include("algos/asynchronous_racos/asracos_optimization.jl")
+include("algos/racos/racos_optimization.jl")
+
+importall asracos_optimization, objective, parameter, racos_optimization
 
 export zoo_min
 

@@ -1,5 +1,9 @@
 module racos_classification
 
+include("../../solution.jl")
+include("../../utils/tool_function.jl")
+include("../../utils/zoo_global.jl")
+
 importall solution, tool_function, zoo_global
 
 export RacosClassification, mixed_classification, rand_sample

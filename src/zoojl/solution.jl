@@ -1,6 +1,9 @@
 module solution
 
-importall dimension, zoo_global, tool_function
+include("utils/zoo_global.jl")
+include("utils/tool_function.jl")
+
+importall zoo_global, tool_function
 
 export Solution, find_max, find_min, sol_print, sol_equal
 
