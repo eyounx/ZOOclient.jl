@@ -1,15 +1,3 @@
-include("../racos/racos.jl")
-include("../../dimension.jl")
-include("asracos.jl")
-include("tcp_asracos.jl")
-include("../racos/racos_optimization.jl")
-
-module asracos_optimization
-
-importall asracos, racos, dimension, racos_optimization, tcp_asracos
-
-export asyn_opt!
-
 # General optimization function, it will choose optimization algorithm according to parameter.get_sequential()
 # If user hasn't define uncertain_bits in parameter, set_ub() will set uncertain_bits automatically according to dim
 # in objective
@@ -23,6 +11,4 @@ function asyn_opt!(ro::RacosOptimization, objective, parameter)
     ro.best_solution = tcp_asracos!(ro.algorithm, objective, parameter, ub=uncertain_bits)
   end
   return ro.best_solution
-end
-
 end

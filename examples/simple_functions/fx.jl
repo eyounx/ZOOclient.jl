@@ -1,9 +1,3 @@
-module fx
-
-importall dimension, tool_function
-
-export sphere, ackley, setcover, setcover_fx, setcover_dim, mixed_functin
-
 function sphere(solution, args)
   # l = 0
   # for i = 1:5000000
@@ -106,6 +100,4 @@ function mixed_functin(solution, args)
   x = solution.x
   value = sum(i^2 for i in x)
   return value
-end
-
 end

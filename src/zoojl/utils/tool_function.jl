@@ -1,7 +1,3 @@
-module tool_function
-
-export zoolog, rand_uniform, convert_time, mydistance
-
 function zoolog(text)
   println("[zoojl] $text")
 end
@@ -28,6 +24,3 @@ function mydistance(x, y)
   end
   return sqrt(dis)
 end
-
-end
-# print(distance([1, 2], [2, 3]))

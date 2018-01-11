@@ -1,20 +1,3 @@
-include("../../objective.jl")
-include("../../parameter.jl")
-include("../../dimension.jl")
-include("../../utils/zoo_global.jl")
-include("../../utils/tool_function.jl")
-include("racos_common.jl")
-include("racos_classification.jl")
-
-module racos
-
-importall racos_common, objective, parameter, zoo_global,
-  racos_classification, dimension, tool_function
-
-using Base.Dates.now
-
-export Racos, racos_opt!
-
 type Racos
   rc::RacosCommon
   function Racos()
@@ -85,8 +68,4 @@ function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub
     end
   end
   return rc.best_solution
-end
-
-
-
 end

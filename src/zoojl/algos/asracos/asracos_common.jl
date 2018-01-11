@@ -1,18 +1,3 @@
-include("../../objective.jl")
-include("../../parameter.jl")
-include("../../solution.jl")
-include("../../utils/zoo_global.jl")
-include("../../utils/tool_function.jl")
-include("../racos/racos_common.jl")
-include("../racos/racos_classification.jl")
-
-module asracos_common
-
-importall objective, dimension, racos_common, racos_classification, zoo_global,
-  solution, tool_function
-
-export ASRacosCommon, init_sample_set!
-
 type ASRacosCommon
   rc::RacosCommon
   computer_num
@@ -41,6 +26,4 @@ function init_sample_set!(arc::ASRacosCommon, ub)
     # sol_print(solution)
     put!(arc.sample_set, solution)
   end
-end
-
 end

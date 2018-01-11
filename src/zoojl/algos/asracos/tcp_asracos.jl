@@ -1,21 +1,3 @@
-include("../racos/sracos.jl")
-include("../racos/racos_common.jl")
-include("../racos/racos_classification.jl")
-include("../../objective.jl")
-include("../../parameter.jl")
-include("../../solution.jl")
-include("../../utils/zoo_global.jl")
-include("../../utils/tool_function.jl")
-include("asracos_common.jl")
-include("asracos.jl")
-
-module tcp_asracos
-
-importall racos_common, asracos_common, asracos, objective, parameter, solution,
-zoo_global, tool_function, racos_classification, sracos
-
-export tcp_asracos!
-
 function tcp_asracos!(asracos::ASRacos, objective::Objective, parameter::Parameter;
   ub=1)
   arc = asracos.arc
@@ -271,6 +253,4 @@ function list2str(list)
   end
   result = string(result, "#")
   result
-end
-
 end

@@ -1,12 +1,3 @@
-include("utils/zoo_global.jl")
-include("utils/tool_function.jl")
-
-module solution
-
-importall zoo_global, tool_function
-
-export Solution, find_max, find_min, sol_print, sol_equal
-
 type Solution
   x
   value
@@ -71,6 +62,4 @@ function sol_print(sol)
   zoolog("x: $(sol.x)")
   zoolog("value: $(sol.value)")
   zoolog("attach: $(sol.attach)")
-end
-
 end

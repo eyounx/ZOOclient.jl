@@ -1,13 +1,3 @@
-include("../../solution.jl")
-include("../../utils/tool_function.jl")
-include("../../utils/zoo_global.jl")
-
-module racos_classification
-
-importall solution, tool_function, zoo_global
-
-export RacosClassification, mixed_classification, rand_sample
-
 type RacosClassification
   solution_space
   sample_region
@@ -167,6 +157,4 @@ end
 function print_sample_region(classifier)
   zoolog("------print sample region------")
   zoolog(classifier.sample_region)
-end
-
 end

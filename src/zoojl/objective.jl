@@ -1,13 +1,3 @@
-include("solution.jl")
-
-module objective
-
-importall solution
-
-using Base.Test
-
-export Objective, obj_construct_solution, obj_eval, get_history_bestsofar
-
 type Objective
   func
   args
@@ -53,6 +43,4 @@ function get_history_bestsofar(objective)
     history_bestsofar.append(bestsofar)
   end
   return history_bestsofar
-end
-
 end

@@ -1,7 +1,3 @@
-module parameter
-
-export Parameter, autoset!
-
 type Parameter
   algorithm
   budget
@@ -84,7 +80,4 @@ function autoset!(parameter)
     parameter.positive_size = 2
   end
   parameter.negative_size = parameter.train_size - parameter.positive_size
-end
-
-
 end

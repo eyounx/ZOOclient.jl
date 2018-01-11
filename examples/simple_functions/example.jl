@@ -1,7 +1,6 @@
-include("../../src/ZOOjl.jl")
-include("fx.jl")
+using ZOOjl
 
-using fx
+include("fx.jl")
 
 using Base.Dates.now
 

@@ -1,12 +1,3 @@
-include("utils/zoo_global.jl")
-include("utils/tool_function.jl")
-
-module dimension
-
-importall zoo_global, tool_function
-
-export Dimension, dim_rand_sample, dim_limited_space, dim_print, is_discrete
-
 type Dimension
   size::Int64
   regions
@@ -54,6 +45,4 @@ function is_discrete(dim::Dimension)
     end
   end
   return true
-end
-
 end

@@ -1,11 +1,3 @@
-module racos_optimization
-
-include("../../dimension.jl")
-include("racos.jl")
-include("sracos.jl")
-
-importall racos, sracos, dimension
-
 export RacosOptimization, opt!, clear!, set_ub
 
 type RacosOptimization
@@ -65,6 +57,4 @@ function set_ub(objective)
     end
   end
   return ub
-end
-
 end

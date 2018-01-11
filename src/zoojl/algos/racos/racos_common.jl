@@ -1,19 +1,3 @@
-include("../../objective.jl")
-include("../../dimension.jl")
-include("../../solution.jl")
-include("../../utils/zoo_global.jl")
-include("../../utils/tool_function.jl")
-include("racos_classification.jl")
-
-module racos_common
-
-importall objective, dimension, racos_classification, solution, zoo_global,
-  tool_function
-
-export RacosCommon, clear!, init_attribute!, selection!, distinct_sample,
-distinct_sample_classifier, print_positive_data, print_negative_data, print_data,
-distinct_sample_from_set
-
 type RacosCommon
   parameter
   objective
@@ -210,6 +194,4 @@ function print_data(rc::RacosCommon)
   for x in rc.data
     sol_print(x)
   end
-end
-
 end

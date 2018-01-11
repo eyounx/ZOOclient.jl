@@ -1,23 +1,3 @@
-include("../racos/sracos.jl")
-include("../racos/racos_common.jl")
-include("../racos/racos_classification.jl")
-include("../../dimension.jl")
-include("../../objective.jl")
-include("../../parameter.jl")
-include("../../solution.jl")
-include("../../utils/zoo_global.jl")
-include("../../utils/tool_function.jl")
-include("asracos_common.jl")
-
-module asracos
-
-importall asracos_common, racos_common, sracos, racos_classification, objective,
-  parameter, zoo_global, solution, tool_function
-
-using Base.Dates.now
-
-export ASRacos, asracos_opt!, updater
-
 type ASRacos
   arc::ASRacosCommon
 
@@ -120,6 +100,4 @@ function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Paramet
   # print("Finish workers")
   result = take!(arc.asyn_result)
   return result
-end
-
 end
