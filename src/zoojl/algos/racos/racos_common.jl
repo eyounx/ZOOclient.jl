@@ -16,7 +16,7 @@ type RacosCommon
 end
 
 # clear RacosCommon
-function clear!(rc::RacosCommon)
+function rc_clear!(rc::RacosCommon)
   rc.parameter = Nullable()
   rc.objective = Nullable()
   rc.data = []

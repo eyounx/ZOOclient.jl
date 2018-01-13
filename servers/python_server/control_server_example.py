@@ -5,12 +5,13 @@ Author:
     Yu-Ren Liu
 """
 
+import os
 import sys
-project_path = "/Users/liu/Desktop/CS/github/"  #project path
-sys.path.append(project_path + "ZOOjl/zoojl/algos/asynchronous_racos_server/")
+sys.path.insert(0, os.path.abspath('../asracos_server'))
 
 import socket
 from control_server import ControlServer
+
 
 def run(port):
     """

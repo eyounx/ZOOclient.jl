@@ -13,7 +13,7 @@ export rng, my_precision, set_seed, set_precision
 # racos_classification.jl
 export RacosClassification, mixed_classification, rand_sample
 # racos_common.jl
-export RacosCommon, clear!, init_attribute!, selection!, distinct_sample,
+export RacosCommon, rc_clear!, init_attribute!, selection!, distinct_sample,
 distinct_sample_classifier, print_positive_data, print_negative_data, print_data,
 distinct_sample_from_set
 # racos_optimization.jl

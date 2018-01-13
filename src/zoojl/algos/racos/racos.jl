@@ -8,7 +8,7 @@ end
 # racos optimization function
 function racos_opt!(racos::Racos, objective::Objective, parameter::Parameter; ub=1)
   rc = racos.rc
-  clear!(rc)
+  rc_clear!(rc)
   rc.objective = objective
   rc.parameter = parameter
   init_attribute!(rc)

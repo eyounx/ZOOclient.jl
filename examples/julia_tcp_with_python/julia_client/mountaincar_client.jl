@@ -1,13 +1,5 @@
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/racos")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/algos/asynchronousracos")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/utils")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/direct_policy_search_for_gym")
-push!(LOAD_PATH, "/Users/liu/Desktop/CS/github/ZOOjl/zoojl/example/simple_functions")
-print("load successfully")
+using ZOOjl
 
-importall gym_task, nn_model, dimension, parameter, objective, solution, tool_function,
-  zoo_global, optimize
 # in_layers means layers information. eg. [2, 5, 1] means input layer has 2 neurons, hidden layer(only one) has 5,
 # output layer has 1.
 # in_budget means budget

@@ -2,7 +2,7 @@
 # If user hasn't define uncertain_bits in parameter, set_ub() will set uncertain_bits automatically according to dim
 # in objective
 function asyn_opt!(ro::RacosOptimization, objective, parameter)
-  clear!(ro)
+  ro_clear!(ro)
   uncertain_bits = set_ub(objective)
   ro.algorithm = ASRacos(parameter.computer_num)
   if parameter.tcp == false

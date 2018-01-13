@@ -115,14 +115,15 @@ function tcp_updater(asracos::ASRacos, budget, ub, finish)
   br = false
   while(t <= budget)
     sol = take!(arc.result_set)
-    bad_ele = replace(rc.positive_data, sol, "pos")
-    replace(rc.negative_data, bad_ele, "neg", strategy=strategy)
+    bad_ele = sracos_replace!(rc.positive_data, sol, "pos")
+    sracos_replace!(rc.negative_data, bad_ele, "neg", strategy=strategy)
     rc.best_solution = rc.positive_data[1]
 	  time_log2 = now()
     time_pass = Dates.value(time_log2 - time_log1) / 1000
 	  if time_pass >= time_sum
 	    time_sum = time_sum + interval
-	    println("time: $(time_pass) update $(t): best_solution value = $(rc.best_solution.value)")
+	    zoolog("time: $(time_pass) update $(t): best_solution value = $(rc.best_solution.value)")
+      zoolog("best_solution x = $(rc.best_solution.x)")
       str = "$(floor(time_pass)) $(rc.best_solution.value)\n"
       if !isnull(f)
         write(f, str)

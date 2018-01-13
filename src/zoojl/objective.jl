@@ -6,7 +6,7 @@ type Objective
   constraint
   history
 
-  function Objective(func, dim; args=Nullable(),
+  function Objective(dim; func= Nullable(), args=Nullable(),
       inherit=obj_default_inherit, constraint=Nullable())
     return new(func, args, dim, obj_default_inherit, constraint, Float64[])
   end

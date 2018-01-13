@@ -12,7 +12,7 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
   ub=1)
   strategy = parameter.replace_strategy
   rc = sracos.rc
-  clear!(rc)
+  rc_clear!(rc)
   rc.objective = objective
   rc.parameter = parameter
   init_attribute!(rc)
