@@ -1,5 +1,3 @@
-export RacosOptimization, opt!, clear!, set_ub
-
 type RacosOptimization
   best_solution
   algorithm
@@ -13,7 +11,7 @@ end
 # If user hasn't define uncertain_bits in parameter, set_ub() will set uncertain_bits automatically according to dim
 # in objective
 function opt!(ro::RacosOptimization, objective, parameter)
-  clear!(ro)
+  ro_clear!(ro)
   uncertain_bits = set_ub(objective)
   if parameter.sequential == true
     ro.algorithm = SRacos()
@@ -25,7 +23,7 @@ function opt!(ro::RacosOptimization, objective, parameter)
   return ro.best_solution
 end
 
-function clear!(ro::RacosOptimization)
+function ro_clear!(ro::RacosOptimization)
   ro.best_solution = Nullable()
   ro.algorithm = Nullable()
 end

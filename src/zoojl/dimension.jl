@@ -4,7 +4,7 @@ type Dimension
   types
 end
 
-function dim_rand_sample(dim)
+function dim_rand_sample(dim::Dimension)
   x = []
   for i = 1:dim.size
     value = 0

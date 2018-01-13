@@ -61,5 +61,4 @@ end
 function sol_print(sol)
   zoolog("x: $(sol.x)")
   zoolog("value: $(sol.value)")
-  zoolog("attach: $(sol.attach)")
 end

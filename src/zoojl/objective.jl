@@ -6,13 +6,13 @@ type Objective
   constraint
   history
 
-  function Objective(;func=Nullable(), dim=Nullable(), args=Nullable(),
+  function Objective(func, dim; args=Nullable(),
       inherit=obj_default_inherit, constraint=Nullable())
-    return new(func, args, dim, obj_default_inherit, constraint, [])
+    return new(func, args, dim, obj_default_inherit, constraint, Float64[])
   end
 end
 
-function obj_construct_solution(objective, x; parent=Nullable())
+function obj_construct_solution(objective::Objective, x; parent=Nullable())
   sol = Solution()
   sol.x = x
   sol.attach = objective.inherit(parent=parent)
@@ -22,7 +22,8 @@ end
 # evaluate the objective function of a solution
 function obj_eval(objective, solution)
   solution.value = objective.func(solution, objective.args)
-  append!(objective.history, solution.value)
+  push!(objective.history, solution.value)
+  return solution.value
 end
 
 function obj_eval_constraint(objective, solution)
@@ -34,13 +35,17 @@ function obj_default_inherit(; parent=Nullable())
 end
 
 function get_history_bestsofar(objective)
-  history_bestsofar = []
+  history_bestsofar = Float64[]
   bestsofar = Inf
   for i in 1:length(objective.history)
     if objective.history[i] < bestsofar
       bestsofar = objective.history[i]
     end
-    history_bestsofar.append(bestsofar)
+    push!(history_bestsofar, bestsofar)
   end
   return history_bestsofar
+end
+
+function obj_clean_history(objective::Objective)
+    objective.history = []
 end

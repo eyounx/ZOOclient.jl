@@ -1,8 +1,10 @@
 module ZOOjl
 
+using Base.Dates.now
+
 export Dimension, dim_rand_sample, dim_limited_space, dim_print, is_discrete
 export Objective, obj_construct_solution, obj_eval, get_history_bestsofar
-export zoo_min
+export zoo_min, exp_min
 export Parameter, autoset!
 export Solution, find_max, find_min, sol_print, sol_equal
 # tool_function.jl
@@ -15,11 +17,11 @@ export RacosCommon, clear!, init_attribute!, selection!, distinct_sample,
 distinct_sample_classifier, print_positive_data, print_negative_data, print_data,
 distinct_sample_from_set
 # racos_optimization.jl
-export RacosOptimization, opt!, clear!, set_ub
+export RacosOptimization, opt!, ro_clear!, set_ub
 # racos.jl
 export Racos, racos_opt!
 # sracos.jl
-export SRacos, sracos_opt!, replace
+export SRacos, sracos_opt!, sracos_replace!
 # asracos_common
 export ASRacosCommon, init_sample_set!
 # asracos_optimization
@@ -29,12 +31,12 @@ export ASRacos, asracos_opt!, updater
 # tcp_asracos.jl
 export tcp_asracos!
 
+include("zoojl/utils/tool_function.jl")
+include("zoojl/utils/zoo_global.jl")
 include("zoojl/dimension.jl")
 include("zoojl/objective.jl")
 include("zoojl/parameter.jl")
 include("zoojl/solution.jl")
-include("zoojl/utils/tool_function.jl")
-include("zoojl/utils/zoo_global.jl")
 include("zoojl/algos/racos/racos_classification.jl")
 include("zoojl/algos/racos/racos_common.jl")
 include("zoojl/algos/racos/racos.jl")

@@ -6,7 +6,7 @@ type SRacos
 end
 
 # SRacos's optimization function
-# Default strategy is WR(worst replace)
+# Default strategy is WR(worst sracos_replace!)
 # Default uncertain_bits is 1, but actually ub will be set either by user or by RacosOptimization automatically.
 function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
   ub=1)
@@ -39,8 +39,8 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
     end
     # evaluate the solution
     obj_eval(objective, solution)
-    bad_ele = replace(rc.positive_data, solution, "pos")
-    replace(rc.negative_data, bad_ele, "neg", strategy=strategy)
+    bad_ele = sracos_replace!(rc.positive_data, solution, "pos")
+    sracos_replace!(rc.negative_data, bad_ele, "neg", strategy=strategy)
     rc.best_solution = rc.positive_data[1]
     if i == 4
       time_log2 = now()
@@ -71,7 +71,7 @@ function sracos_opt!(sracos::SRacos, objective::Objective, parameter::Parameter;
   return rc.best_solution
 end
 
-function replace(iset, x, iset_type; strategy="WR")
+function sracos_replace!(iset, x, iset_type; strategy="WR")
   if strategy == "WR"
     return strategy_wr(iset, x, iset_type)
   elseif strategy == "RR"
