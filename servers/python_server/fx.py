@@ -36,10 +36,10 @@ def ackley(solution):
         :param solution: a data structure containing x and fx
         :return: value of fx
     """
-    a = 0
-    rd = Random()
-    for i in range(100000):
-        a += rd.uniform(0, 1)
+    # a = 0
+    # rd = Random()
+    # for i in range(100000):
+    #     a += rd.uniform(0, 1)
     x = solution.get_x()
     bias = 0.2
     ave_seq = sum([(i - bias) * (i - bias) for i in x]) / len(x)

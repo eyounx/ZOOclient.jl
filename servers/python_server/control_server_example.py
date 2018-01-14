@@ -18,7 +18,7 @@ def run(port):
     Api of running control server.
 
     :param port:
-        port of control server
+        The ports occupied by the control server
         port is a list having four elements, for example, [10000, 10001, 10002, 10003]
     :return: no return
     """
