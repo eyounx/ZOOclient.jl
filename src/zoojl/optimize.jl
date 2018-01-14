@@ -11,12 +11,12 @@ end
 
 # a function to print optimization results
 function result_analysis(result, top)
-  sort!(result)
-  top = top > length(result)? length(result) : top
-  top_k = result[1:top]
-  meanr = mean(top_k)
-  stdr = (top == 1? 0: std(top_k))
-  zoolog("$(meanr) +- $(stdr)")
+    sort!(result)
+    top = top > length(result)? length(result) : top
+    top_k = result[1:top]
+    meanr = mean(top_k)
+    stdr = (top == 1? 0: std(top_k))
+    zoolog("$(meanr) +- $(stdr)")
 end
 
 function exp_min(obj::Objective, par::Parameter; repeat=1, best_n=Nullable(),

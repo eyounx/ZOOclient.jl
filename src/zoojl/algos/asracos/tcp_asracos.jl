@@ -109,7 +109,7 @@ function tcp_updater(asracos::ASRacos, budget, ub, finish)
   time_sum = interval
   output_file = rc.parameter.output_file
   f = Nullable()
-  if output_file != ""
+  if !isnull(output_file)
     f = open(output_file, "w")
   end
   br = false
@@ -123,8 +123,13 @@ function tcp_updater(asracos::ASRacos, budget, ub, finish)
 	  if time_pass >= time_sum
 	    time_sum = time_sum + interval
 	    zoolog("time: $(time_pass) update $(t): best_solution value = $(rc.best_solution.value)")
-      zoolog("best_solution x = $(rc.best_solution.x)")
+      if parameter.show_x == true
+        zoolog("best_solution x = $(rc.best_solution.x)")
+      end
       str = "$(floor(time_pass)) $(rc.best_solution.value)\n"
+      if parameter.show_x == true
+        str = string(str, " ", rc.best_solution.x)
+      end
       if !isnull(f)
         write(f, str)
       end
