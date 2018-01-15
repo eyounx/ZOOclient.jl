@@ -8,7 +8,6 @@ type Parameter
     time_limit
 
     # for racos optimization
-    sequential
     precision
     uncertain_bits
     train_size
@@ -17,12 +16,8 @@ type Parameter
     probability
     replace_strategy
 
-    # for asynchronousracos
-    asynchronous
-    computer_num
-
     # for tcp with python
-    tcp
+    computer_num
     ip_port
     control_server_ip
     control_server_port
@@ -35,17 +30,21 @@ type Parameter
     # for pareto optimization
     isolationfunc
 
-    function Parameter(; algorithm=Nullable{String}(), budget=0, init_sample=Nullable(),
-        terminal_value=Nullable(), time_limit=Nullable{Int64}(), sequential=true, precision=Nullable(),
+    # init_sample
+    # sequential
+    # asynchronous
+    # tcp
+    function Parameter(; algorithm="asracos", budget=0, init_sample=Nullable(),
+        terminal_value=Nullable(), time_limit=Nullable{Int64}(), precision=Nullable(),
         uncertain_bits=Nullable{Int64}(), train_size=0, positive_size=0, negative_size=0,
-        probability=0.99, replace_strategy="WR", asynchronous=false, computer_num = 1,
-        tcp=false, control_server_ip=Nullable{String}(), control_server_port=Nullable{String}(),
-        working_directory=Nullable{String}(), func="target_func", show_x=false,
-        output_file=Nullable{String}(), isolationfunc=x->0, autoset=true)
+        probability=0.99, replace_strategy="WR", computer_num = 1, control_server_ip=Nullable{String}(),
+        control_server_port=Nullable{String}(), working_directory=Nullable{String}(),
+        func="target_func", show_x=false, output_file=Nullable{String}(), isolationfunc=x->0,
+        autoset=true)
 
         parameter = new(algorithm, budget, init_sample, terminal_value, time_limit,
-        sequential, precision, uncertain_bits, train_size, positive_size, negative_size,
-        probability, replace_strategy, asynchronous, computer_num, tcp, Nullable(), control_server_ip,
+        precision, uncertain_bits, train_size, positive_size, negative_size,
+        probability, replace_strategy, computer_num, Nullable(), control_server_ip,
         control_server_port, working_directory, func, show_x, output_file,
         isolationfunc)
         if budget != 0 && autoset == true

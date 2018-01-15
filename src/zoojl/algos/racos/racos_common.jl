@@ -29,10 +29,9 @@ end
 function init_attribute!(rc::RacosCommon)
     # check if the initial solutions have been set
     data_temp = rc.parameter.init_sample
-    if !isnull(data_temp) && isnull(rc.best_solution)
-        for j in 1:length(date_temp)
-            x = obj_construct_solution(rc.objective, data_temp[j])
-            push!(rc.data, obj_eval(rc.objective, x))
+    if !isnull(data_temp)
+        for i = 1:length(data_temp)
+            push!(rc.data, obj_eval(rc.objective, data_temp[i]))
         end
         selection!(rc)
         return
@@ -74,13 +73,13 @@ end
 # distinct sample form dim, return a solution
 function distinct_sample(rc::RacosCommon, dim; check_distinct=true, data_num=0)
     objective = rc.objective
-    x = obj_construct_solution(objective, dim_rand_sample(dim))
+    sol = obj_construct_solution(objective, dim_rand_sample(dim))
     times = 1
     distinct_flag = true
     if check_distinct == true
-        while is_distinct(rc.positive_data, x) == false ||
-            is_distinct(rc.negative_data, x) == false
-            x = obj_construct_solution(objective, dim_rand_sample(dim))
+        while is_distinct(rc.positive_data, sol) == false ||
+            is_distinct(rc.negative_data, sol) == false
+            sol = obj_construct_solution(objective, dim_rand_sample(dim))
             times += 1
             if times % 10 == 0
                 limited, number = dim_limited_space(dim)
@@ -97,17 +96,17 @@ function distinct_sample(rc::RacosCommon, dim; check_distinct=true, data_num=0)
             end
         end
     end
-    return x, distinct_flag
+    return sol, distinct_flag
 end
 
 function distinct_sample_from_set(rc::RacosCommon, dim, set; check_distinct=true, data_num=0)
     objective = rc.objective
-    x = obj_construct_solution(objective, dim_rand_sample(dim))
+    sol = obj_construct_solution(objective, dim_rand_sample(dim))
     times = 1
     distinct_flag = true
     if check_distinct == true
-        while is_distinct(set, x) == false
-            x = obj_construct_solution(objective, dim_rand_sample(dim))
+        while is_distinct(set, sol) == false
+            sol = obj_construct_solution(objective, dim_rand_sample(dim))
             times += 1
             if times % 10 == 0
                 limited, number = dim_limited_space(dim)
@@ -124,7 +123,7 @@ function distinct_sample_from_set(rc::RacosCommon, dim, set; check_distinct=true
             end
         end
     end
-    return x, distinct_flag
+    return sol, distinct_flag
 end
 
 # distinct sample from a classifier, return a solution
@@ -132,13 +131,13 @@ end
 function distinct_sample_classifier(rc::RacosCommon, classifier; check_distinct=true, data_num=0)
     objective = rc.objective
     x = rand_sample(classifier)
-    ins = obj_construct_solution(rc.objective, x)
+    sol = obj_construct_solution(rc.objective, x)
     times = 1
     distinct_flag = true
     if check_distinct == true
-        while is_distinct(rc.positive_data, ins) == false || is_distinct(rc.negative_data, ins) == false
+        while is_distinct(rc.positive_data, sol) == false || is_distinct(rc.negative_data, sol) == false
             x = rand_sample(classifier)
-            ins = obj_construct_solution(rc.objective, x)
+            sol = obj_construct_solution(rc.objective, x)
             times += 1
             if times % 10 == 0
                 space = classifier.solution_space
@@ -156,15 +155,15 @@ function distinct_sample_classifier(rc::RacosCommon, classifier; check_distinct=
             end
         end
     end
-    return ins, distinct_flag
+    return sol, distinct_flag
 end
 
 # Check if x is distinct from each solution in seta
 # return False if there exists a solution the same as x,
 # otherwise return True
 function is_distinct(seta, x)
-    for ins in seta
-        if sol_equal(x, ins)
+    for sol in seta
+        if sol_equal(x, sol)
             return false
         end
     end

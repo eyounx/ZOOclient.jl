@@ -7,10 +7,10 @@ export Objective, obj_construct_solution, obj_eval, get_history_bestsofar
 export zoo_min, exp_min
 export Parameter, autoset!
 export Solution, find_max, find_min, sol_print, sol_equal
-# tool_function.jl
+
 export zoolog, rand_uniform, convert_time, mydistance
 export rng, my_precision, set_seed, set_precision
-# racos_classification.jl
+
 export RacosClassification, mixed_classification, rand_sample
 # racos_common.jl
 export RacosCommon, rc_clear!, init_attribute!, selection!, distinct_sample,
@@ -22,14 +22,11 @@ export RacosOptimization, opt!, ro_clear!, set_ub
 export Racos, racos_opt!
 # sracos.jl
 export SRacos, sracos_opt!, sracos_replace!
-# asracos_common
-export ASRacosCommon, init_sample_set!
-# asracos_optimization
-export asyn_opt!
-# asracos.jl
-export ASRacos, asracos_opt!, updater
-# tcp_asracos.jl
-export tcp_asracos!
+
+export ASRacos, asracos_init_sample_set!
+
+export asracos_opt!
+export aposs_opt!
 
 include("zoojl/utils/tool_function.jl")
 include("zoojl/utils/zoo_global.jl")
@@ -42,9 +39,8 @@ include("zoojl/algos/racos/racos_common.jl")
 include("zoojl/algos/racos/racos.jl")
 include("zoojl/algos/racos/sracos.jl")
 include("zoojl/algos/racos/racos_optimization.jl")
-include("zoojl/algos/asracos/asracos_common.jl")
 include("zoojl/algos/asracos/asracos.jl")
-include("zoojl/algos/asracos/tcp_asracos.jl")
-include("zoojl/algos/asracos/asracos_optimization.jl")
+include("zoojl/algos/asracos/asracos_opt.jl")
+include("zoojl/algos/aposs/aposs_opt.jl")
 include("zoojl/optimize.jl")
 end

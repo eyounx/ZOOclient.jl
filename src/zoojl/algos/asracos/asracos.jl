@@ -1,103 +1,36 @@
 type ASRacos
-    arc::ASRacosCommon
+    rc::RacosCommon
+    computer_num
+    sample_set
+    result_set
+    asyn_result
+    is_finish
 
-    function ASRacos(computer_num=1)
-        return new(ASRacosCommon(computer_num))
+    function ASRacos(ncomputer)
+        new(RacosCommon(), ncomputer, RemoteChannel(()->Channel(ncomputer)),
+        RemoteChannel(()->Channel(ncomputer)), RemoteChannel(()->Channel(1)), false)
     end
 end
 
-# @async remote_do(updater, p, asracos, parameter.budget, ub)
-function updater(asracos::ASRacos, budget,  ub)
-    # println("in updater")
-    t = 1
-    arc = asracos.arc
-    rc = arc.rc
-    parameter = rc.parameter
-    strategy = parameter.replace_strategy
-    time_log1 = now()
-    # println(budget)
-    while(t <= budget)
-        t += 1
-        if t == arc.computer_num + 1
-            time_log1 = now()
+function asracos_init_sample_set!(asracos::ASRacos, ub)
+    rc = asracos.rc
+    data_temp = rc.parameter.init_sample
+    if !isnull(data_temp)
+        for i = 1:length(data_temp)
+            put!(asracos.sample_set, data_temp[i])
         end
-        # println("updater before take solution")
-        sol = take!(arc.result_set)
-        # println("updater after take solution")
-        bad_ele = replace(rc.positive_data, sol, "pos")
-        replace(rc.negative_data, bad_ele, "neg", strategy=strategy)
-        rc.best_solution = rc.positive_data[1]
+        return
+    end
+    classifier = RacosClassification(rc.objective.dim, rc.positive_data,
+        rc.negative_data, ub=ub)
+    mixed_classification(classifier)
+    for i = 1:asracos.computer_num
         if rand(rng, Float64) < rc.parameter.probability
-            classifier = RacosClassification(rc.objective.dim, rc.positive_data,
-            rc.negative_data, ub=ub)
-            # println(classifier)
-            # zoolog("before classification")
-            mixed_classification(classifier)
-            # zoolog("after classification")
             solution, distinct_flag = distinct_sample_classifier(rc, classifier, data_num=rc.parameter.train_size)
         else
             solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
         end
-        #painc stop
-        if distinct_flag == false
-            zoolog("ERROR: dimension limited")
-            break
-        end
-        if isnull(solution)
-            zoolog("ERROR: solution null")
-            break
-        end
-        # println("updater before sample")
-        put!(arc.sample_set, solution)
-        # println("updater after sample: $(solution.x)")
-        if t == arc.computer_num * 2
-            time_log2 = now()
-            expected_time = (parameter.budget - parameter.train_size) *
-                (Dates.value(time_log2 - time_log1) / 1000) / arc.computer_num
-            zoolog(string("expected remaining running time: ", convert_time(expected_time)))
-        end
-        # println("update $(t-1)")
+        # sol_print(solution)
+        put!(asracos.sample_set, solution)
     end
-    arc.is_finish = true
-    put!(arc.asyn_result, rc.best_solution)
-end
-
-function computer(asracos::ASRacos, objective::Objective)
-    # println("in computer")
-    arc = asracos.arc
-    while arc.is_finish == false
-        # println("computer before take")
-        sol = take!(arc.sample_set)
-        # println("computer after take")
-        obj_eval(objective, sol)
-        put!(arc.result_set, sol)
-        # println("computer after put")
-    end
-end
-
-function asracos_opt!(asracos::ASRacos, objective::Objective, parameter::Parameter;
-  ub=1)
-    arc = asracos.arc
-    rc = arc.rc
-    rc.objective = objective
-    rc.parameter = parameter
-    init_attribute!(rc)
-    init_sample_set!(arc, ub)
-    # addprocs(parameter.computer_num + 1)
-    first = true
-    is_finish = false
-    for p in workers()
-        if first
-            remote_do(updater, p, asracos, parameter.budget, ub)
-            first = false
-            # println("updater begin")
-        else
-            remote_do(computer, p, asracos, objective)
-            # computer(asracos, objective)
-            # println("computer begin")
-        end
-    end
-    # print("Finish workers")
-    result = take!(arc.asyn_result)
-    return result
 end

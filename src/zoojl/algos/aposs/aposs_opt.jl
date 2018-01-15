@@ -37,10 +37,10 @@ function aposs_opt!(objective::Objective, parameter::Parameter)
     n = objective.dim.dim_size
     sol = Solution(x=[0 for i = 1:n])
     ip_port = take!(parameter.ip_port)
-    br, x = aposs_compute_fx(sol, ip_port, parameter)
+    br= aposs_compute_fx(sol, ip_port, parameter)
     put!(parameter.ip_port, ip_port)
 
-    push!(population, x)
+    push!(population, sol)
 
     aposs_init_sample_set!(sample_set, sol, parameter.computer_num)
     println("after init")
@@ -59,9 +59,9 @@ function aposs_opt!(objective::Objective, parameter::Parameter)
         sol = take!(sample_set)
         @spawn begin
             try
-                br, x = aposs_compute_fx(sol, ip_port, parameter)
+                br= aposs_compute_fx(sol, ip_port, parameter)
                 put!(parameter.ip_port, ip_port)
-                put!(result_set, x)
+                put!(result_set, sol)
             catch e
                 println("Exception")
                 println(e)
@@ -103,8 +103,8 @@ function tcp_aposs_updater(population, result_set, asyn_result, parameter, finis
             if parameter.isolationfunc(sol.x) != parameter.isolationfunc(population[i].x)
                 continue
             else
-                if (population[i].value[0] < sol.value[0] && population[i].value[1] >= sol.value[1])
-                    || (population[i].value[0] <= sol.value[0] && population[i].value[1] > sol.value[1])
+                if (population[i].value[0] < sol.value[0] && population[i].value[1] >= sol.value[1]) ||
+                    (population[i].value[0] <= sol.value[0] && population[i].value[1] > sol.value[1])
                     has_better = true
                     break
                 end
@@ -113,7 +113,7 @@ function tcp_aposs_updater(population, result_set, asyn_result, parameter, finis
         if !has_better
             Q = []
             for j = 1:pop_size
-                if sol.value[0] <= population[i].value[0] and sol.value[1] >= population[i].value[1]
+                if sol.value[0] <= population[i].value[0] && sol.value[1] >= population[i].value[1]
                     continue
                 else
                     push!(Q, population[i])
@@ -198,5 +198,5 @@ function aposs_compute_fx(sol::Solution, ip_port::String, parameter::Parameter)
         value = [parse(Float64, receives[1]), parse(Float64, receives[2])]
         sol.value = value
     end
-    return br, sol
+    return br
 end

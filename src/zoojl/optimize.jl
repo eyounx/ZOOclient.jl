@@ -1,23 +1,17 @@
 function zoo_min(obj::Objective, par::Parameter)
-    if par.asynchronous == true
-        algorithm = asyn_opt!
+    obj_clean_history(obj)
+    if par.algorithm == "asracos"
+        algorithm = asracos_opt!
+    elseif par.algorithm == "aposs"
+        algorithm = aposs_opt!
     else
-        algorithm = opt!
+        zoolog("Error: No such algorithm")
+        exit()
     end
-    optimizer = RacosOptimization()
-    solution = algorithm(optimizer, obj, par)
+    solution = algorithm(obj, par)
     return solution
 end
 
-# a function to print optimization results
-function result_analysis(result, top)
-    sort!(result)
-    top = top > length(result)? length(result) : top
-    top_k = result[1:top]
-    meanr = mean(top_k)
-    stdr = (top == 1? 0: std(top_k))
-    zoolog("$(meanr) +- $(stdr)")
-end
 
 function exp_min(obj::Objective, par::Parameter; repeat=1, best_n=Nullable(),
     seed=Nullable())
@@ -29,15 +23,14 @@ function exp_min(obj::Objective, par::Parameter; repeat=1, best_n=Nullable(),
         set_seed(seed)
     end
     solutions = []
-    result_value = Float64[]
+    result_value = []
     for i = 1:repeat
-        obj_clean_history(obj)
         solution = zoo_min(obj, par)
         push!(solutions, solution)
         push!(result_value, solution.value)
         sol_print(solution)
     end
-    result_analysis(result_value, best_n)
+    zoolog("results: $(result_value)")
     time_log2 = now()
     run_time = Dates.value(time_log2 - time_log1) / 1000
     zoolog("runtime: $(run_time)")
