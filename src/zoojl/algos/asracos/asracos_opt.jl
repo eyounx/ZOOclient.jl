@@ -26,7 +26,7 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
     finish = SharedArray{Bool}(1)
     finish[1] = false
     # addprocs(1)
-    @spawn asracos_updater(asracos, parameter.budget, ub, finish)
+    @spawn asracos_updater!(asracos, parameter.budget, ub, finish)
     i = parameter.train_size
     br = false
     while true
@@ -49,6 +49,7 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
     end
     # finish task
     result = take!(asracos.asyn_result)
+    objective.history = take!(asracos.history)
     cs_receive = connect(ip, port[2])
     servers_msg = string(servers_msg, "#")
     println(cs_receive, servers_msg)
@@ -93,9 +94,10 @@ function compute_fx(sol::Solution, ip_port, parameter::Parameter)
     return br
 end
 
-function asracos_updater(asracos::ASRacos, budget, ub, finish)
+function asracos_updater!(asracos::ASRacos, budget, ub, finish)
     rc = asracos.rc
     parameter = rc.parameter
+    history = []
     t = parameter.train_size + 1
     strategy = parameter.replace_strategy
     time_log1 = now()
@@ -109,6 +111,7 @@ function asracos_updater(asracos::ASRacos, budget, ub, finish)
     br = false
     while(t <= budget)
         sol = take!(asracos.result_set)
+        push!(history, sol.value)
         bad_ele = sracos_replace!(rc.positive_data, sol, "pos")
         sracos_replace!(rc.negative_data, bad_ele, "neg", strategy=strategy)
         rc.best_solution = rc.positive_data[1]
@@ -160,6 +163,7 @@ function asracos_updater(asracos::ASRacos, budget, ub, finish)
          close(f)
      end
      put!(asracos.asyn_result, rc.best_solution)
+     put!(asracos.history, history)
 end
 
 function asracos_sample(rc, ub)

@@ -14,5 +14,6 @@ sol = zoo_min(obj, par)
 
 sol_print(sol)
 history = get_history_bestsofar(obj)
+
 plt[:plot](history)
-plt[:savefig]("figure.pdf")
+# plt[:savefig]("figure.pdf")

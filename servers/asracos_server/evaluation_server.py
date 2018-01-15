@@ -76,7 +76,7 @@ class EvaluationServer:
                     data = receive(self.__data_length, es)
                     x = []
                     data_str = data.split(' ')
-                    # print(data_str)
+
                     for istr in data_str:
                         x.append(float(istr))
                     fx = calculate(Solution(x=x))
