@@ -119,8 +119,8 @@ Starting with `julia -p n` provides `n` worker processes on the local machine. G
 
 For a few seconds, the optimization is done and we will get the result.
 
-<table border=0><tr><td width="400px"><img src="https://github.com/eyounx/ZOOjl/tree/dev/img/result.png"/></td></tr></table>
+<table border=0><tr><td width="400px"><img src="https://github.com/eyounx/ZOOjl/blob/dev/img/result.png"/></td></tr></table>
 
 Visualized optimization progress looks like:
 
-<table border=0><tr><td width="400px"><img src="https://https://github.com/eyounx/ZOOjl/tree/dev/img/figure.pdf"/></td></tr></table>
+<table border=0><tr><td width="400px"><img src="https://github.com/eyounx/ZOOjl/blob/dev/img/figure.pdf?raw=true" alt="figure"/></td></tr></table>
