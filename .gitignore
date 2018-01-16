@@ -3,3 +3,4 @@
 *.jl.mem
 *.pyc
 *.DS_Store
+*.idea/*
