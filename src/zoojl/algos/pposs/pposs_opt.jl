@@ -29,6 +29,10 @@ function pposs_opt!(objective::Objective, parameter::Parameter)
     msg = readline(cs_send)
 
     servers_msg = readline(cs_send)
+    if servers_msg == "No available evaluation server"
+        zoolog("Error: no available evaluation server")
+        return Solution()
+    end
     servers = split(servers_msg, " ")
     println("get $(length(servers)) servers")
     parameter.ip_port = RemoteChannel(()->Channel(length(servers)))

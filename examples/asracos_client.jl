@@ -16,7 +16,7 @@ obj = Objective(mydim)
 # control_server_port: the last three ports of the four ports occupied by the control server
 # objective_file: the objective funtion is defined in this file
 # func: the name of the objective function
-par = Parameter(budget=10000, evaluation_server_num=2, control_server_ip="192.168.1.105",
+par = Parameter(budget=10000, evaluation_server_num=2, control_server_ip="192.168.1.104",
     control_server_port=[20001, 20002, 20003], objective_file="fx.py", func="ackley")
 
 # perform optimization

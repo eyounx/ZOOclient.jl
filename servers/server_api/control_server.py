@@ -69,6 +69,8 @@ class ControlServer:
                         msg += self.evaluation_server[i]
                     else:
                         msg = msg + ' ' + self.evaluation_server[i]
+                if require_num == 0:
+                    msg += "No available evaluation server"
                 msg += '\n'
                 print(msg)
                 self.evaluation_server = self.evaluation_server[require_num:]
@@ -159,21 +161,17 @@ class ControlServer:
             print("2.ip:ip1 ==> shut down all servers having ip1 as ip. e.g. ip:127.0.0.1")
             print("3.ip_port: ip1:port1 ip2:port2 ip3:port3 ... ==> shut down specific servers. e.g. ip_port: 127.0.0.1:20000 127.0.0.1:20001")
             msg = raw_input("")
-            print(msg)
             new_cal_server = copy.deepcopy(self.evaluation_server)
             if msg == "all":
-                print("in all")
                 for ip_port in self.evaluation_server:
                     self.shut_down(ip_port)
                     new_cal_server.remove(ip_port)
             elif msg[:7] == "ip_port":
-                print("in ip_port")
                 ip_ports = msg[9:].split(' ')
                 for ip_port in ip_ports:
                     self.shut_down(ip_port)
                     new_cal_server.remove(ip_port)
             elif msg[:2] == "ip":
-                print("in ip")
                 ip = msg[3:]
                 for ip_port in self.evaluation_server:
                     sip, port = ip_port.split(":")
@@ -197,16 +195,14 @@ class ControlServer:
         if ip_port not in self.evaluation_server:
             ToolFunction.log("no such ip:port")
             return
-        print(ip_port)
         ip, port = ip_port.split(":")
         port = int(port)
         addr = (ip, port)
         es.connect(addr)
         es.sendall("control server: shutdown#")
         result = receive(1024, es)
-        print(result)
         if result == "success":
-            ToolFunction.log("manage to shut down")
+            ToolFunction.log("%s: manage to shut down" % ip_port)
         else:
             ToolFunction.log("fail to shut down")
         es.close()

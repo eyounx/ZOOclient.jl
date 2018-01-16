@@ -2,7 +2,7 @@
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/eyounx/ZOOjl/blob/master/LICENSE)
 
-ZOOjl provides distributed Zeroth-Order Optimization with the help of the Julia language for Python described functions.
+ZOOjl provides distributed Zeroth-Order Optimization with the help of the Julia language for Python described functions. Two  zeroth-order optimization method s are implemented in release 0.1, respectively are Asynchronous Sequential Racos  (ASRacos) and parallel pareto optimization method  for subset selection (PPOSS, IJCAI'16)
 
 Zeroth-order optimization (a.k.a. derivative-free optimization/black-box optimization) does not rely on the gradient of the objective function, but instead, learns from samples of the search space. It is suitable for optimizing functions that are nondifferentiable, with many local minima, or even unknown but only testable.
 
@@ -22,7 +22,7 @@ Pkg.add("ZOOjl")
 
 This will download ZOOjl and all of its dependencies.
 
-## A quick example
+## A Quick Example
 
 We will demonstrate ZOOjl by using it to optimize the Ackley function.
 
