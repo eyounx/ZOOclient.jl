@@ -121,7 +121,9 @@ plt[:savefig]("figure.png")
 
 To run this example, type the following command
 
-> $ ./julia -p 4 /path/to/your/directory/ZOOjl/examples/julia_tcp_with_python/asracos_client.jl
+```
+$ ./julia -p 4 /path/to/your/directory/ZOOjl/examples/asracos_client.jl
+```
 
 Starting with `julia -p n` provides `n` worker processes on the local machine. Generally it makes sense for `n` to equal the number of CPU cores on the machine.
 
