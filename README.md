@@ -123,4 +123,4 @@ For a few seconds, the optimization is done and we will get the result.
 
 Visualized optimization progress looks like:
 
-<table border=0><tr><td width="400px"><img src="https://github.com/eyounx/ZOOjl/blob/dev/img/figure.pdf?raw=true" alt="figure"/></td></tr></table>
+<table border=0><tr><td width="400px"><img src="https://github.com/eyounx/ZOOjl/blob/dev/img/figure.pdf"/></td></tr></table>
