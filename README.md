@@ -138,3 +138,13 @@ For a few seconds, the optimization is done and we will get the result.
 Visualized optimization progress looks like:
 
 <table border=0><tr><td width="400px"><img src="https://github.com/eyounx/ZOOjl/blob/dev/img/figure.png"/></td></tr></table>
+
+## Release 0.1
+
+* Include the asynchronous version of the general optimization method Sequential RACOS (AAAI'17)
+* Include the parallel pareto optimization method (PPOSS) for subset selection (IJCAI'16)
+* The algorithm selection is automatic. See examples in the `examples` fold.- Default parameters work well on many problems, while parameters are fully controllable
+
+  ​			
+  ​		
+  ​	
