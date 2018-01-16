@@ -6,6 +6,10 @@ ZOOjl provides distributed Zeroth-Order Optimization with the help of the Julia 
 
 Zeroth-order optimization (a.k.a. derivative-free optimization/black-box optimization) does not rely on the gradient of the objective function, but instead, learns from samples of the search space. It is suitable for optimizing functions that are nondifferentiable, with many local minima, or even unknown but only testable.
 
+**Documents: ** [Wiki of ZOOjl]()
+
+**Single-thread version:** [ZOOpt](https://github.com/eyounx/ZOOpt)
+
 ## Installation
 
 If you have not done so already, [download and install Julia](http://julialang.org/downloads/) (Any version starting with 0.6 should be fine)
@@ -26,7 +30,7 @@ Ackley function is a classical function with many local minima. In 2-dimension, 
 
 <table border=0><tr><td width="400px"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Ackley%27s_function.pdf/page1-400px-Ackley%27s_function.pdf.jpg"/></td></tr></table>
 
-First, we fefine the Ackley function implemented in Python for minimization.
+First, we define the Ackley function implemented by Python for minimization.
 
 ```python
 import numpy as np
