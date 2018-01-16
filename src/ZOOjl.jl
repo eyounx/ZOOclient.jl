@@ -26,7 +26,7 @@ export SRacos, sracos_opt!, sracos_replace!
 export ASRacos, asracos_init_sample_set!
 
 export asracos_opt!
-export aposs_opt!
+export pposs_opt!
 
 include("zoojl/utils/tool_function.jl")
 include("zoojl/utils/zoo_global.jl")
@@ -41,6 +41,6 @@ include("zoojl/algos/racos/sracos.jl")
 include("zoojl/algos/racos/racos_optimization.jl")
 include("zoojl/algos/asracos/asracos.jl")
 include("zoojl/algos/asracos/asracos_opt.jl")
-include("zoojl/algos/aposs/aposs_opt.jl")
+include("zoojl/algos/pposs/pposs_opt.jl")
 include("zoojl/optimize.jl")
 end

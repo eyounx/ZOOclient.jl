@@ -1,4 +1,4 @@
-function aposs_mutation(s, n)
+function pposs_mutation(s, n)
     s_temp = copy(s)
     threshold = 1.0 / n
     flipped = false
@@ -15,9 +15,9 @@ function aposs_mutation(s, n)
     return s_temp
 end
 
-function aposs_opt!(objective::Objective, parameter::Parameter)
-    sample_set = RemoteChannel(()->Channel(parameter.computer_num))
-    result_set = RemoteChannel(()->Channel(parameter.computer_num))
+function pposs_opt!(objective::Objective, parameter::Parameter)
+    sample_set = RemoteChannel(()->Channel(parameter.evaluation_server_num))
+    result_set = RemoteChannel(()->Channel(parameter.evaluation_server_num))
     asyn_result = RemoteChannel(()->Channel(1))
     history = RemoteChannel(()->Channel(1))
     population = []
@@ -25,7 +25,7 @@ function aposs_opt!(objective::Objective, parameter::Parameter)
     ip = parameter.control_server_ip
     port = parameter.control_server_port
     cs_send = connect(ip, port[1])
-    println(cs_send, string(parameter.computer_num))
+    println(cs_send, string(parameter.evaluation_server_num))
     msg = readline(cs_send)
 
     servers_msg = readline(cs_send)
@@ -38,17 +38,17 @@ function aposs_opt!(objective::Objective, parameter::Parameter)
     n = objective.dim.size
     sol = Solution(x=[0 for i = 1:n])
     ip_port = take!(parameter.ip_port)
-    br = aposs_compute_fx(sol, ip_port, parameter)
+    br = pposs_compute_fx(sol, ip_port, parameter)
     zoolog(sol.value)
     put!(parameter.ip_port, ip_port)
 
     push!(population, sol)
 
-    aposs_init_sample_set!(sample_set, sol, parameter.computer_num)
+    pposs_init_sample_set!(sample_set, sol, parameter.evaluation_server_num)
     println("after init")
     finish = SharedArray{Bool}(1)
     finish[1] = false
-    @spawn aposs_updater!(population, sample_set, result_set, asyn_result, history, parameter, finish)
+    @spawn pposs_updater!(population, sample_set, result_set, asyn_result, history, parameter, finish)
     br = false
     while true
         if finish[1] == true
@@ -59,36 +59,32 @@ function aposs_opt!(objective::Objective, parameter::Parameter)
         sol = take!(sample_set)
         @spawn begin
             try
-                br = aposs_compute_fx(sol, ip_port, parameter)
+                br = pposs_compute_fx(sol, ip_port, parameter)
                 put!(parameter.ip_port, ip_port)
                 put!(result_set, sol)
-                # aposs_updater!(population, result_set, asyn_result, parameter, finish)
+                # pposs_updater!(population, result_set, asyn_result, parameter, finish)
             catch e
                 println("Exception")
                 println(e)
             end
         end
     end
-    zoolog("after while true")
     result = take!(asyn_result)
     objective.history = take!(history)
     cs_receive = connect(ip, port[2])
     servers_msg = string(servers_msg, "#")
     println(cs_receive, servers_msg)
-    zoolog("before return")
     return result
 end
 
-function aposs_init_sample_set!(sample_set, sol, computer_num)
-    for i = 1:computer_num
-        new_x = aposs_mutation(sol.x, length(sol.x))
+function pposs_init_sample_set!(sample_set, sol, evaluation_server_num)
+    for i = 1:evaluation_server_num
+        new_x = pposs_mutation(sol.x, length(sol.x))
         put!(sample_set, Solution(x=new_x))
     end
-    zoolog("out sample_set")
 end
 
-function aposs_updater!(population, sample_set, result_set, asyn_result, history, parameter, finish)
-    zoolog("in updater")
+function pposs_updater!(population, sample_set, result_set, asyn_result, history, parameter, finish)
     t = 1
     pop_size = 1
     my_history = []
@@ -107,6 +103,8 @@ function aposs_updater!(population, sample_set, result_set, asyn_result, history
         sol = take!(result_set)
         if sol.value[2] >= 0
             push!(my_history, sol.value[1])
+        else
+            push!(my_history, best_sol.value[1])
         end
         if sol.value[1] < best_sol.value[1] && sol.value[2] >= 0
             best_sol = sol
@@ -158,7 +156,7 @@ function aposs_updater!(population, sample_set, result_set, asyn_result, history
             end
          end
          index = rand(rng, 1:pop_size)
-         new_x = aposs_mutation(population[index].x, length(population[index].x))
+         new_x = pposs_mutation(population[index].x, length(population[index].x))
          put!(sample_set, Solution(x=new_x))
      end
      min_value = population[1].value[1]
@@ -178,12 +176,12 @@ function aposs_updater!(population, sample_set, result_set, asyn_result, history
      put!(history, my_history)
      finish[1] = true
      index = rand(rng, 1:pop_size)
-     new_x = aposs_mutation(population[index].x, length(population[index].x))
+     new_x = pposs_mutation(population[index].x, length(population[index].x))
      put!(sample_set, Solution(x=new_x))
      # println("$(finish[1])")
 end
 
-function aposs_compute_fx(sol::Solution, ip_port, parameter::Parameter)
+function pposs_compute_fx(sol::Solution, ip_port, parameter::Parameter)
     ip, port = get_ip_port(ip_port)
     client = connect(ip, port)
 
@@ -195,9 +193,9 @@ function aposs_compute_fx(sol::Solution, ip_port, parameter::Parameter)
         br = true
     end
 
-    # send working_directory:func
+    # send objective_file:func
     if br == false
-        smsg = string(parameter.working_directory, ":", parameter.func, "#")
+        smsg = string(parameter.objective_file, ":", parameter.func, "#")
         println(client, smsg)
         msg = readline(client)
         if check_exception(msg) == true

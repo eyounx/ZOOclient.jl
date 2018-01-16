@@ -17,11 +17,11 @@ type Parameter
     replace_strategy
 
     # for tcp with python
-    computer_num
+    evaluation_server_num
     ip_port
     control_server_ip
     control_server_port
-    working_directory
+    objective_file
     func
     show_x
     output_file
@@ -37,15 +37,15 @@ type Parameter
     function Parameter(; algorithm="asracos", budget=0, init_sample=Nullable(),
         terminal_value=Nullable(), time_limit=Nullable{Int64}(), precision=Nullable(),
         uncertain_bits=Nullable{Int64}(), train_size=0, positive_size=0, negative_size=0,
-        probability=0.99, replace_strategy="WR", computer_num = 1, control_server_ip=Nullable{String}(),
-        control_server_port=Nullable{String}(), working_directory=Nullable{String}(),
+        probability=0.99, replace_strategy="WR", evaluation_server_num = 1, control_server_ip=Nullable{String}(),
+        control_server_port=Nullable{String}(), objective_file=Nullable{String}(),
         func="target_func", show_x=false, output_file=Nullable{String}(), isolationfunc=x->0,
         autoset=true)
 
         parameter = new(algorithm, budget, init_sample, terminal_value, time_limit,
         precision, uncertain_bits, train_size, positive_size, negative_size,
-        probability, replace_strategy, computer_num, Nullable(), control_server_ip,
-        control_server_port, working_directory, func, show_x, output_file,
+        probability, replace_strategy, evaluation_server_num, Nullable(), control_server_ip,
+        control_server_port, objective_file, func, show_x, output_file,
         isolationfunc)
         if budget != 0 && autoset == true
             autoset!(parameter)

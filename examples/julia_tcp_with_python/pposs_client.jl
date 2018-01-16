@@ -7,8 +7,8 @@ dim_tys = [false for i = 1:dim_size]
 mydim = Dimension(dim_size, dim_regs, dim_tys)
 obj = Objective(mydim)
 
-par = Parameter(algorithm="aposs", budget=10000, computer_num=2, control_server_ip="192.168.1.105",
-    control_server_port=[20001, 20002, 20003], working_directory="sparse_mse.py", func="target_func")
+par = Parameter(algorithm="pposs", budget=1000, evaluation_server_num=2, control_server_ip="192.168.1.105",
+    control_server_port=[20001, 20002, 20003], objective_file="sparse_mse.py", func="target_func")
 
 sol = zoo_min(obj, par)
 

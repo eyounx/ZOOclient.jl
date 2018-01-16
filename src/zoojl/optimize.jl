@@ -2,8 +2,8 @@ function zoo_min(obj::Objective, par::Parameter)
     obj_clean_history(obj)
     if par.algorithm == "asracos"
         algorithm = asracos_opt!
-    elseif par.algorithm == "aposs"
-        algorithm = aposs_opt!
+    elseif par.algorithm == "pposs"
+        algorithm = pposs_opt!
     else
         zoolog("Error: No such algorithm")
         exit()

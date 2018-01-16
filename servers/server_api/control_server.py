@@ -210,3 +210,18 @@ class ControlServer:
         else:
             ToolFunction.log("fail to shut down")
         es.close()
+
+
+def run_control_server(port):
+    """
+    Api of running control server.
+
+    :param port:
+        The ports occupied by the control server
+        port is a list having four elements, for example, [10000, 10001, 10002, 10003]
+    :return: no return
+    """
+    local_ip = socket.gethostbyname(socket.gethostname())
+    print("control server ip: " + local_ip)
+    cs = ControlServer(local_ip, port)
+    cs.start()

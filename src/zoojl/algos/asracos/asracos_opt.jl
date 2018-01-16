@@ -1,5 +1,5 @@
 function asracos_opt!(objective::Objective, parameter::Parameter)
-    asracos = ASRacos(parameter.computer_num)
+    asracos = ASRacos(parameter.evaluation_server_num)
     rc = asracos.rc
     rc.objective = objective
     rc.parameter = parameter
@@ -9,7 +9,7 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
     ip = parameter.control_server_ip
     port = parameter.control_server_port
     cs_send = connect(ip, port[1])
-    println(cs_send, string(parameter.computer_num))
+    println(cs_send, string(parameter.evaluation_server_num))
     msg = readline(cs_send)
 
     servers_msg = readline(cs_send)
@@ -68,9 +68,9 @@ function compute_fx(sol::Solution, ip_port, parameter::Parameter)
         br = true
     end
 
-    # send working_directory:func
+    # send objective_file:func
     if br == false
-        smsg = string(parameter.working_directory, ":", parameter.func, "#")
+        smsg = string(parameter.objective_file, ":", parameter.func, "#")
         println(client, smsg)
         msg = readline(client)
         if check_exception(msg) == true
