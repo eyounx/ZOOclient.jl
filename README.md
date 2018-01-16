@@ -38,7 +38,9 @@ def ackley(solution):
     return value	
 ```
 
-Then, run the control server example by providing four ports. `servers/server_example/control_server_example.py` (Apis of the python servers are povided in `servers/server_api/`, specific examples can be found in `servers/server_example/`. )
+Then, run the control server example by providing four ports.  (Apis of the python servers are povided in `servers/server_api/`, specific examples can be found in `servers/server_example/`. )
+
+>  servers/server_example/control_server_example.py:
 
 ```python
 import os
@@ -55,6 +57,8 @@ if __name__ == "__main__":
 
 A configuration text should be provided for running evaluation servers.
 
+> servers/server_example/configuration.txt
+
 ```
 /path/to/your/directory/ZOOjl/servers/python_server/
 192.168.1.105:20000
@@ -63,7 +67,9 @@ A configuration text should be provided for running evaluation servers.
 
 The first line indicates the root directory of  your evaluation servers. The objective function should be located in this directory. The second line means control_server_ip:first_port. (first_port is the first port occupied by the control server) The third line states we want to start 2 evaluation servers by choosing 2 available ports from 60003 to 60020.
 
-Then, we can start the evaluation servers easily. `servers/server_example/evaluation_server_example.py`
+Then, we can start the evaluation servers easily. 
+
+>  servers/server_example/evaluation_server_example.py
 
 ```python
 import os
@@ -76,7 +82,9 @@ if __name__ == "__main__":
     run_evaluation_server("configuration.txt")
 ```
 
-Finally, use ZOOjl to optimize a 100-dimension Ackley function `/path/to/your/directory/ZOOjl/examples/julia_tcp_with_python/asracos_client.jl`:
+Finally, use ZOOjl to optimize a 100-dimension Ackley function 
+
+> examples/asracos_client.jl
 
 ```julia
 using ZOOjl
@@ -108,7 +116,7 @@ sol_print(sol)
 # visualize the optimization progress
 history = get_history_bestsofar(obj)
 plt[:plot](history)
-plt[:savefig]("figure.pdf")
+plt[:savefig]("figure.png")
 ```
 
 To run this example, type the following command

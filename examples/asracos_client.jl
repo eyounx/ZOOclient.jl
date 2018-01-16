@@ -27,4 +27,4 @@ sol_print(sol)
 # visualize the optimization progress
 history = get_history_bestsofar(obj)
 plt[:plot](history)
-plt[:savefig]("figure.pdf")
+plt[:savefig]("figure.png")
