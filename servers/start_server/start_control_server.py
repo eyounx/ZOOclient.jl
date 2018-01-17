@@ -9,9 +9,9 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../server_api'))
 
-from control_server import run_control_server
+from control_server import start_control_server
 
 
 if __name__ == "__main__":
     # users should provide four ports occupied by the control server
-    run_control_server([20000, 20001, 20002, 20003])
+    start_control_server([20000, 20001, 20002, 20003])

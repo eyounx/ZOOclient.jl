@@ -161,7 +161,7 @@ def run(port, work_dir, control_server):
     server.start_server(control_server=control_server, working_dir=work_dir)
 
 
-def run_evaluation_server(configuration):
+def start_evaluation_server(configuration):
     """
     Api of running evaluation servers from configuration file.
 

@@ -208,9 +208,9 @@ class ControlServer:
         es.close()
 
 
-def run_control_server(port):
+def start_control_server(port):
     """
-    Api of running control server.
+    Api of starting the control server.
 
     :param port:
         The ports occupied by the control server
