@@ -2,7 +2,7 @@
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/eyounx/ZOOjl/blob/master/LICENSE)
 
-ZOOjl provides distributed Zeroth-Order Optimization with the help of the Julia language for Python described functions. Two  zeroth-order optimization method s are implemented in release 0.1, respectively are Asynchronous Sequential Racos  (ASRacos) and parallel pareto optimization method  for subset selection (PPOSS, IJCAI'16)
+ZOOjl provides distributed Zeroth-Order Optimization with the help of the Julia language for Python described functions. Two  zeroth-order optimization method s are implemented in release 0.1, respectively are Asynchronous Sequential Racos  (ASRacos) method and parallel pareto optimization for subset selection method(PPOSS, IJCAI'16)
 
 Zeroth-order optimization (a.k.a. derivative-free optimization/black-box optimization) does not rely on the gradient of the objective function, but instead, learns from samples of the search space. It is suitable for optimizing functions that are nondifferentiable, with many local minima, or even unknown but only testable.
 
@@ -24,7 +24,7 @@ This will download ZOOjl and all of its dependencies.
 
 ## A Quick Example
 
-We will demonstrate ZOOjl by using it to optimize the Ackley function.
+We will demonstrate ZOOjl by using it to optimize Ackley function.
 
 Ackley function is a classical function with many local minima. In 2-dimension, it looks like (from wikipedia)
 
@@ -133,11 +133,11 @@ Starting with `julia -p n` provides `n` worker processes on the local machine. G
 
 For a few seconds, the optimization is done and we will get the result.
 
-<table border=0><tr><td width="700px"><img src="https://github.com/eyounx/ZOOjl/blob/dev/img/result.png"/></td></tr></table>
+<table border=0><tr><td width="700px"><img src="https://github.com/eyounx/ZOOjl/blob/master/img/result.png"/></td></tr></table>
 
 Visualized optimization progress looks like:
 
-<table border=0><tr><td width="400px"><img src="https://github.com/eyounx/ZOOjl/blob/dev/img/figure.png"/></td></tr></table>
+<table border=0><tr><td width="400px"><img src="https://github.com/eyounx/ZOOjl/blob/master/img/figure.png"/></td></tr></table>
 
 ## Release 0.1
 
