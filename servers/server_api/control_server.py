@@ -142,12 +142,14 @@ class ControlServer:
             t.start()
         # start main thread
         while True:
-            cmd = int(raw_input("please input cmd, 1: print servers, 2: shut down the server\n"))
+            cmd = int(raw_input("please input cmd, 1: print evaluation servers, 2: shut down evaluation servers, 3: exit\n"))
             with lock:
                 if cmd == 1:
                     ToolFunction.log(str(self.evaluation_server))
                 elif cmd == 2:
                     self.shut_down_control()
+                elif cmd == 3:
+                    return
 
     def shut_down_control(self):
         """
