@@ -42,48 +42,48 @@ def ackley(solution):
     return value	
 ```
 
-Then, run the control server example by providing four ports.  (Apis of the python servers are povided in `servers/server_api/`, specific examples can be found in `servers/server_example/`. )
+Then, run the control server example by providing four ports.  (APIs of the python servers are povided in `servers/server_api/`, specific examples can be found in `servers/start_server/`. )
 
->  servers/server_example/control_server_example.py:
+>  servers/start_server/start_control_server.py:
 
 ```python
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../server_api'))
 
-from control_server import run_control_server
+from control_server import start_control_server
 
 
 if __name__ == "__main__":
     # users should provide four ports occupied by the control server
-    run_control_server([20000, 20001, 20002, 20003])
+    start_control_server([20000, 20001, 20002, 20003])
 ```
 
-A configuration text should be provided for running evaluation servers.
+A configuration text should be provided for starting evaluation servers.
 
-> servers/server_example/configuration.txt
+> servers/start_server/configuration.txt
 
 ```
-/path/to/your/directory/ZOOjl/servers/python_server/
+/path/to/your/directory/ZOOjl/servers/start_server/
 192.168.1.105:20000
 10 60003 600020
 ```
 
-The first line indicates the root directory of  your evaluation servers. The objective function should be located in this directory. The second line means control_server_ip:first_port. (first_port is the first port occupied by the control server) The third line states we want to start 2 evaluation servers by choosing 2 available ports from 60003 to 60020.
+The first line indicates the root directory of  your evaluation servers. The objective function should be located in this directory. The second line means control_server_ip:first_port (first_port is the first port occupied by the control server). The third line states we want to start 2 evaluation servers by choosing 2 available ports from 60003 to 60020.
 
 Then, we can start the evaluation servers easily. 
 
->  servers/server_example/evaluation_server_example.py
+>  servers/start_server/start_evaluation_server.py
 
 ```python
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../server_api'))
 
-from evaluation_server import run_evaluation_server
+from evaluation_server import start_evaluation_server
 
 if __name__ == "__main__":
-    run_evaluation_server("configuration.txt")
+    start_evaluation_server("configuration.txt")
 ```
 
 Finally, use ZOOjl to optimize a 100-dimension Ackley function 
@@ -109,7 +109,7 @@ obj = Objective(mydim)
 # control_server_port: the last three ports of the four ports occupied by the control server
 # objective_file: the objective funtion is defined in this file
 # func: the name of the objective function
-par = Parameter(budget=10000, evaluation_server_num=2, control_server_ip="192.168.1.105",
+par = Parameter(budget=10000, evaluation_server_num=10, control_server_ip="192.168.1.105",
     control_server_port=[20001, 20002, 20003], objective_file="fx.py", func="ackley")
 
 # perform optimization
@@ -142,8 +142,7 @@ Visualized optimization progress looks like:
 ## Release 0.1
 
 * Include the asynchronous version of the general optimization method Sequential RACOS (AAAI'17)
-* Include the parallel pareto optimization method (PPOSS) for subset selection (IJCAI'16)
-* The algorithm selection is automatic. See examples in the `examples` fold.- Default parameters work well on many problems, while parameters are fully controllable
+* Include the Parallel Pareto Optimization for Subset Selection  method (PPOSS, IJCAI'16)
 
   ​			
   ​		
