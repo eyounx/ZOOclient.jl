@@ -2,9 +2,9 @@
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/eyounx/ZOOjl/blob/master/LICENSE)
 
-ZOOjl provides distributed Zeroth-Order Optimization with the help of the Julia language for Python described functions. Two  zeroth-order optimization method s are implemented in release 0.1, respectively are Asynchronous Sequential Racos  (ASRacos) method and parallel pareto optimization for subset selection method(PPOSS, IJCAI'16)
+ZOOjl is the distributed version of [ZOOpt](https://github.com/eyounx/ZOOpt). In order to improve the efficiency of handling distributed computing, we use Julia language to code the client end for its high efficiency and Python-like features. Meanwhile, the servers are still coded in Python. Therefore, users programs their objective function in Python as usual, and only need to change a few lines of the client Julia codes (just as easy to understand as Python). 
 
-Zeroth-order optimization (a.k.a. derivative-free optimization/black-box optimization) does not rely on the gradient of the objective function, but instead, learns from samples of the search space. It is suitable for optimizing functions that are nondifferentiable, with many local minima, or even unknown but only testable.
+Two  zeroth-order optimization methods are implemented in ZOOjl release 0.1, respectively are Asynchronous Sequential RACOS  (ASRacos) method and parallel pareto optimization for subset selection method (PPOSS, IJCAI'16)
 
 **Documents:** [Wiki of ZOOjl]()
 
