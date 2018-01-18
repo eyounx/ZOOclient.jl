@@ -3,5 +3,4 @@
 *.jl.mem
 *.pyc
 *.DS_Store
-servers/.idea
-tutorial/*
+python_server/.idea

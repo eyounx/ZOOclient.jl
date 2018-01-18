@@ -42,14 +42,14 @@ def ackley(solution):
     return value	
 ```
 
-Then, run the control server example by providing four ports.  (APIs of the python servers are povided in `servers/server_api/`, specific examples can be found in `servers/start_server/`. )
+Then, run the control server example by providing four ports.  (APIs of the python servers are povided in `python_server/server_api/` )
 
->  servers/start_server/start_control_server.py:
+>  python_server/start_control_server.py:
 
 ```python
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../server_api'))
+sys.path.insert(0, os.path.abspath('./server_api'))
 
 from control_server import start_control_server
 
@@ -61,24 +61,24 @@ if __name__ == "__main__":
 
 A configuration text should be provided for starting evaluation servers.
 
-> servers/start_server/configuration.txt
+> python_server/configuration.txt
 
 ```
-/path/to/your/directory/ZOOjl/servers/start_server/
+/path/to/your/directory/ZOOjl/objective_function/
 192.168.1.105:20000
 10 60003 600020
 ```
 
-The first line indicates the root directory of  your evaluation servers. The objective function should be located in this directory. The second line means control_server_ip:first_port (first_port is the first port occupied by the control server). The third line states we want to start 2 evaluation servers by choosing 2 available ports from 60003 to 60020.
+The first line indicates the root directory  your evaluation servers working under. The objective function should be located in this directory. The second line means control_server_ip:first_port (first_port is the first port occupied by the control server). The third line states we want to start 2 evaluation servers by choosing 2 available ports from 60003 to 60020.
 
 Then, we can start the evaluation servers easily. 
 
->  servers/start_server/start_evaluation_server.py
+>  python_server/start_evaluation_server.py
 
 ```python
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../server_api'))
+sys.path.insert(0, os.path.abspath('./server_api'))
 
 from evaluation_server import start_evaluation_server
 
@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
 Finally, use ZOOjl to optimize a 100-dimension Ackley function 
 
-> examples/asracos_client.jl
+> julia_client/asracos_client.jl
 
 ```julia
 using ZOOjl
@@ -126,7 +126,7 @@ plt[:savefig]("figure.png")
 To run this example, type the following command
 
 ```
-$ ./julia -p 4 /path/to/your/directory/ZOOjl/examples/asracos_client.jl
+$ ./julia -p 4 /path/to/your/directory/ZOOjl/julia_client/asracos_client.jl
 ```
 
 Starting with `julia -p n` provides `n` worker processes on the local machine. Generally it makes sense for `n` to equal the number of CPU cores on the machine.

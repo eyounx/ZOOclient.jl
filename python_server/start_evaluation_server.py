@@ -7,7 +7,7 @@ Author:
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../server_api'))
+sys.path.insert(0, os.path.abspath('./server_api'))
 
 from evaluation_server import start_evaluation_server
 
