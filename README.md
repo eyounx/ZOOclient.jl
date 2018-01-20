@@ -42,48 +42,36 @@ def ackley(solution):
     return value	
 ```
 
-Then, run the control server example by providing four ports.  (APIs of the python servers are povided in `python_server/server_api/` )
+Then, run the control server by providing a port.  
 
->  python_server/start_control_server.py:
+>  python_server/control_server.py:
 
 ```python
-import os
-import sys
-sys.path.insert(0, os.path.abspath('./server_api'))
-
-from control_server import start_control_server
-
-
 if __name__ == "__main__":
-    # users should provide four ports occupied by the control server
-    start_control_server([20000, 20001, 20002, 20003])
+    # users should provide a port occupied by the control server
+    start_control_server(20000)
 ```
 
 A configuration text should be provided for starting evaluation servers.
 
-> python_server/configuration.txt
+> python_server/evaluation_server.cfg
 
 ```
-/path/to/your/directory/ZOOjl/objective_function/
-192.168.1.105:20000
-10 60003 600020
+shared fold: /Users/liu/.julia/v0.6/ZOOjl/objective_function/
+control server's ip_port: 192.168.1.105:20000
+the number of evaluation servers: 10
+port lower bound: 60003
+port upper bound: 60020
 ```
 
-The first line indicates the root directory  your evaluation servers working under. The objective function should be located in this directory. The second line means control_server_ip:first_port (first_port is the first port occupied by the control server). The third line states we want to start 2 evaluation servers by choosing 2 available ports from 60003 to 60020.
+The first line indicates the root directory  your julia client and evaluation servers work under. The objective function should be defined in this directory. The second line means the addres of the control server. The third line to the last line state we want to start 10 evaluation servers by choosing 10 available ports from 60003 to 60020.
 
 Then, we can start the evaluation servers easily. 
 
->  python_server/start_evaluation_server.py
+>  python_server/evaluation_server.py
 
 ```python
-import os
-import sys
-sys.path.insert(0, os.path.abspath('./server_api'))
-
-from evaluation_server import start_evaluation_server
-
-if __name__ == "__main__":
-    start_evaluation_server("configuration.txt")
+start_evaluation_server("evaluation_server.cfg")
 ```
 
 Finally, use ZOOjl to optimize a 100-dimension Ackley function 
@@ -106,11 +94,11 @@ obj = Objective(mydim)
 # budget:  the number of calls to the objective function
 # evalueation_server_num: the number of evaluation servers
 # control_server_ip: the ip address of the control server
-# control_server_port: the last three ports of the four ports occupied by the control server
+# control_server_port: the port occupied by the control server
 # objective_file: the objective funtion is defined in this file
 # func: the name of the objective function
 par = Parameter(budget=10000, evaluation_server_num=10, control_server_ip="192.168.1.105",
-    control_server_port=[20001, 20002, 20003], objective_file="fx.py", func="ackley")
+    control_server_port=20000, objective_file="fx.py", func="ackley")
 
 # perform optimization
 sol = zoo_min(obj, par)

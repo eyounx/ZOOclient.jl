@@ -1,5 +1,5 @@
 """
-This file contains example of running control server.
+You can run this file to start the control server.
 
 Author:
     Yu-Ren Liu
@@ -48,7 +48,7 @@ class ControlServer:
             t.start()
         # start main thread
         while True:
-            cmd = int(raw_input("please input cmd, 1: print evaluation servers, 2: shut down evaluation servers, 3: exit\n"))
+            cmd = int(raw_input("[zoojl] please input cmd, 1: print evaluation servers, 2: shut down evaluation servers, 3: exit\n"))
             with lock:
                 if cmd == 1:
                     ToolFunction.log("The number of evaluation servers: %s" % len(self.evaluation_server))
@@ -69,7 +69,6 @@ class ControlServer:
         while True:
             client, address = s.accept()
             cmd = receive(1024, client)
-            print(cmd)
             client.sendall("success#\n")
             # receive from evaluation servers
             if cmd == "evaluation server":
@@ -124,10 +123,10 @@ class ControlServer:
         :return: no return
         """
         try:
-            print("you can input three different kinds of commands")
-            print("1.all ==> shut down all servers. e.g. all")
-            print("2.ip:ip1 ==> shut down all servers having ip1 as ip. e.g. ip:127.0.0.1")
-            print("3.ip_port: ip1:port1 ip2:port2 ip3:port3 ... ==> shut down specific servers. e.g. ip_port: 127.0.0.1:20000 127.0.0.1:20001")
+            ToolFunction.log("you can input three different kinds of commands")
+            ToolFunction.log("1.all ==> shut down all servers. e.g. all")
+            ToolFunction.log("2.ip:ip1 ==> shut down all servers having ip1 as ip. e.g. ip:127.0.0.1")
+            ToolFunction.log("3.ip_port: ip1:port1 ip2:port2 ip3:port3 ... ==> shut down specific servers. e.g. ip_port: 127.0.0.1:20000 127.0.0.1:20001")
             msg = raw_input("")
             new_cal_server = copy.deepcopy(self.evaluation_server)
             if msg == "all":
@@ -147,10 +146,10 @@ class ControlServer:
                         self.shut_down(ip_port)
                         new_cal_server.remove(ip_port)
             else:
-                print("No such command")
+                ToolFunction.log("No such command")
             self.evaluation_server = new_cal_server
         except Exception as e:
-            print("input error", e)
+            ToolFunction.log("input error", e)
 
     def shut_down(self, ip_port):
         """
@@ -186,11 +185,11 @@ def start_control_server(port):
     :return: no return
     """
     local_ip = socket.gethostbyname(socket.gethostname())
-    print("control server ip: " + local_ip)
+    ToolFunction.log("control server ip: " + local_ip)
     cs = ControlServer(local_ip, port)
     cs.start()
 
 
 if __name__ == "__main__":
-    # users should provide four ports occupied by the control server
+    # users should provide a port occupied by the control server
     start_control_server(20000)

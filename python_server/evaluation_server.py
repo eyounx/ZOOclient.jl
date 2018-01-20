@@ -1,5 +1,5 @@
 """
-This file contains example of running evaluation server.
+You can run this file to start the evaluation servers.
 
 Author:
     Yu-Ren Liu
@@ -37,12 +37,12 @@ class EvaluationServer:
 
         return
 
-    def start_server(self, control_server, working_dir):
+    def start_server(self, control_server, shared_fold):
         """
         Start this evaluation server.
 
         :param control_server: control server address
-        :param working_dir: current working directory
+        :param shared_fold: current working directory
         :return: target function name
         """
 
@@ -60,14 +60,14 @@ class EvaluationServer:
         s.listen(5)
         all_connect = 0
         restart = False
-        print("this is server !")
-        print ("waiting for connector...")
+        ToolFunction.log("this is server !")
+        ToolFunction.log ("waiting for connector...")
         while True:
             # get x from client
             es, address = s.accept()
             # print all_connect + 1, ' get connected...'
             all_connect += 1
-            print("connect num:"+str(all_connect)+" address:"+str(address))
+            ToolFunction.log("connect num:"+str(all_connect)+" address:"+str(address))
             cmd = receive(self.__data_length, es)
             if cmd == "control server: shutdown":
                 es.sendall("success#")
@@ -80,9 +80,8 @@ class EvaluationServer:
                     es.sendall("receive\n")
 
                     load = Loader()
-                    module = load.load(working_dir + addr)
+                    module = load.load(shared_fold + addr)
                     calculate = module[func]
-                    print("module load success")
                     data = receive(self.__data_length, es)
                     x = []
                     data_str = data.split(' ')
@@ -92,9 +91,9 @@ class EvaluationServer:
                     fx = calculate(Solution(x=x))
                     fx_x = str(fx) + "\n"
                     es.sendall(fx_x)
-                    print("finish calculating")
+                    ToolFunction.log("finish calculating")
                 except Exception, msg:
-                    print("Exception")
+                    ToolFunction.log("Exception")
                     es.sendall("Exception: " + str(msg))
                     restart = True
                     break
@@ -103,37 +102,13 @@ class EvaluationServer:
                 restart = True
                 break
             else:
-                print(cmd)
-                print("no such cmd")
+                ToolFunction.log("no such cmd")
             es.close()
-        print ("server close!")
+        ToolFunction.log("server close!")
         s.close()
         if restart is True:
-            print("server restart")
-            self.start_server(control_server, working_dir)
-
-    def result_2_string(self, fx=0, x=[0]):
-        """
-        Transfer result value to string, which has the form "fx: x"
-        :param fx:
-        :param x:
-        :return:
-        """
-        my_string = str(fx) + ':' + self.list2string(x)
-        return my_string
-
-    def list2string(self, list):
-        """
-        Transfer a list to string, [x1, x2, x3] --> 'x1 x2 x3'.
-        :param list: input list
-        :return: a string
-        """
-        my_str = str(list[0])
-        i = 1
-        while i < len(list):
-            my_str = my_str + ' ' + str(list[i])
-            i += 1
-        return my_str
+            ToolFunction.log("server restart")
+            self.start_server(control_server, shared_fold)
 
     def explain_address(self, addr):
         """
@@ -148,14 +123,14 @@ class EvaluationServer:
         return t_ip, t_port
 
 
-def run(port, work_dir, control_server):
+def run(port, shared_fold, control_server):
     """
     Api of running evaluation server.
 
     :param port: port of evaluation server
-    :param work_dir: working directory
-    :param control_server: ip:port of control server
-    :return: no return
+    :param shared_fold: the working directory shared by julia client and evaluation servers
+    :param control_server: ip:port of the control server
+    :return: no return value
     """
     local_ip = socket.gethostbyname(socket.gethostname())
     data_length = 1024
@@ -165,32 +140,33 @@ def run(port, work_dir, control_server):
     # set server ip, port and longest data length in initialization
     server = EvaluationServer(server_ip, server_port, data_length)
 
-    server.start_server(control_server=control_server, working_dir=work_dir)
+    server.start_server(control_server=control_server, shared_fold=shared_fold)
 
 
 def start_evaluation_server(configuration):
     """
-    Api of running evaluation servers from configuration file.
+    Starting evaluation servers from configuration file.
 
     :param configuration:
         configuration is a file name
-        configuration  has three lines
-        he first line is the working directory this server works on
+        configuration  has five lines
+        he first line is the directory this server works under, objective functions should be defined in this directory
         the second line is the address of control server
-        the third line has three numbers, for example, 2 50000 50002
-        2 means opening 2 server, 50000 50002 means these servers can use port between 50000 and 50002([50000, 50002])
-    :return: no return
+        the third line is the number of evaluation servers to be started
+        the fourth line is the lower bound of the range that ports are chosen from
+        the last line is the upper bound of the range that ports are chosen from
+        2 means opening 2 server, 60003 and 60010 mean these servers can use port between 60003 and 60010([60003, 60010])
+    :return: no return value
     """
 
     file_obj = open(configuration)
     list_of_all_lines = file_obj.readlines()
-    working_dir = list_of_all_lines[0][:-1]
-    control_server = list_of_all_lines[1][:-1]
-    info = list_of_all_lines[2].split()
-    sys.path.insert(0, os.path.abspath(working_dir))
-    num = int(info[0])
-    lowerb = int(info[1])
-    upperb = int(info[2])
+    shared_fold = list_of_all_lines[0].split(":", 1)[1][1:-1]
+    control_server = list_of_all_lines[1].split(":", 1)[1][1:-1]
+    num = int(list_of_all_lines[2].split(":", 1)[1][1:-1])
+    lowerb = int(list_of_all_lines[3].split(":", 1)[1][1:-1])
+    upperb = int(list_of_all_lines[4].split(":", 1)[1][1:])
+    sys.path.insert(0, os.path.abspath(shared_fold))
     local_ip = socket.gethostbyname(socket.gethostname())  # get local ip
     ToolFunction.log("evaluation server ip: " + local_ip)
     count = 0
@@ -198,7 +174,7 @@ def start_evaluation_server(configuration):
     for port in range(lowerb, upperb):
         if is_open(local_ip, port) is False:
             count += 1
-            workers.append(multiprocessing.Process(target=run, args=(port, working_dir, control_server)))
+            workers.append(multiprocessing.Process(target=run, args=(port, shared_fold, control_server)))
             if count >= num:
                 break
     for w in workers:

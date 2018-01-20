@@ -1,3 +1,3 @@
-# APIs of Starting Servers
+# Components
 
-This directory includes APIs of starting servers.
+This directory includes components used by `control_server.py` and `evaluation_server.py`
