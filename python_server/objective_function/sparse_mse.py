@@ -29,7 +29,6 @@ class SparseMSE:
         Initialization.
         :param filename: filename
         """
-        print(sys.path)
         data = self.read_data(filename)
         self._size = np.shape(data)[1] - 1
         self._X = data[:, 0: self._size]
@@ -131,7 +130,7 @@ class SparseMSE:
         return self._k
 
 
-mse = SparseMSE('sonar.arff')
+mse = SparseMSE('data/sonar.arff')
 mse.set_sparsity(8)
 
 

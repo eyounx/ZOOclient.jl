@@ -5,14 +5,10 @@ Author:
     Yu-Ren Liu
 """
 
-import os
-import sys
-sys.path.insert(0, os.path.abspath('./components'))
-
 import threading
 import socket
-from receive import receive
-from tool_function import ToolFunction
+from components.receive import receive
+from components.tool_function import ToolFunction
 import copy
 
 

@@ -45,13 +45,12 @@ function pposs_opt!(objective::Objective, parameter::Parameter)
     sol = Solution(x=[0 for i = 1:n])
     ip_port = take!(parameter.ip_port)
     br = pposs_compute_fx(sol, ip_port, parameter)
-    zoolog(sol.value)
     put!(parameter.ip_port, ip_port)
 
     push!(population, sol)
 
-    pposs_init_sample_set!(sample_set, sol, parameter.evaluation_server_num)
-    println("after init")
+    pposs_init_sample_set!(sample_set, sol, parameter)
+    println("Initialization succeeds")
     finish = SharedArray{Bool}(1)
     finish[1] = false
     @spawn pposs_updater!(population, sample_set, result_set, asyn_result, history, parameter, finish)
@@ -89,8 +88,17 @@ function pposs_opt!(objective::Objective, parameter::Parameter)
     return result
 end
 
-function pposs_init_sample_set!(sample_set, sol, evaluation_server_num)
-    for i = 1:evaluation_server_num
+function pposs_init_sample_set!(sample_set, sol, parameter)
+    evaluation_server_num = parameter.evaluation_server_num
+    data_temp = parameter.init_sample
+    init_num = 0
+    if !isnull(data_temp)
+        init_num = length(data_temp)
+        for i = 1:init_num
+            put!(sample_set, data_temp[i])
+        end
+    end
+    for i = 1:(evaluation_server_num - init_num)
         new_x = pposs_mutation(sol.x, length(sol.x))
         put!(sample_set, Solution(x=new_x))
     end
@@ -157,7 +165,7 @@ function pposs_updater!(population, sample_set, result_set, asyn_result, history
             end
             str = "$(floor(time_pass)) $(best_sol.value)\n"
             if parameter.show_x == true
-                str = string(str, " ", best_sol.x)
+                str = string(str, best_sol.x, "\n")
             end
             if !isnull(f)
                 write(f, str)

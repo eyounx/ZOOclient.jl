@@ -17,16 +17,17 @@ end
 function asracos_init_sample_set!(asracos::ASRacos, ub)
     rc = asracos.rc
     data_temp = rc.parameter.init_sample
+    init_num = 0
     if !isnull(data_temp)
-        for i = 1:length(data_temp)
+        init_num = length(data_temp)
+        for i = 1:init_num
             put!(asracos.sample_set, data_temp[i])
         end
-        return
     end
     classifier = RacosClassification(rc.objective.dim, rc.positive_data,
         rc.negative_data, ub=ub)
     mixed_classification(classifier)
-    for i = 1:asracos.evaluation_server_num
+    for i = 1:(asracos.evaluation_server_num-init_num)
         if rand(rng, Float64) < rc.parameter.probability
             solution, distinct_flag = distinct_sample_classifier(rc, classifier, data_num=rc.parameter.train_size)
         else

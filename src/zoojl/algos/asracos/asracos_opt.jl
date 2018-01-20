@@ -29,7 +29,7 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
 
     asracos_init_attribute!(asracos, parameter)
     asracos_init_sample_set!(asracos, ub)
-    println("after init")
+    println("Initialization succeeds")
     finish = SharedArray{Bool}(1)
     finish[1] = false
     # addprocs(1)
@@ -138,7 +138,7 @@ function asracos_updater!(asracos::ASRacos, budget, ub, finish)
             end
             str = "$(floor(time_pass)) $(rc.best_solution.value)\n"
             if parameter.show_x == true
-                str = string(str, " ", rc.best_solution.x)
+                str = string(str, rc.best_solution.x, "\n")
             end
             if !isnull(f)
                 write(f, str)

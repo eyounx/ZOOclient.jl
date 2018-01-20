@@ -4,3 +4,4 @@
 *.pyc
 *.DS_Store
 python_server/.idea
+.idea

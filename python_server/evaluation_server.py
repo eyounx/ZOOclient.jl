@@ -7,14 +7,12 @@ Author:
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('./components'))
-
 import socket
-from solution import Solution
-from loader import Loader
-from receive import receive
-from tool_function import ToolFunction
-from port_conflict import is_open
+from components.solution import Solution
+from components.loader import Loader
+from components.receive import receive
+from components.tool_function import ToolFunction
+from components.port_conflict import is_open
 import multiprocessing
 
 
@@ -78,14 +76,12 @@ class EvaluationServer:
                     msg = receive(self.__data_length, es)
                     addr, func = msg.split(":")
                     es.sendall("receive\n")
-
                     load = Loader()
                     module = load.load(shared_fold + addr)
                     calculate = module[func]
                     data = receive(self.__data_length, es)
                     x = []
                     data_str = data.split(' ')
-
                     for istr in data_str:
                         x.append(float(istr))
                     fx = calculate(Solution(x=x))
