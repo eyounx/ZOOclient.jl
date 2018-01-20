@@ -8,8 +8,11 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
     # require calculator server
     ip = parameter.control_server_ip
     port = parameter.control_server_port
-    cs_send = connect(ip, port[1])
-    println(cs_send, string(parameter.evaluation_server_num))
+    print("$(ip):$(port)")
+    cs_send = connect(ip, port)
+    println(cs_send, "client: require servers#")
+    readline(cs_send)
+    println(cs_send, string(parameter.evaluation_server_num, "#"))
     msg = readline(cs_send)
 
     servers_msg = readline(cs_send)
@@ -48,15 +51,21 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
             catch e
                 println("Exception")
                 println(e)
+                cs_exception = connect(ip, port)
+                println(cs_exception, "client: restart#")
+                readline(cs_send)
+                println(cs_receive, string(servers_msg, "#"))
+                return Solution()
             end
         end
     end
     # finish task
     result = take!(asracos.asyn_result)
     objective.history = take!(asracos.history)
-    cs_receive = connect(ip, port[2])
-    servers_msg = string(servers_msg, "#")
-    println(cs_receive, servers_msg)
+    cs_receive = connect(ip, port)
+    println(cs_receive, "client: return servers#")
+    println(readline(cs_send))
+    println(cs_receive, string(servers_msg, "#"))
     return result
 end
 

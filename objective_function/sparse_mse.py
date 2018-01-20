@@ -9,6 +9,7 @@ import numpy as np
 from zoopt import Opt, Parameter, Objective, Dimension, ExpOpt
 import codecs
 import arff
+import os, sys
 
 
 class SparseMSE:
@@ -28,6 +29,7 @@ class SparseMSE:
         Initialization.
         :param filename: filename
         """
+        print(sys.path)
         data = self.read_data(filename)
         self._size = np.shape(data)[1] - 1
         self._X = data[:, 0: self._size]

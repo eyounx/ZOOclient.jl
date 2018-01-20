@@ -42,9 +42,9 @@ class ToolFunction:
     @staticmethod
     def log(text):
         """
-        Log output in ZOOpt.
+        Log output.
 
         :param text: text to output
         :return: no return
         """
-        print('[zoopt] '+text)
+        print('[zoojl] '+text)
