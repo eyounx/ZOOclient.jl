@@ -8,4 +8,4 @@
 
 `components`: include modules used by `control_server.py` and `evaluation_server.py`.
 
-`login.sh`: this script is provided for automatic login and starting servers.
+`login.sh`: this script is provided for automatic login and starting servers on users' servers.
