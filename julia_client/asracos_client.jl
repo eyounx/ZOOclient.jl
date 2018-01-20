@@ -12,13 +12,12 @@ obj = Objective(mydim)
 # define a Parameter Object
 # budget:  the number of calls to the objective function
 # evalueation_server_num: the number of evaluation servers
-# control_server_ip: the ip address of the control server
-# control_server_port: the last three ports of the four ports occupied by the control server
+# control_server_ip_port: the ip:port of the control server
 # objective_file: the objective funtion is defined in this file
 # func: the name of the objective function
 
-par = Parameter(budget=10000, evaluation_server_num=2, control_server_ip="192.168.1.104",
-    control_server_port=20000, objective_file="fx.py", func="ackley")
+par = Parameter(budget=10000, evaluation_server_num=2, control_server_ip_port="192.168.1.104:20000",
+    objective_file="fx.py", func="ackley")
 
 # perform optimization
 sol = zoo_min(obj, par)
