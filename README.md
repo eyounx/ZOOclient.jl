@@ -47,9 +47,8 @@ Then, run the control server by providing a port.
 >  python_server/control_server.py:
 
 ```python
-if __name__ == "__main__":
-    # users should provide a port occupied by the control server
-    start_control_server(20000)
+# users should provide the port occupied by the control server
+start_control_server(20000)
 ```
 
 A configuration text should be provided for starting evaluation servers.
@@ -90,9 +89,9 @@ mydim = Dimension(dim_size, dim_regs, dim_tys)
 # define an Objective object
 obj = Objective(mydim)
 
-# define a Parameter Object, the six parameters are indispensable.
+# define a Parameter Object, the five parameters are indispensable.
 # budget:  the number of calls to the objective function
-# evalueation_server_num: the number of evaluation servers
+# evalueation_server_num: the number of evaluation servers user requires
 # control_server_ip_port: the ip:port of the control server
 # objective_file: the objective funtion is defined in this file
 # func: the name of the objective function
