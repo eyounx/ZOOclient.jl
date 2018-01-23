@@ -8,7 +8,6 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
     # require calculator server
     ip = parameter.control_server_ip
     port = parameter.control_server_port
-    print("$(ip):$(port)")
     cs_send = connect(ip, port)
     println(cs_send, "client: require servers#")
     readline(cs_send)

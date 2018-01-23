@@ -42,13 +42,18 @@ def ackley(solution):
     return value	
 ```
 
-Then, run the control server by providing a port.  
+Then, provide a port for the control server and run `control_server.py`.  
 
->  python_server/control_server.py:
+> python_server/control_server.py:
 
 ```python
 # users should provide the port occupied by the control server
 start_control_server(20000)
+```
+
+```
+$ cd python_server
+$ python control_server.py
 ```
 
 A configuration text should be provided for starting evaluation servers.
@@ -59,8 +64,8 @@ A configuration text should be provided for starting evaluation servers.
 shared fold: /Users/liu/.julia/v0.6/ZOOjl/objective_function/
 control server's ip_port: 192.168.1.105:20000
 the number of evaluation servers: 10
-port lower bound: 60003
-port upper bound: 60020
+starting port: 60003
+ending port: 60020
 ```
 
 The first line indicates the root directory  your julia client and evaluation servers work under. The objective function should be defined in this directory. The second line means the addres of the control server. The third line to the last line state we want to start 10 evaluation servers by choosing 10 available ports from 60003 to 60020.
@@ -71,6 +76,11 @@ Then, we can start the evaluation servers easily.
 
 ```python
 start_evaluation_server("evaluation_server.cfg")
+```
+
+```
+$ cd python_server
+$ python evaluation_server.py
 ```
 
 Finally, use ZOOjl to optimize a 100-dimension Ackley function 
@@ -90,11 +100,11 @@ mydim = Dimension(dim_size, dim_regs, dim_tys)
 obj = Objective(mydim)
 
 # define a Parameter Object, the five parameters are indispensable.
-# budget:  the number of calls to the objective function
-# evalueation_server_num: the number of evaluation servers user requires
+# budget:  number of calls to the objective function
+# evalueation_server_num: number of evaluation cores user requires
 # control_server_ip_port: the ip:port of the control server
-# objective_file: the objective funtion is defined in this file
-# func: the name of the objective function
+# objective_file: objective funtion is defined in this file
+# func: name of the objective function
 par = Parameter(budget=10000, evaluation_server_num=10, control_server_ip_port="192.168.1.105:20000", objective_file="fx.py", func="ackley")
 
 # perform optimization

@@ -9,13 +9,12 @@ mydim = Dimension(dim_size, dim_regs, dim_tys)
 # define an Objective object
 obj = Objective(mydim)
 
-# define a Parameter Object
-# budget:  the number of calls to the objective function
-# evalueation_server_num: the number of evaluation servers
+# define a Parameter Object, the five parameters are indispensable.
+# budget:  number of calls to the objective function
+# evalueation_server_num: number of evaluation cores user requires
 # control_server_ip_port: the ip:port of the control server
-# objective_file: the objective funtion is defined in this file
-# func: the name of the objective function
-
+# objective_file: objective funtion is defined in this file
+# func: name of the objective function
 par = Parameter(budget=10000, evaluation_server_num=2, control_server_ip_port="192.168.1.104:20000",
     objective_file="fx.py", func="ackley")
 
