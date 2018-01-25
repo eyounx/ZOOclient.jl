@@ -22,6 +22,7 @@ type Parameter
     control_server_port
     objective_file
     func
+    constraint
     show_x
     output_file
 
@@ -38,8 +39,8 @@ type Parameter
         uncertain_bits=Nullable{Int64}(), train_size=0, positive_size=0, negative_size=0,
         probability=0.99, replace_strategy="WR", evaluation_server_num = 1,
         control_server_ip_port=Nullable{String}(), objective_file=Nullable{String}(),
-        func="target_func", show_x=false, output_file=Nullable{String}(), isolationfunc=x->0,
-        autoset=true)
+        func="target_func", constraint=Nullable{String}(), show_x=false, output_file=Nullable{String}(),
+        isolationfunc=x->0, autoset=true)
 
         temp = split(control_server_ip_port, ":")
         control_server_ip = temp[1]
@@ -47,7 +48,7 @@ type Parameter
         parameter = new(algorithm, budget, init_sample, time_limit,
         precision, uncertain_bits, train_size, positive_size, negative_size,
         probability, replace_strategy, evaluation_server_num, Nullable(), control_server_ip,
-        control_server_port, objective_file, func, show_x, output_file,
+        control_server_port, objective_file, func, constraint, show_x, output_file,
         isolationfunc)
         if budget != 0 && autoset == true
             autoset!(parameter)

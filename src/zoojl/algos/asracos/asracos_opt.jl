@@ -80,6 +80,12 @@ function compute_fx(sol::Solution, ip_port, parameter::Parameter)
         br = true
     end
 
+    println(client, "asracos#")
+    msg = readline(client)
+    if check_exception(msg) == true
+        br = true
+    end
+
     # send objective_file:func
     if br == false
         smsg = string(parameter.objective_file, ":", parameter.func, "#")

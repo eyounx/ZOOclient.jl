@@ -14,6 +14,7 @@ from components.receive import receive
 from components.tool_function import ToolFunction
 from components.port_conflict import is_open
 import multiprocessing
+import ConfigParser
 
 
 class EvaluationServer:
@@ -58,8 +59,7 @@ class EvaluationServer:
         s.listen(5)
         all_connect = 0
         restart = False
-        ToolFunction.log("this is server !")
-        ToolFunction.log ("waiting for connector...")
+        ToolFunction.log("initialization succeeds")
         while True:
             # get x from client
             es, address = s.accept()
@@ -71,23 +71,44 @@ class EvaluationServer:
                 es.sendall("success#")
                 break
             elif cmd == "client: calculate":
+                es.sendall("calculate\n")
                 try:
-                    es.sendall("calculate\n")
                     msg = receive(self.__data_length, es)
-                    addr, func = msg.split(":")
                     es.sendall("receive\n")
-                    load = Loader()
-                    module = load.load(shared_fold + addr)
-                    calculate = module[func]
-                    data = receive(self.__data_length, es)
-                    x = []
-                    data_str = data.split(' ')
-                    for istr in data_str:
-                        x.append(float(istr))
-                    fx = calculate(Solution(x=x))
-                    fx_x = str(fx) + "\n"
-                    es.sendall(fx_x)
-                    ToolFunction.log("finish calculating")
+                    if msg == "pposs":
+                        msg = receive(self.__data_length, es)
+                        addr, func, constraint = msg.split(":")
+                        es.sendall("receive\n")
+                        load = Loader()
+                        module = load.load(shared_fold + addr)
+                        calculate_fx = module[func]
+                        calculate_constraint = module[constraint]
+                        data = receive(self.__data_length, es)
+                        x = []
+                        data_str = data.split(' ')
+                        for istr in data_str:
+                            x.append(float(istr))
+                        fx = calculate_fx(Solution(x=x))
+                        c = calculate_constraint(Solution(x=x))
+                        fx_x = str(fx) + ' ' + str(c) + "\n"
+                        es.sendall(fx_x)
+                    elif msg == "asracos":
+                        msg = receive(self.__data_length, es)
+                        addr, func = msg.split(":")
+                        es.sendall("receive\n")
+                        load = Loader()
+                        module = load.load(shared_fold + addr)
+                        calculate = module[func]
+                        data = receive(self.__data_length, es)
+                        x = []
+                        data_str = data.split(' ')
+                        for istr in data_str:
+                            x.append(float(istr))
+                        fx = calculate(Solution(x=x))
+                        fx_x = str(fx) + "\n"
+                        es.sendall(fx_x)
+                    else:
+                        ToolFunction.log("Exception: %s method is unavailable" % msg)
                 except Exception, msg:
                     ToolFunction.log("Exception")
                     es.sendall("Exception: " + str(msg))
@@ -154,20 +175,20 @@ def start_evaluation_server(configuration):
         2 means opening 2 server, 60003 and 60010 mean these servers can use port between 60003 and 60010([60003, 60010])
     :return: no return value
     """
-
-    file_obj = open(configuration)
-    list_of_all_lines = file_obj.readlines()
-    shared_fold = list_of_all_lines[0].split(":", 1)[1][1:-1]
-    control_server = list_of_all_lines[1].split(":", 1)[1][1:-1]
-    num = int(list_of_all_lines[2].split(":", 1)[1][1:-1])
-    lowerb = int(list_of_all_lines[3].split(":", 1)[1][1:-1])
-    upperb = int(list_of_all_lines[4].split(":", 1)[1][1:])
-    sys.path.insert(0, os.path.abspath(shared_fold))
+    conf = ConfigParser.ConfigParser()
+    conf.read(configuration)
+    section = conf.sections()[0]
+    options = conf.options(section)
+    shared_fold = conf.get(section, "shared fold")
+    control_server = conf.get(section, "control server's ip_port")
+    num = conf.getint(section, "evaluation processes")
+    starting_port = conf.getint(section, "starting port")
+    ending_port = conf.getint(section, "ending port")
     local_ip = socket.gethostbyname(socket.gethostname())  # get local ip
     ToolFunction.log("evaluation server ip: " + local_ip)
     count = 0
     workers = []
-    for port in range(lowerb, upperb):
+    for port in range(starting_port, ending_port):
         if is_open(local_ip, port) is False:
             count += 1
             workers.append(multiprocessing.Process(target=run, args=(port, shared_fold, control_server)))
@@ -177,4 +198,4 @@ def start_evaluation_server(configuration):
         w.start()
 
 if __name__ == "__main__":
-    start_evaluation_server("evaluation_server.cfg")
+    start_evaluation_server("python_server/evaluation_server.cfg")

@@ -208,14 +208,19 @@ function pposs_compute_fx(sol::Solution, ip_port, parameter::Parameter)
     # send calculate info
     println(client, "client: calculate#")
     msg = readline(client)
+
     br = false
     if check_exception(msg) == true
         br = true
     end
-
+    println(client, "pposs#")
+    msg = readline(client)
+    if check_exception(msg) == true
+        br = true
+    end
     # send objective_file:func
     if br == false
-        smsg = string(parameter.objective_file, ":", parameter.func, "#")
+        smsg = string(parameter.objective_file, ":", parameter.func, ":", parameter.constraint, "#")
         println(client, smsg)
         msg = readline(client)
         if check_exception(msg) == true
@@ -227,14 +232,13 @@ function pposs_compute_fx(sol::Solution, ip_port, parameter::Parameter)
     if br == false
         str = list2str(sol.x)
         println(client, str)
-        receive = readline(client)
+        receive = split(readline(client), " ")
         if check_exception(receive) == true
             br = true
         end
     end
     if br == false
-        receives = split(receive[2:length(receive)-1], ", ")
-        value = [parse(Float64, receives[1]), parse(Float64, receives[2])]
+        value = [parse(Float64, receive[1]), parse(Float64, receive[2])]
         # zoolog("$(value)")
         sol.value = value
     end

@@ -2,7 +2,7 @@
 This module contains the implementation of Sparse MSE problem.
 
 Author:
-    Chao Feng
+    Chao Feng, Yu-Ren Liu
 """
 
 import numpy as np
@@ -27,7 +27,6 @@ class SparseMSE:
     def __init__(self, filename):
         """
         Initialization.
-        :param filename: filename
         """
         data = self.read_data(filename)
         self._size = np.shape(data)[1] - 1
@@ -64,9 +63,6 @@ class SparseMSE:
     def set_sparsity(self, k):
         self._k = k
 
-    def get_sparsity(self):
-        return self._k
-
     def loss(self, solution):
         """
         loss function for sparse regression
@@ -81,15 +77,6 @@ class SparseMSE:
         sub = self._Y - self._X[:, pos]*alpha
         mse = sub.T*sub / np.shape(self._Y)[0]
         return mse[0, 0]
-
-    def get_dim(self):
-        """
-        Construct a Dimension object of this problem.
-        :return: a dimension object of sparse mse.
-        """
-        dim_regs = [[0, 1]] * self._size
-        dim_tys = [False] * self._size
-        return Dimension(self._size, dim_regs, dim_tys)
 
     def read_data(self, filename):
         """
@@ -129,11 +116,13 @@ class SparseMSE:
     def get_k(self):
         return self._k
 
-
-mse = SparseMSE('data/sonar.arff')
+mse = SparseMSE('objective_function/data/sonar.arff')
 mse.set_sparsity(8)
 
 
-def target_func(solution):
-    return [mse.loss(solution), mse.constraint(solution)]
+def loss(solution):
+    return mse.loss(solution)
 
+
+def constraint(solution):
+    return mse.constraint(solution)
