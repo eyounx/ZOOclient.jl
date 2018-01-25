@@ -42,7 +42,7 @@ def ackley(solution):
     return value	
 ```
 
-Then, provide a port for the control server and run `control_server.py`.  
+Then, run `control_server.py` after providing a port, which is occupied by the control server. 
 
 > python_server/control_server.py:
 
@@ -52,8 +52,7 @@ start_control_server(20000)
 ```
 
 ```
-$ cd python_server
-$ python control_server.py
+$ python python_server/control_server.py
 ```
 
 A configuration text should be provided for starting evaluation servers.
@@ -61,16 +60,15 @@ A configuration text should be provided for starting evaluation servers.
 > python_server/evaluation_server.cfg
 
 ```
-shared fold: /Users/liu/.julia/v0.6/ZOOjl/objective_function/
-control server's ip_port: 192.168.1.105:20000
-the number of evaluation servers: 10
-starting port: 60003
-ending port: 60020
+[evaluation server]
+shared fold = /path/to/project/ZOOjl/objective_function/
+control server's ip_port = 192.168.0.103:20000
+evaluation processes = 10
+starting port = 60003
+ending port = 60020
 ```
 
-The first line indicates the root directory  your julia client and evaluation servers work under. The objective function should be defined in this directory. The second line means the addres of the control server. The third line to the last line state we want to start 10 evaluation servers by choosing 10 available ports from 60003 to 60020.
-
-Then, we can start the evaluation servers easily. 
+`shared fold` indicates the root directory  your julia client and evaluation servers work under. The objective function should be defined under this directory. `constrol server's ip_port` means the address of the control server. The last three lines state we want to start 10 evaluation processes by choosing 10 available ports from 60003 to 60020.
 
 >  python_server/evaluation_server.py
 
@@ -78,14 +76,15 @@ Then, we can start the evaluation servers easily.
 start_evaluation_server("evaluation_server.cfg")
 ```
 
+Then, we can start the evaluation servers easily. 
+
 ```
-$ cd python_server
-$ python evaluation_server.py
+$ python python_server/evaluation_server.py
 ```
 
 Finally, use ZOOjl to optimize a 100-dimension Ackley function 
 
-> julia_client/asracos_client.jl
+> julia_client/client.jl
 
 ```julia
 using ZOOjl
@@ -121,7 +120,7 @@ plt[:savefig]("figure.png")
 To run this example, type the following command
 
 ```
-$ ./julia -p 4 /path/to/your/directory/ZOOjl/julia_client/asracos_client.jl
+$ ./julia -p 4 /path/to/your/directory/ZOOjl/julia_client/client.jl
 ```
 
 Starting with `julia -p n` provides `n` worker processes on the local machine. Generally it makes sense for `n` to equal the number of CPU cores on the machine.

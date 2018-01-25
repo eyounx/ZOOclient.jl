@@ -11,15 +11,14 @@ mydim = Dimension(dim_size, dim_regs, dim_tys)
 obj = Objective(mydim)
 
 # define a Parameter object
-# algorithm: 'pposs' or 'asracos', 'asracos' by default
 # budget:  number of calls to the objective function
 # evalueation_server_num: number of evaluation cores user requires
 # control_server_ip_port: the ip:port of the control server
 # objective_file: objective funtion is defined in this file
 # func: name of the objective function
-
-par = Parameter(budget=500, evaluation_server_num=2,
-    control_server_ip_port="192.168.0.103:20000", objective_file="sparse_mse.py", func="loss", constraint="constraint")
+# constraint: the name of the constraint function
+par = Parameter(budget=500, evaluation_server_num=2, control_server_ip_port="192.168.0.103:20000",
+    objective_file="sparse_mse.py", func="loss", constraint="constraint")
 
 # perform optimization
 sol = zoo_min(obj, par)

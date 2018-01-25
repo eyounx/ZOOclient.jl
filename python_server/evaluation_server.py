@@ -59,7 +59,7 @@ class EvaluationServer:
         s.listen(5)
         all_connect = 0
         restart = False
-        ToolFunction.log("initialization succeeds")
+        ToolFunction.log("evaluation process initializes successfully: ip=%s, port=%s" % (self.__server_ip, self.__server_port))
         while True:
             # get x from client
             es, address = s.accept()
@@ -185,7 +185,6 @@ def start_evaluation_server(configuration):
     starting_port = conf.getint(section, "starting port")
     ending_port = conf.getint(section, "ending port")
     local_ip = socket.gethostbyname(socket.gethostname())  # get local ip
-    ToolFunction.log("evaluation server ip: " + local_ip)
     count = 0
     workers = []
     for port in range(starting_port, ending_port):
