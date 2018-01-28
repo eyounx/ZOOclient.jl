@@ -1,5 +1,5 @@
 function zoolog(text)
-    println("[zoojl] $text")
+    println("[zooclient] $text")
 end
 
 function rand_uniform(rng, lower, upper)
