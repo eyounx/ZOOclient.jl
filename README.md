@@ -10,6 +10,8 @@ Two  zeroth-order optimization methods are implemented in ZOOclient release 0.1,
 
 **Single-thread version:** [ZOOpt](https://github.com/eyounx/ZOOpt)
 
+**Server part of Distributed ZOOpt**: [ZOOsrv](https://github.com/eyounx/ZOOsrv)
+
 ## Installation
 
 If you have not done so already, [download and install Julia](http://julialang.org/downloads/) (Any version starting with 0.6 should be fine)
