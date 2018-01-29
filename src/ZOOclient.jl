@@ -1,4 +1,4 @@
-module ZOOjl
+module ZOOclient
 
 using Base.Dates.now
 
@@ -28,19 +28,19 @@ export ASRacos, asracos_init_sample_set!
 export asracos_opt!
 export pposs_opt!
 
-include("zoojl/utils/tool_function.jl")
-include("zoojl/utils/zoo_global.jl")
-include("zoojl/dimension.jl")
-include("zoojl/objective.jl")
-include("zoojl/parameter.jl")
-include("zoojl/solution.jl")
-include("zoojl/algos/racos/racos_classification.jl")
-include("zoojl/algos/racos/racos_common.jl")
-include("zoojl/algos/racos/racos.jl")
-include("zoojl/algos/racos/sracos.jl")
-include("zoojl/algos/racos/racos_optimization.jl")
-include("zoojl/algos/asracos/asracos.jl")
-include("zoojl/algos/asracos/asracos_opt.jl")
-include("zoojl/algos/pposs/pposs_opt.jl")
-include("zoojl/optimize.jl")
+include("ZOOclient/utils/tool_function.jl")
+include("ZOOclient/utils/zoo_global.jl")
+include("ZOOclient/dimension.jl")
+include("ZOOclient/objective.jl")
+include("ZOOclient/parameter.jl")
+include("ZOOclient/solution.jl")
+include("ZOOclient/algos/racos/racos_classification.jl")
+include("ZOOclient/algos/racos/racos_common.jl")
+include("ZOOclient/algos/racos/racos.jl")
+include("ZOOclient/algos/racos/sracos.jl")
+include("ZOOclient/algos/racos/racos_optimization.jl")
+include("ZOOclient/algos/asracos/asracos.jl")
+include("ZOOclient/algos/asracos/asracos_opt.jl")
+include("ZOOclient/algos/pposs/pposs_opt.jl")
+include("ZOOclient/optimize.jl")
 end

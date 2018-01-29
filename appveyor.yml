@@ -41,7 +41,7 @@ build_script:
 # Need to convert from shallow to complete for Pkg.clone to work
   - IF EXIST .git\shallow (git fetch --unshallow)
   - C:\projects\julia\bin\julia -e "versioninfo();
-      Pkg.clone(pwd(), \"ZOOjl\"); Pkg.build(\"ZOOjl\")"
+      Pkg.clone(pwd(), \"ZOOclient\"); Pkg.build(\"ZOOclient\")"
 
 test_script:
-  - C:\projects\julia\bin\julia -e "Pkg.test(\"ZOOjl\")"
+  - C:\projects\julia\bin\julia -e "Pkg.test(\"ZOOclient\")"

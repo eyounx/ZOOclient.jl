@@ -1,4 +1,4 @@
-using ZOOjl
+using ZOOclient
 using PyPlot
 
 # define a Dimension object
