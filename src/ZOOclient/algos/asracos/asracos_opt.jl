@@ -21,6 +21,8 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
     end
     servers = split(servers_msg, " ")
     println("get $(length(servers)) servers")
+    # close the socket
+    close(cs_send)
     parameter.ip_port = RemoteChannel(()->Channel(length(servers)))
     for server in servers
         put!(parameter.ip_port, server)
@@ -52,8 +54,9 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
                 println(e)
                 cs_exception = connect(ip, port)
                 println(cs_exception, "client: restart#")
-                readline(cs_send)
-                println(cs_receive, string(servers_msg, "#"))
+                readline(cs_exception)
+                println(cs_exception, string(servers_msg, "#"))
+                close(cs_exception)
                 return Solution()
             end
         end
@@ -63,8 +66,9 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
     objective.history = take!(asracos.history)
     cs_receive = connect(ip, port)
     println(cs_receive, "client: return servers#")
-    println(readline(cs_send))
+    readline(cs_receive)
     println(cs_receive, string(servers_msg, "#"))
+    close(cs_receive)
     return result
 end
 
@@ -109,6 +113,7 @@ function compute_fx(sol::Solution, ip_port, parameter::Parameter)
         value = parse(Float64, receive)
         sol.value = value
     end
+    close(client)
     return br
 end
 
@@ -147,6 +152,7 @@ function asracos_updater!(asracos::ASRacos, budget, ub, finish)
             end
             if !isnull(f)
                 write(f, str)
+                flush(f)
             end
             if !isnull(parameter.time_limit) && time_pass > parameter.time_limit
                 zoolog("Exceed time limit: $(parameter.time_limit)")
