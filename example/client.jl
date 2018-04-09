@@ -22,8 +22,8 @@ par = Parameter(budget=400, evaluation_server_num=2, control_server_ip_port="192
 sol = zoo_min(obj, par)
 # print the Solution object
 sol_print(sol)
-positive_data = get_positive_data(par)
-negative_data = get_negative_data(par)
+positive_data = take!(par.positive_data)
+negative_data = take!(par.negative_data)
 println("########################################")
 println("positive_data: ")
 for sol in positive_data
