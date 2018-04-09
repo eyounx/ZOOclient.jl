@@ -69,8 +69,6 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
     readline(cs_receive)
     println(cs_receive, string(servers_msg, "#"))
     close(cs_receive)
-	parameter.positive_data = rc.positive_data
-	parameter.negative_data = rc.negative_data
     return result
 end
 
@@ -190,6 +188,8 @@ function asracos_updater!(asracos::ASRacos, budget, ub, finish)
      end
      put!(asracos.asyn_result, rc.best_solution)
      put!(asracos.history, history)
+	 put!(parameter.positive_data, rc.positive_data)
+	 put!(parameter.negative_data, rc.negative_data)
 end
 
 function asracos_sample(rc, ub)
@@ -233,7 +233,7 @@ function asracos_init_attribute!(asracos::ASRacos, parameter::Parameter)
             br = compute_fx(sol, ip_port, parameter)
             put!(parameter.ip_port, ip_port)
             push!(rc.data, sol)
-			str = "compute fx: $(i), value=$(sol.value), ip_port=$(ip_port), x=$(sol.x)"
+			str = "compute fx: $(i), value=$(sol.value), ip_port=$(ip_port), x=$(sol.x)\n"
             zoolog(str)
 			write(f, str)
 			flush(f)
