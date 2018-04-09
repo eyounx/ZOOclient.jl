@@ -69,6 +69,8 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
     readline(cs_receive)
     println(cs_receive, string(servers_msg, "#"))
     close(cs_receive)
+	parameter.positive_data = rc.positive_data
+	parameter.negative_data = rc.negative_data
     return result
 end
 
@@ -146,7 +148,7 @@ function asracos_updater!(asracos::ASRacos, budget, ub, finish)
             if parameter.show_x == true
                 zoolog("best_solution x = $(rc.best_solution.x)")
             end
-            str = "$(floor(time_pass)) $(rc.best_solution.value)\n"
+            str = "budget $(t): time $(floor(time_pass)) seconds,  value $(rc.best_solution.value)\n"
             if parameter.show_x == true
                 str = string(str, rc.best_solution.x, "\n")
             end
@@ -216,6 +218,7 @@ function asracos_init_attribute!(asracos::ASRacos, parameter::Parameter)
     # otherwise generate random solutions
     iteration_num = rc.parameter.train_size
     i = 1
+	f = open("init.txt", "w")
     while i <= iteration_num
         # distinct_flag: True means sample is distinct(can be use),
         # False means sample is distinct, you should sample again.
@@ -230,10 +233,14 @@ function asracos_init_attribute!(asracos::ASRacos, parameter::Parameter)
             br = compute_fx(sol, ip_port, parameter)
             put!(parameter.ip_port, ip_port)
             push!(rc.data, sol)
-            println("compute fx: $(i), value=$(sol.value), ip_port=$(ip_port)")
+			str = "compute fx: $(i), value=$(sol.value), ip_port=$(ip_port), x=$(sol.x)"
+            zoolog(str)
+			write(f, str)
+			flush(f)
             i += 1
         end
     end
+	close(f)
     selection!(rc)
     return
 end

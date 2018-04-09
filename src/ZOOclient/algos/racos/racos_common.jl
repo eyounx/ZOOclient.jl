@@ -10,6 +10,7 @@ type RacosCommon
     negative_data
     # best solution
     best_solution
+
     function RacosCommon()
         new(Nullable(), Nullable(), [], [], [], Nullable())
     end
