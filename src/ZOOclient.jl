@@ -5,11 +5,12 @@ using Base.Dates.now
 export Dimension, dim_print
 export Objective, get_history_bestsofar
 export zoo_min
-export Parameter
-export Solution, sol_print, sol_equal
+export Parameter, print_population, get_positive_data, get_negative_data
+export Solution, sol_print, sol_equal, sol_write
 
 export zoolog
 export rng, my_precision, set_seed, set_precision
+export construct_init_sample
 
 include("ZOOclient/utils/tool_function.jl")
 include("ZOOclient/utils/zoo_global.jl")

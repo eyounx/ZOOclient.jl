@@ -1,22 +1,6 @@
 using ZOOclient
 # using PyPlot
 
-function construct_init_sample(init_file)
-    f = open(init_file)
-    lines = readlines(f)
-    count = floor(Int, length(lines)/2)
-    result = []
-    for i in 1:count
-        value_num = 2 * i - 1
-        x_num = 2 * i
-        value = eval(parse(split(lines[value_num], "=")[2]))
-        x = eval(parse(split(lines[x_num], "=Any")[2]))
-        sol = Solution(x=x, value=value)
-        push!(result, sol)
-    end
-    return result
-end
-
 # define a Dimension object
 dim_size = 100
 dim_regs = [[-1, 1] for i = 1:dim_size]
@@ -42,13 +26,13 @@ sol_print(sol)
 f = open("result.txt", "w")
 positive_data = take!(par.positive_data)
 negative_data = take!(par.negative_data)
-write(f, "########################################")
-write(f, "positive_data: ")
+write(f, "########################################\n")
+write(f, "positive_data: \n")
 for sol in positive_data
     sol_write(sol, f)
 end
-write(f, "########################################")
-write(f, "negative_data: ")
+write(f, "########################################\n")
+write(f, "negative_data: \n")
 for sol in negative_data
     sol_write(sol, f)
 end

@@ -59,11 +59,11 @@ function find_max(iset)
 end
 
 function sol_print(sol)
-    zoolog("x: $(sol.x)")
     zoolog("value: $(sol.value)")
+    zoolog("x: $(sol.x)")
 end
 
 function sol_write(sol, f)
-    write(f, "x: $(sol.x)\n")
-    write(f, "value: $(sol.value)\n")
+    write(f, "value=$(sol.value)\n")
+    write(f, "x=$(sol.x)\n")
 end

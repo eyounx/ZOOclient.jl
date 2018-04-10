@@ -141,40 +141,36 @@ function asracos_updater!(asracos::ASRacos, budget, ub, finish)
 	    time_log2 = now()
         time_pass = Dates.value(time_log2 - time_log1) / 1000
         zoolog("Budget $(t): value=$(sol.value), best_solution_value=$(rc.best_solution.value)")
-	    if time_pass >= time_sum
-	        time_sum = time_sum + interval
-            str = "Budget $(t): time=$(floor(time_pass))s, value=$(sol.value), best_solution_value=$(rc.best_solution.value)\n
-             best_x=$(rc.best_solution.x)"
-            if !isnull(f)
-                write(f, str)
-                flush(f)
-            end
-            if !isnull(parameter.time_limit) && time_pass > parameter.time_limit
-                zoolog("Exceed time limit: $(parameter.time_limit)")
-                br = true
-            end
-	     end
-         if rand(rng, Float64) < rc.parameter.probability
-             classifier = RacosClassification(rc.objective.dim, rc.positive_data,
-             rc.negative_data, ub=ub)
-             mixed_classification(classifier)
-             solution, distinct_flag = distinct_sample_classifier(rc, classifier, data_num=rc.parameter.train_size)
-         else
-             solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
-         end
-         if distinct_flag == false
-             zoolog("ERROR: dimension limited")
-             break
-         end
-         if isnull(solution)
-             zoolog("ERROR: solution null")
-             break
-         end
-         put!(asracos.sample_set, solution)
-         t += 1
-         if br == true
-             break
-         end
+		str = "Budget $(t): time=$(floor(time_pass))s, value=$(sol.value), best_solution_value=$(rc.best_solution.value)\nbest_x=$(rc.best_solution.x)\n"
+		if !isnull(f)
+			write(f, str)
+			flush(f)
+		end
+		if !isnull(parameter.time_limit) && time_pass > parameter.time_limit
+			zoolog("Exceed time limit: $(parameter.time_limit)")
+			br = true
+		end
+		 if rand(rng, Float64) < rc.parameter.probability
+			 classifier = RacosClassification(rc.objective.dim, rc.positive_data,
+			 rc.negative_data, ub=ub)
+			 mixed_classification(classifier)
+			 solution, distinct_flag = distinct_sample_classifier(rc, classifier, data_num=rc.parameter.train_size)
+		 else
+			 solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
+		 end
+		 if distinct_flag == false
+			 zoolog("ERROR: dimension limited")
+			 break
+		 end
+		 if isnull(solution)
+			 zoolog("ERROR: solution null")
+			 break
+		 end
+		 put!(asracos.sample_set, solution)
+		 t += 1
+		 if br == true
+			 break
+		 end
      end
      finish[1] = true
      # zoolog("update finish")
@@ -286,7 +282,7 @@ function construct_init_sample(init_file)
         value_num = 2 * i - 1
         x_num = 2 * i
         value = eval(parse(split(lines[value_num], "=")[2]))
-        x = eval(parse(split(lines[x_num], "=Any")[2]))
+        x = eval(parse(split(lines[x_num], "=")[2]))
         sol = Solution(x=x, value=value)
         push!(result, sol)
     end

@@ -84,3 +84,19 @@ function get_negative_data(parameter)
     result = take!(parameter.negative_data)
     return result
 end
+
+function write_population(parameter, file)
+    f = open(file, "w")
+    positive_data = get_positive_data(parameter)
+    negative_data = get_negative_data(parameter)
+    write(f, "########################################\n")
+    write(f, "positive_data: \n")
+    for sol in positive_data
+        sol_write(sol, f)
+    end
+    write(f, "########################################\n")
+    write(f, "negative_data: \n")
+    for sol in negative_data
+        sol_write(sol, f)
+    end
+end
