@@ -140,16 +140,11 @@ function asracos_updater!(asracos::ASRacos, budget, ub, finish)
         rc.best_solution = rc.positive_data[1]
 	    time_log2 = now()
         time_pass = Dates.value(time_log2 - time_log1) / 1000
+        zoolog("Budget $(t): value=$(sol.value), best_solution_value=$(rc.best_solution.value)")
 	    if time_pass >= time_sum
 	        time_sum = time_sum + interval
-	        zoolog("time: $(time_pass) update $(t): best_solution value = $(rc.best_solution.value)")
-            if parameter.show_x == true
-                zoolog("best_solution x = $(rc.best_solution.x)")
-            end
-            str = "budget $(t): time $(floor(time_pass)) seconds,  value $(rc.best_solution.value)\n"
-            if parameter.show_x == true
-                str = string(str, rc.best_solution.x, "\n")
-            end
+            str = "Budget $(t): time=$(floor(time_pass))s, value=$(sol.value), best_solution_value=$(rc.best_solution.value)\n
+             best_x=$(rc.best_solution.x)"
             if !isnull(f)
                 write(f, str)
                 flush(f)
@@ -214,33 +209,80 @@ function asracos_sample(rc, ub)
 end
 
 function asracos_init_attribute!(asracos::ASRacos, parameter::Parameter)
+    f = open("init.txt", "w")
     rc = asracos.rc
     # otherwise generate random solutions
     iteration_num = rc.parameter.train_size
+    data_temp = rc.parameter.init_sample
+    init_num = 0
+    remote_data = RemoteChannel(()->Channel(iteration_num))
+    remote_result = RemoteChannel(()->Channel(iteration_num))
+    if !isnull(data_temp)
+        init_num = length(data_temp) < iteration_num? length(data_temp):iteration_num
+        for i = 1:init_num
+            # str = "initial sample: $(i), value=$(data_temp[i].value)\nx=$(sol.x)\n"
+            put!(remote_data, data_temp[i])
+        end
+    end
     i = 1
-	f = open("init.txt", "w")
-    while i <= iteration_num
+    while i <= iteration_num - init_num
         # distinct_flag: True means sample is distinct(can be use),
         # False means sample is distinct, you should sample again.
         sol, distinct_flag = distinct_sample_from_set(rc, rc.objective.dim, rc.data,
-        data_num=iteration_num)
+            data_num=iteration_num)
         # panic stop
         if isnull(sol)
             break
         end
         if distinct_flag
-            ip_port = take!(parameter.ip_port)
-            br = compute_fx(sol, ip_port, parameter)
-            put!(parameter.ip_port, ip_port)
-            push!(rc.data, sol)
-			str = "compute fx: $(i), value=$(sol.value), ip_port=$(ip_port), x=$(sol.x)\n"
-            zoolog(str)
-			write(f, str)
-			flush(f)
+            # ip_port = take!(parameter.ip_port)
+            # br = compute_fx(sol, ip_port, parameter)
+            # put!(parameter.ip_port, ip_port)
+            put!(remote_data, sol)
+			# str = "compute fx: $(i + init_num), value=$(sol.value), ip_port=$(ip_port), x=$(sol.x)\n"
+            # zoolog(str)
+			# write(f, str)
+			# flush(f)
             i += 1
         end
     end
-	close(f)
+    # str = "compute fx: $(i + init_num), value=$(sol.value), ip_port=$(ip_port), x=$(sol.x)\n"
+    # zoolog(str)
+    fn = RemoteChannel(()->Channel(1))
+    zoolog("$(iteration_num)")
+    for i = 1:iteration_num
+        d = take!(remote_data)
+        if d.value != 0
+            put!(remote_result, d)
+            if i == iteration_num
+                put!(fn, 1)
+            end
+            continue
+        end
+        ip_port = take!(parameter.ip_port)
+        @spawn begin
+            compute_fx(d, ip_port, parameter)
+            put!(parameter.ip_port, ip_port)
+            put!(remote_result, d)
+            if i == iteration_num
+                put!(fn, 1)
+            end
+        end
+
+    end
+    result = take!(fn)
+    f = open("init.txt", "w")
+    for i = 1:iteration_num
+        d = take!(remote_result)
+        push!(rc.data, d)
+        str_print = "init sample: $(i), value=$(d.value)"
+        str = "init sample: $(i), value=$(d.value)\n x=$(d.x)\n"
+        zoolog(str_print)
+        write(f, str)
+        flush(f)
+    end
+    # zoolog("after taking result")
+    close(f)
     selection!(rc)
     return
 end
