@@ -235,21 +235,11 @@ function asracos_init_attribute!(asracos::ASRacos, parameter::Parameter)
             break
         end
         if distinct_flag
-            # ip_port = take!(parameter.ip_port)
-            # br = compute_fx(sol, ip_port, parameter)
-            # put!(parameter.ip_port, ip_port)
             put!(remote_data, sol)
-			# str = "compute fx: $(i + init_num), value=$(sol.value), ip_port=$(ip_port), x=$(sol.x)\n"
-            # zoolog(str)
-			# write(f, str)
-			# flush(f)
             i += 1
         end
     end
-    # str = "compute fx: $(i + init_num), value=$(sol.value), ip_port=$(ip_port), x=$(sol.x)\n"
-    # zoolog(str)
     fn = RemoteChannel(()->Channel(1))
-    zoolog("$(iteration_num)")
     for i = 1:iteration_num
         d = take!(remote_data)
         if d.value != 0
@@ -285,6 +275,22 @@ function asracos_init_attribute!(asracos::ASRacos, parameter::Parameter)
     close(f)
     selection!(rc)
     return
+end
+
+function construct_init_sample(init_file)
+    f = open(init_file)
+    lines = readlines(f)
+    count = floor(Int, length(lines)/2)
+    result = []
+    for i in 1:count
+        value_num = 2 * i - 1
+        x_num = 2 * i
+        value = eval(parse(split(lines[value_num], "=")[2]))
+        x = eval(parse(split(lines[x_num], "=Any")[2]))
+        sol = Solution(x=x, value=value)
+        push!(result, sol)
+    end
+    return result
 end
 
 function check_exception(msg)

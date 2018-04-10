@@ -62,3 +62,8 @@ function sol_print(sol)
     zoolog("x: $(sol.x)")
     zoolog("value: $(sol.value)")
 end
+
+function sol_write(sol, f)
+    write(f, "x: $(sol.x)\n")
+    write(f, "value: $(sol.value)\n")
+end
