@@ -63,7 +63,22 @@ function sol_print(sol)
     zoolog("x: $(sol.x)")
 end
 
-function sol_write(sol, f)
+function sol_write(f, sol)
     write(f, "value=$(sol.value)\n")
     write(f, "x=$(sol.x)\n")
+end
+
+function write_population(filename, positive_data, negative_data)
+	f = open(filename, "w")
+	write(f, "########################################\n")
+	write(f, "positive_data: \n")
+	for sol in positive_data
+		sol_write(f, sol)
+	end
+	write(f, "########################################\n")
+	write(f, "negative_data: \n")
+	for sol in negative_data
+		sol_write(f, sol)
+	end
+	close(f)
 end

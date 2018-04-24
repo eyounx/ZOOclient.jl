@@ -33,6 +33,7 @@ type Parameter
     # result
     positive_data
     negative_data
+
     function Parameter(; algorithm="asracos", budget=0, init_sample=Nullable(),
         time_limit=Nullable{Int64}(), precision=Nullable(),
         uncertain_bits=Nullable{Int64}(), train_size=0, positive_size=0, negative_size=0,
@@ -83,20 +84,4 @@ end
 function get_negative_data(parameter)
     result = take!(parameter.negative_data)
     return result
-end
-
-function write_population(parameter, file)
-    f = open(file, "w")
-    positive_data = get_positive_data(parameter)
-    negative_data = get_negative_data(parameter)
-    write(f, "########################################\n")
-    write(f, "positive_data: \n")
-    for sol in positive_data
-        sol_write(sol, f)
-    end
-    write(f, "########################################\n")
-    write(f, "negative_data: \n")
-    for sol in negative_data
-        sol_write(sol, f)
-    end
 end

@@ -132,6 +132,7 @@ function asracos_updater!(asracos::ASRacos, budget, ub, finish)
         f = open(output_file, "w")
     end
     br = false
+
     while(t <= budget)
         sol = take!(asracos.result_set)
         push!(history, sol.value)

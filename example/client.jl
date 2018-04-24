@@ -23,19 +23,9 @@ par = Parameter(budget=400, evaluation_server_num=2, control_server_ip_port="192
 sol = zoo_min(obj, par)
 # print the Solution object
 sol_print(sol)
-f = open("result.txt", "w")
 positive_data = take!(par.positive_data)
 negative_data = take!(par.negative_data)
-write(f, "########################################\n")
-write(f, "positive_data: \n")
-for sol in positive_data
-    sol_write(sol, f)
-end
-write(f, "########################################\n")
-write(f, "negative_data: \n")
-for sol in negative_data
-    sol_write(sol, f)
-end
+write_population("population.txt", positive_data, negative_data)
 # visualize the optimization progress
 # history = get_history_bestsofar(obj)
 # plt[:plot](history)
