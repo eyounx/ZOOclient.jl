@@ -108,6 +108,9 @@ function mixed_classification(classifier)
             if delete != 0
                 splice!(index_set, pos)
             end
+            if length(index_set) == 0
+                push!(index_set, k)
+            end
         end
     end
     set_uncertain_bit!(classifier, index_set)
