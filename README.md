@@ -14,7 +14,7 @@ Two  zeroth-order optimization methods are implemented in ZOOclient release 0.1,
 
 ## Installation
 
-If you have not done so already, [download and install Julia](http://julialang.org/downloads/) (Any version starting with 0.6 should be fine)
+If you have not done so already, [download and install Julia](http://julialang.org/downloads/) (Any version starting with 0.6 should be fine.  ZOOclient is not compatible with julia 1.0 temporarily. )
 
 To install ZOOclient, start Julia and run:
 
