@@ -49,7 +49,7 @@ type Parameter
         precision, uncertain_bits, train_size, positive_size, negative_size,
         probability, replace_strategy, evaluation_server_num, Nullable(), control_server_ip,
         control_server_port, objective_file, func, constraint, show_x, output_file,
-        isolationfunc, RemoteChannel(()->Channel(1)), RemoteChannel(()->Channel(1)))
+        isolationfunc, [], [])
         if budget != 0 && autoset == true
             autoset!(parameter)
         end
@@ -84,4 +84,8 @@ end
 function get_negative_data(parameter)
     result = take!(parameter.negative_data)
     return result
+end
+
+function clear_parameter(parameter)
+    parameter.control
 end

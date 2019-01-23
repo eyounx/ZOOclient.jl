@@ -27,7 +27,6 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
     for server in servers
         put!(parameter.ip_port, server)
     end
-
     asracos_init_attribute!(asracos, parameter)
     asracos_init_sample_set!(asracos, ub)
     println("Initialization succeeds")
@@ -64,6 +63,8 @@ function asracos_opt!(objective::Objective, parameter::Parameter)
     # finish task
     result = take!(asracos.asyn_result)
     objective.history = take!(asracos.history)
+    parameter.positive_data = take!(asracos.chan_positive_data)
+    parameter.negative_data = take!(asracos.chan_negative_data)
     cs_receive = connect(ip, port)
     println(cs_receive, "client: return servers#")
     readline(cs_receive)
@@ -141,7 +142,7 @@ function asracos_updater!(asracos::ASRacos, budget, ub, finish)
         rc.best_solution = rc.positive_data[1]
 	    time_log2 = now()
         time_pass = Dates.value(time_log2 - time_log1) / 1000
-        zoolog("Budget $(t): value=$(sol.value), best_solution_value=$(rc.best_solution.value)")
+        zoolog("Budget $(t): time=$(floor(time_pass))s, value=$(sol.value), best_solution_value=$(rc.best_solution.value)")
 		str = "Budget $(t): time=$(floor(time_pass))s, value=$(sol.value), best_solution_value=$(rc.best_solution.value)\nbest_x=$(rc.best_solution.x)\n"
 		if !isnull(f)
 			write(f, str)
@@ -174,36 +175,35 @@ function asracos_updater!(asracos::ASRacos, budget, ub, finish)
 		 end
      end
      finish[1] = true
-     # zoolog("update finish")
      if !isnull(f)
          close(f)
      end
      put!(asracos.asyn_result, rc.best_solution)
      put!(asracos.history, history)
-	 put!(parameter.positive_data, rc.positive_data)
-	 put!(parameter.negative_data, rc.negative_data)
+	 put!(asracos.chan_positive_data, rc.positive_data)
+	 put!(asracos.chan_negative_data, rc.negative_data)
 end
 
-function asracos_sample(rc, ub)
-    if rand(rng, Float64) < rc.parameter.probability
-        classifier = RacosClassification(rc.objective.dim, rc.positive_data,
-        rc.negative_data, ub=ub)
-        zoolog("before classification")
-        mixed_classification(classifier)
-        zoolog("after classification")
-        solution, distinct_flag = distinct_sample_classifier(rc, classifier, data_num=rc.parameter.train_size)
-    else
-        solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
-    end
-    #painc stop
-    if distinct_flag == false
-        zoolog("ERROR: dimension limited")
-    end
-    if isnull(solution)
-        zoolog("ERROR: solution null")
-    end
-    return solution
-end
+# function asracos_sample(rc, ub)
+#     if rand(rng, Float64) < rc.parameter.probability
+#         classifier = RacosClassification(rc.objective.dim, rc.positive_data,
+#         rc.negative_data, ub=ub)
+#         zoolog("before classification")
+#         mixed_classification(classifier)
+#         zoolog("after classification")
+#         solution, distinct_flag = distinct_sample_classifier(rc, classifier, data_num=rc.parameter.train_size)
+#     else
+#         solution, distinct_flag = distinct_sample(rc, rc.objective.dim)
+#     end
+#     #painc stop
+#     if distinct_flag == false
+#         zoolog("ERROR: dimension limited")
+#     end
+#     if isnull(solution)
+#         zoolog("ERROR: solution null")
+#     end
+#     return solution
+# end
 
 function asracos_init_attribute!(asracos::ASRacos, parameter::Parameter)
     f = open("init.txt", "w")

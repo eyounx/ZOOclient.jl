@@ -5,3 +5,4 @@
 *.DS_Store
 python_server/.idea
 .idea
+example/test.jl

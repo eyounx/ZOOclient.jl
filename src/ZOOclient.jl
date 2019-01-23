@@ -3,7 +3,7 @@ module ZOOclient
 using Base.Dates.now
 
 export Dimension, dim_print
-export Objective, get_history_bestsofar
+export Objective, get_history_bestsofar, obj_clean_history
 export zoo_min
 export Parameter, print_population, get_positive_data, get_negative_data
 export Solution, sol_print, sol_equal, sol_write, write_population
@@ -25,6 +25,10 @@ include("ZOOclient/algos/racos/sracos.jl")
 include("ZOOclient/algos/racos/racos_optimization.jl")
 include("ZOOclient/algos/asracos/asracos.jl")
 include("ZOOclient/algos/asracos/asracos_opt.jl")
+include("ZOOclient/algos/pracos/pracos.jl")
+include("ZOOclient/algos/pracos/pracos_opt.jl")
+include("ZOOclient/algos/psracos/psracos.jl")
+include("ZOOclient/algos/psracos/psracos_opt.jl")
 include("ZOOclient/algos/pposs/pposs_opt.jl")
 include("ZOOclient/optimize.jl")
 

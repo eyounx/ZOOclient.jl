@@ -27,37 +27,37 @@ function rc_clear!(rc::RacosCommon)
 end
 
 # construct self._data, self._positive_data, self._negative_data
-function init_attribute!(rc::RacosCommon)
-    # check if the initial solutions have been set
-    data_temp = rc.parameter.init_sample
-    if !isnull(data_temp)
-        for i = 1:length(data_temp)
-            push!(rc.data, obj_eval(rc.objective, data_temp[i]))
-        end
-        selection!(rc)
-        return
-    end
-    # otherwise generate random solutions
-    iteration_num = rc.parameter.train_size
-    i = 0
-    while i < iteration_num
-        # distinct_flag: True means sample is distinct(can be use),
-        # False means sample is distinct, you should sample again.
-        x, distinct_flag = distinct_sample_from_set(rc, rc.objective.dim, rc.data,
-          data_num=iteration_num)
-        # panic stop
-        if isnull(x)
-            break
-        end
-        if distinct_flag
-            obj_eval(rc.objective, x)
-            push!(rc.data, x)
-            i += 1
-        end
-    end
-    selection!(rc)
-    return
-end
+# function init_attribute!(rc::RacosCommon)
+#     # check if the initial solutions have been set
+#     data_temp = rc.parameter.init_sample
+#     if !isnull(data_temp)
+#         for i = 1:length(data_temp)
+#             push!(rc.data, obj_eval(rc.objective, data_temp[i]))
+#         end
+#         selection!(rc)
+#         return
+#     end
+#     # otherwise generate random solutions
+#     iteration_num = rc.parameter.train_size
+#     i = 0
+#     while i < iteration_num
+#         # distinct_flag: True means sample is distinct(can be use),
+#         # False means sample is distinct, you should sample again.
+#         x, distinct_flag = distinct_sample_from_set(rc, rc.objective.dim, rc.data,
+#           data_num=iteration_num)
+#         # panic stop
+#         if isnull(x)
+#             break
+#         end
+#         if distinct_flag
+#             obj_eval(rc.objective, x)
+#             push!(rc.data, x)
+#             i += 1
+#         end
+#     end
+#     selection!(rc)
+#     return
+# end
 
 # sort self._data
 # choose first-train_size solutions as the new self._data
@@ -69,6 +69,7 @@ function selection!(rc::RacosCommon)
     rc.positive_data = rc.data[1:rc.parameter.positive_size]
     rc.negative_data = rc.data[(rc.parameter.positive_size+1):rc.parameter.train_size]
     rc.best_solution = rc.positive_data[1]
+    rc.data = rc.data[1:rc.parameter.train_size]
 end
 
 # distinct sample form dim, return a solution
