@@ -1,3 +1,5 @@
+This repository is out of maintenance. ZOOpt is now in the Ray project for distributed computing.
+
 # ZOOclient
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/eyounx/ZOOjl/blob/master/LICENSE)
